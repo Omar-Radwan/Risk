@@ -3,18 +3,18 @@ Game:
   agent redPlayer, greenPlayer
   bool isSimulation, redPlayerTurn
   map gameMap
-  initializeGame()
+  prepare()
   play()
 
-GameMap:
+Map:
   list of cities
-  hashMap<city.id, list of city.id> cityGraph -> cityGraph[city x] -> list of cities connected to city x
+  list<city.id, list of city.id> cityGraph -> cityGraph[city x] -> list of cities connected to city x
   readMap()
 
 City:
   id
-  list connected
-  bool armyType
+ // list connected
+  bool redArmy
   int armyCount
 
 // will have child classes
@@ -35,3 +35,8 @@ GameController:
   Verginia: passive agent + greedy+A* + GUI + (performance)
   Nadeen: aggressive agent + A* realtime + (performance)
   Radwan: minimax + nearly pacifist
+
+
+Done:
+    - load map from file and tested it on dummyfile.txt {change it to xml or db later}
+    - generate random type and number of army in each city at the start of the game
