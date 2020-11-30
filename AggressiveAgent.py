@@ -1,4 +1,5 @@
 #send game state and return the new game state
+#togggle the redArmy boolean in each agent or state
 class AggressiveAgent:
     def __init__(self):
         self.cityList = []

@@ -1,4 +1,5 @@
 from Agent import Agent
+from AggressiveAgent import AggressiveAgent
 from Game import Game
 from Map import Map
 from PassiveAgent import PassiveAgent
@@ -19,5 +20,9 @@ passiveAgent.cityList=[cityOne,cityTwo]
 passiveAgent.passiveAgentHeuristic()
 # print(game)
 # print(greenPlayer)
+
+aggressiveAgent = AggressiveAgent()
+aggressiveAgent.cityList=[cityOne,cityTwo]
+aggressiveAgent.AggressiveAgentHeuristic()
 
 
