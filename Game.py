@@ -1,6 +1,6 @@
+import math
 import random
 from constants import MIN_ARMY_START, MAX_ARMY_START
-
 
 class Game:
 
@@ -11,17 +11,17 @@ class Game:
         self.redPlayer = redPlayer
         self.greenPlayer = greenPlayer
 
+    # this method need to be modified according to the pdf
     def prepare(self):
         for city in self.map.cityList:
-            city.isRedArmy = True if random.randint(0, 1) == 0 else False
+            city.isRedArmy = bool(random.getrandbits(1))
             city.armyCount = random.randint(MIN_ARMY_START, MAX_ARMY_START)  # random integer from 1 to 10 inclusive
+            self.redPlayer.attachCity(city) if city.isRedArmy else self.greenPlayer.attachCity(city)
 
     def play(self):
-        # TODO: take choice from user to process the current turn
-        if self.redPlayerTurn:
-            self.redPlayer.applyHeuristic(self.map)
-        else:
-            self.greenPlayer.applyHeuristic(self.map)
+        # TODO: take choice from user to process the current turn or wait a certain amount of time
+        currentPlayer = self.redPlayer if self.redPlayerTurn else self.greenPlayer
+        bonusPlayers = max(math.floor(len(currentPlayer.cityList) / 3), 3)
 
     # debugging functions
     def __str__(self):

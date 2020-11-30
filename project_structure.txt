@@ -3,7 +3,7 @@ Game:
   agent redPlayer, greenPlayer
   bool isSimulation, redPlayerTurn
   map gameMap
-  prepare()
+  prepare() -> should be removed to Agent
   play()
 
 Map:
@@ -20,23 +20,31 @@ City:
 // will have child classes
 Agent:
   list of cities -> add, remove n^2
-  applyHeuristic(map gameMap) -> go through all occupied cities and find the best action function and can be improved later
-  boolean didWin()
+  play(map gameMap) -> go through all occupied cities and find the best action function and can be improved later
+// boolean didWin()
 
+A(8 red)
 Gui:
  drawMap()
  updateArmiesAt(int id, int armyCount, boolean armyType)
+ displayWinner(boolean type)
+ ......
 
 GameController:
- Game game
+    create game of chosen type ..
+
   1. passive agent, aggressive agent, nearly pacifist
   2. greedy+A*, A* realtime, minimax
 
   Verginia: passive agent + greedy+A* + GUI + (performance)
   Nadeen: aggressive agent + A* realtime + (performance)
   Radwan: minimax + nearly pacifist
-
+  3egoz:
 
 Done:
-    - load map from file and tested it on dummyfile.txt {change it to xml or db later}
+    - load map from file and tested it on map1.txt {change it to xml or db later or protocol buffer}
     - generate random type and number of army in each city at the start of the game
+
+Shb7ana list:
+    - memento (undo and redo)
+    - click on map to choose which city to place armies

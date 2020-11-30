@@ -10,7 +10,7 @@ class Map:
         self.graph = [[] for i in range(self.cityCount + 1)]
         self.cityList = [City(i) for i in range(self.cityCount + 1)]
         self.__readGraph(lines)
-        # self.__str__()  # for debugging ... remove it later
+        self.__str__()  # for debugging ... remove it later
 
     def __readGraph(self, lines):
         for currentLine in lines:

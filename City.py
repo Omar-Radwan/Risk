@@ -5,6 +5,9 @@ class City:
         self.isRedArmy = False
         self.armyCount = 0
 
-    #debugging function
+    def __lt__(self, other):
+        return self.armyCount <= other.armyCount
+
+    # debugging function
     def __str__(self):
         return f'id={self.id}, redArmy={self.isRedArmy}, armyCount={self.armyCount}'
