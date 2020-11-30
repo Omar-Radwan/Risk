@@ -23,7 +23,7 @@ Agent:
   play(map gameMap) -> go through all occupied cities and find the best action function and can be improved later
 // boolean didWin()
 
-A(8 red)
+
 Gui:
  drawMap()
  updateArmiesAt(int id, int armyCount, boolean armyType)
@@ -39,7 +39,13 @@ GameController:
   Verginia: passive agent + greedy+A* + GUI + (performance)
   Nadeen: aggressive agent + A* realtime + (performance)
   Radwan: minimax + nearly pacifist
-  3egoz:
+  3egoz: hi3mlna shay
+
+GUI OPTIONS:
+    1- to make the map static and select the city we want from some list
+    2- to choose the city we want by clicking on the map
+    3- to make the map as circles (or some other shape)
+    4- add circles to the map and detect the click on the circle
 
 Done:
     - load map from file and tested it on map1.txt {change it to xml or db later or protocol buffer}
