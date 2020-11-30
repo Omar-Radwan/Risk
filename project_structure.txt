@@ -36,10 +36,10 @@ GameController:
   1. passive agent, aggressive agent, nearly pacifist
   2. greedy+A*, A* realtime, minimax
 
-  Verginia: passive agent + greedy+A* + GUI + (performance)
-  Nadeen: aggressive agent + A* realtime + (performance)
+  Verginia: passive agent + A* + GUI + (performance)
+  Nadeen:  A* realtime + (performance)
   Radwan: minimax + nearly pacifist
-  3egoz: hi3mlna shay
+  3egoz: greedy + aggressive agent .
 
 GUI OPTIONS:
     1- to make the map static and select the city we want from some list

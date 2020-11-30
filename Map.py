@@ -2,6 +2,7 @@ from City import City
 
 
 class Map:
+    #cityCount..graph..cityList
 
     def __init__(self, filename="map1.txt"):  # default loaded map is map1
         file = open(filename, 'r')
