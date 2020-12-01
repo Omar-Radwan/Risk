@@ -47,6 +47,11 @@ GUI OPTIONS:
     3- to make the map as circles (or some other shape)
     4- add circles to the map and detect the click on the circle
 
+
+Heuristics:
+1- conquer the city that leaves the maximum number of (armies, cities … ) after conquering it.
+2- conquer the city which minimize the number of (cities, army can be taken from you) when the enemy conquer you next time
+
 Done:
     - load map from file and tested it on map1.txt {change it to xml or db later or protocol buffer}
     - generate random type and number of army in each city at the start of the game
