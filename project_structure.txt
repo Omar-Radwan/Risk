@@ -60,3 +60,7 @@ Done:
 Shb7ana list:
     - memento (undo and redo)
     - click on map to choose which city to place armies
+
+TODO LIST for gui
+city class should have x and y attributes
+boolean to indicate red or green city
