@@ -22,7 +22,7 @@ class Crosshair(pygame.sprite.Sprite):
 class Circle(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, armyCount):
         super().__init__()
-        self.image = pygame.image.load('circle.png')
+        self.image = pygame.image.load('red-flag.png')
         self.rect = self.image.get_rect()
         self.armyCount = armyCount
         self.width = width
@@ -47,9 +47,13 @@ crosshair = Crosshair('sword.png')
 crosshairgroup = pygame.sprite.Group()
 crosshairgroup.add(crosshair)
 
-texas = Circle(unitedstatesmap.get_rect()[0]/2, unitedstatesmap.get_rect()[1]/2, 40, 50, (255, 0, 0))
+texas = Circle(622, 632, 100, 100, (255, 0, 0))
+NewMexico = Circle(430, 545, 100, 100, (255, 0, 0))
+Arizona = Circle(286, 524, 100, 100, (255, 0, 0))
 circlegroup = pygame.sprite.Group()
 circlegroup.add(texas)
+circlegroup.add(NewMexico)
+circlegroup.add(Arizona)
 
 
 class GameState():
