@@ -1,7 +1,6 @@
 import copy
 import math
 import random
-
 from Agent import Agent
 from City import City
 from Map import Map
@@ -10,7 +9,7 @@ from constants import MIN_ARMY_START, MAX_ARMY_START
 
 class Game:
 
-    def __init__(self, map: Map, isSimulation: bool, redPlayer: Agent = None, greenPlayer: Agent = None):
+    def __init__(self, map: Map, isSimulation: bool, redPlayer:Agent =None, greenPlayer:Agent =None):
         self.redPlayerTurn = True  # the red player starts first
         self.isSimulation = isSimulation
         self.map = map
@@ -36,7 +35,13 @@ class Game:
 
     # conquer city with some army count
     def move(self, from_id, to_id, count: int):
-        pass
+        self.cityList[from_id].armyCount-=count
+        self.cityList[to_id].armyCount=count
+        self.cityList[to_id].isRedArmy=self.cityList[from_id].isRedArmy
+        if self.cityList[from_id].isRedArmy:
+            self.redPlayer.attachCity(self.cityList[to_id])
+        else :
+            self.greenPlayer.attachCity(self.cityList[to_id])
 
     # debugging functions
     def __str__(self):

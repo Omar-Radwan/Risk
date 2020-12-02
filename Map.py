@@ -13,6 +13,7 @@ class Map:
         self.__readGraph(lines)
         self.__str__()  # for debugging ... remove it later
 
+
     def __readGraph(self, lines):
         for currentLine in lines:
             ids = currentLine.strip().split(' ')
@@ -20,6 +21,8 @@ class Map:
             for i in range(1, len(ids)):
                 v = int(ids[i])
                 self.graph[u].append(v)
+
+
 
     # debugging functions
     def __str__(self):
