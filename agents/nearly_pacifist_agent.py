@@ -7,10 +7,10 @@ from Game import Game
 
 class NearlyPacifistAgent(Agent):
 
+
     def compareCity(self, x: City, y: City) -> bool:
-        if (x.armyCount != y.armyCount):
-            return x.armyCount < y.armyCount
-        return x.id < y.id
+        return x.armyCount < y.armyCount if x.armyCount != y.armyCount else x.id < y.id
+
 
     def myMinArmyCity(self, game: Game) -> int:
         minCity = self.cityList[0]
@@ -33,6 +33,8 @@ class NearlyPacifistAgent(Agent):
                     if (self.compareCity(candidate, current)):
                         myAdjToMin, hisMinCityId = uId, vId
         return (myAdjToMin, hisMinCityId)
+
+
 
     def applyHeuristic(self, game: Game, bonusPlayers: int):
         myMinArmyCityId = self.myMinArmyCity(game)
