@@ -48,6 +48,9 @@ crosshairgroup = pygame.sprite.Group()
 crosshairgroup.add(crosshair)
 
 texas = Circle(622, 632, 100, 100, (255, 0, 0))
+
+
+
 NewMexico = Circle(430, 545, 100, 100, (255, 0, 0))
 Arizona = Circle(286, 524, 100, 100, (255, 0, 0))
 circlegroup = pygame.sprite.Group()
@@ -111,7 +114,6 @@ class GameState():
         image = pygame.image.load('unitedstatesmap.png')
         screen = pygame.display.set_mode((image.get_width(), image.get_height()))
         screen.blit(image, (0, 0))
-        pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -123,6 +125,16 @@ class GameState():
         crosshairgroup.update()
         circlegroup.draw(screen)
         circlegroup.update()
+
+        #code for putting the number of armies in each city
+        #for city in cities
+
+        text = pygame.font.Font('freesansbold.ttf', 50)
+        textsurf, textrect = text_objects("17", text,(255,0,0)) #get city.armyCount
+        textrect.center = (screen.get_width() / 2, screen.get_height() / 2) #get city location
+        screen.blit(textsurf, textrect)
+
+
         pygame.display.update()
 
     def statemanager(self):
