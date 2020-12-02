@@ -9,7 +9,7 @@ from constants import MIN_ARMY_START, MAX_ARMY_START
 
 class Game:
 
-    def __init__(self, map: Map, isSimulation: bool, redPlayer, greenPlayer):
+    def __init__(self, map: Map, isSimulation: bool, redPlayer:Agent =None, greenPlayer:Agent =None):
         self.redPlayerTurn = True  # the red player starts first
         self.isSimulation = isSimulation
         self.map = map

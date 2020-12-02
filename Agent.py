@@ -2,9 +2,9 @@ from Game import Game
 
 
 class Agent:
-    def __init__(self):
+    def __init__(self,game: Game):
         self.cityList = []
-        #self.game = game
+        self.game = game
 
     def applyHeuristic(self, game: Game, bonusPlayers: int):
         pass
@@ -17,11 +17,11 @@ class Agent:
         self.cityList.remove(city)
 
     # TODO: get rid of loop in this function
-    #def countArmy(self) -> int:
-     #   sum = 0
-      #  for city_id in self.cityList:
-       #     sum += self.game.cityList[id].armyCount
-        #return sum
+    def countArmy(self) -> int:
+        sum = 0
+        for city_id in self.cityList:
+            sum += self.game.cityList[id].armyCount
+        return sum
 
     # debugging function
     def __str__(self):
