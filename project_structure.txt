@@ -5,6 +5,7 @@ Game:
   map gameMap
   prepare() -> should be removed to Agent
   play()
+  isWinner()
 
 Map:
   list of cities

@@ -5,6 +5,7 @@ class PassiveAgent:
     def calculateBonusArmy(self):
         return max(3,len(self.cityList)/3)
 
+
     def calculateMinimumTerritory(self):
         minimum=20
         for city in self.cityList:

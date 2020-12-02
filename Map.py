@@ -11,7 +11,9 @@ class Map:
         self.graph = [[] for i in range(self.cityCount + 1)]
         self.cityList = [City(i) for i in range(self.cityCount + 1)]
         self.__readGraph(lines)
+        #self.readGraph2(lines)
         self.__str__()  # for debugging ... remove it later
+
 
     def __readGraph(self, lines):
         for currentLine in lines:
@@ -20,6 +22,19 @@ class Map:
             for i in range(1, len(ids)):
                 v = int(ids[i])
                 self.graph[u].append(v)
+
+    def readGraph2(self, lines):
+        visited=set()
+        for currentLine in lines:
+            ids = currentLine.strip().split(' ')
+            if not visited.__contains__(City(ids[0])):
+                u = City(ids[0])
+                visited.add(u)
+            for i in range(1, len(ids)):
+                if not visited.__contains__(City(ids[i])):
+                    v = City(ids[i])
+                    visited.add(u)
+                self.graph[int(u.id)].append(v)
 
     # debugging functions
     def __str__(self):
