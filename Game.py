@@ -40,8 +40,11 @@ class Game:
         self.cityList[to_id].isRedArmy=self.cityList[from_id].isRedArmy
         if self.cityList[from_id].isRedArmy:
             self.redPlayer.attachCity(self.cityList[to_id])
+            self.greenPlayer.removeCity(self.cityList[to_id])
         else :
             self.greenPlayer.attachCity(self.cityList[to_id])
+            self.redPlayer.removeCity(self.cityList[to_id])
+
 
     # debugging functions
     def __str__(self):
