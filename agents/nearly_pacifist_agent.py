@@ -7,7 +7,6 @@ from Game import Game
 
 class NearlyPacifistAgent(Agent):
 
-
     def compareCity(self, x: City, y: City) -> bool:
         return x.armyCount < y.armyCount if x.armyCount != y.armyCount else x.id < y.id
 
@@ -18,6 +17,7 @@ class NearlyPacifistAgent(Agent):
             if (self.compareCity(city, minCity)):
                 minCity = city
         return minCity.id
+
 
     def hisMinArmyCityToAttack(self, game: Game) -> ():
         myAdjToMin, hisMinCityId, graph = -1, -1, game.map.graph

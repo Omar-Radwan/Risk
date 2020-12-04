@@ -18,6 +18,19 @@ class Crosshair(pygame.sprite.Sprite):
         self.attack.play()
 
 
+# the rectangles for every city
+class Circle(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, armyCount,color):
+        super().__init__()
+        self.image = pygame.image.load('red-flag.png')
+        self.rect = self.image.get_rect()
+        self.font = pygame.font.SysFont("Arial", 10)
+        self.textSurf = self.font.render(str(armyCount), 1, color)
+        self.armyCount = armyCount
+        self.width = width
+        self.height = height
+        self.rect.center = [x, y]
+
 def text_objects(text, font, color):
     textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
@@ -34,6 +47,28 @@ crosshair = Crosshair('sword.png')
 
 crosshairgroup = pygame.sprite.Group()
 crosshairgroup.add(crosshair)
+
+
+
+
+#texas = Circle(622, 632, 100, 100, (255, 0, 0))
+texas=Circle(622,632,100,100,3,(255,0,0))
+
+#NewMexico = Circle(430, 545, 100, 100, (255, 0, 0))
+#Arizona = Circle(286, 524, 100, 100, (255, 0, 0))
+
+# texas = Circle(622, 632, 100, 100, (255, 0, 0)
+
+
+
+# NewMexico = Circle(430, 545, 100, 100, (255, 0, 0))
+# Arizona = Circle(286, 524, 100, 100, (255, 0, 0))
+
+circlegroup = pygame.sprite.Group()
+circlegroup.add(texas)
+#circlegroup.add(NewMexico)
+#circlegroup.add(Arizona)
+
 
 class GameState():
     def __init__(self,):
@@ -99,178 +134,18 @@ class GameState():
                 crosshair.shoot()
         crosshairgroup.draw(screen)
         crosshairgroup.update()
-
+        circlegroup.draw(screen)
+        circlegroup.update()
 
         #code for putting the number of armies in each city
         #for city in cities
 
-        text1 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text1,(0,255,0)) #get city.armyCount
+        text = pygame.font.Font('freesansbold.ttf', 50)
+        textsurf, textrect = text_objects("17", text,(255,0,0)) #get city.armyCount
         textrect.center = (screen.get_width() / 2, screen.get_height() / 2) #get city location
         screen.blit(textsurf, textrect)
-        text2 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text2, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 180, screen.get_height() / 2)  # get city location
-        screen.blit(textsurf, textrect)
-        text3 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text3, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 350, screen.get_height() / 2)  # get city location
-        screen.blit(textsurf, textrect)
-        text4 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text4, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 480, screen.get_height() / 2)  # get city location
-        screen.blit(textsurf, textrect)
-        text5 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text5, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 550, screen.get_height() / 2 + 80)  # get city location
-        screen.blit(textsurf, textrect)
-        text6 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text6, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 20, screen.get_height() / 2 + 120)  # get city location
-        screen.blit(textsurf, textrect)
-        text7 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text7, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 350, screen.get_height() / 2 + 170)  # get city location
-        screen.blit(textsurf, textrect)
-        text8 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("3", text8, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 250, screen.get_height() / 2 + 170)  # get city location
-        screen.blit(textsurf, textrect)
-        text9 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text9, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 20, screen.get_height() / 2 + 250)  # get city location
-        screen.blit(textsurf, textrect)
-        text10 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text10, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 100, screen.get_height() / 2 + 140)  # get city location
-        screen.blit(textsurf, textrect)
 
-        text11 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text11, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 495, screen.get_height() / 2 - 300)  # get city location
-        screen.blit(textsurf, textrect)
-        text12 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text12, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 -515, screen.get_height() / 2 - 195)  # get city location
-        screen.blit(textsurf, textrect)
-        text13 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text13, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 -255, screen.get_height() / 2 -250)  # get city location
-        screen.blit(textsurf, textrect)
-        text14 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text14, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 -65, screen.get_height() / 2 -165)  # get city location
-        screen.blit(textsurf, textrect)
 
-        text15 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text15, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 390, screen.get_height() / 2 - 160)  # get city location
-        screen.blit(textsurf, textrect)
-        text16 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text16, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 245, screen.get_height() / 2 - 115)  # get city location
-        screen.blit(textsurf, textrect)
-        text17 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text17, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 65, screen.get_height() / 2 - 255)  # get city location
-        screen.blit(textsurf, textrect)
-        text18 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text18, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 +35, screen.get_height() / 2 - 200)  # get city location
-        screen.blit(textsurf, textrect)
-
-        text19 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text19, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 - 30, screen.get_height() / 2 - 70)  # get city location
-        screen.blit(textsurf, textrect)
-        text20 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text20, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 80, screen.get_height() / 2 - 95)  # get city location
-        screen.blit(textsurf, textrect)
-        text21 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text21, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 145, screen.get_height() / 2 - 165)  # get city location
-        screen.blit(textsurf, textrect)
-        text22 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text22, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 360, screen.get_height() / 2 + 190)  # get city location
-        screen.blit(textsurf, textrect)
-
-        text23 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text23, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 110, screen.get_height() / 2 + 25)  # get city location
-        screen.blit(textsurf, textrect)
-        text24 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text24, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 175, screen.get_height() / 2 - 25)  # get city location
-        screen.blit(textsurf, textrect)
-        text25 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text25, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 182, screen.get_height() / 2 + 190)  # get city location
-        screen.blit(textsurf, textrect)
-        text26 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("2", text26, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 105, screen.get_height() / 2 + 200)  # get city location
-        screen.blit(textsurf, textrect)
-
-        text27 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text27, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 235, screen.get_height() / 2 - 45)  # get city location
-        screen.blit(textsurf, textrect)
-        text28 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text28, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 300, screen.get_height() / 2 - 20)  # get city location
-        screen.blit(textsurf, textrect)
-        text29 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text29, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 + 55)  # get city location
-        screen.blit(textsurf, textrect)
-        text30 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text30, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 260, screen.get_height() / 2 + 125)  # get city location
-        screen.blit(textsurf, textrect)
-        text31 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text31, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 405, screen.get_height() / 2 + 245)  # get city location
-        screen.blit(textsurf, textrect)
-
-        text32 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text32, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 305, screen.get_height() / 2 - 70)  # get city location
-        screen.blit(textsurf, textrect)
-        text33 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text33, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 400, screen.get_height() / 2 -115)  # get city location
-        screen.blit(textsurf, textrect)
-        text34 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text34, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 410, screen.get_height() / 2 + 110)  # get city location
-        screen.blit(textsurf, textrect)
-        text35 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text35, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 485, screen.get_height() / 2 + 20)  # get city location
-        screen.blit(textsurf, textrect)
-
-        text36 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text36, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 450, screen.get_height() / 2 - 50)  # get city location
-        screen.blit(textsurf, textrect)
-        text37 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text37, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 380, screen.get_height() / 2 - 50)  # get city location
-        screen.blit(textsurf, textrect)
-        text38 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text38, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 480, screen.get_height() / 2 - 225)  # get city location
-        screen.blit(textsurf, textrect)
-        text39 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text39, (255, 0, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 240, screen.get_height() / 2 -175)  # get city location
-        screen.blit(textsurf, textrect)
-        text40 = pygame.font.Font('freesansbold.ttf', 30)
-        textsurf, textrect = text_objects("1", text40, (0, 255, 0))  # get city.armyCount
-        textrect.center = (screen.get_width() / 2 + 530, screen.get_height() / 2 - 265)  # get city location
-        screen.blit(textsurf, textrect)
         pygame.display.update()
 
     def statemanager(self):

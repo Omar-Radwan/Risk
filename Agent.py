@@ -6,7 +6,7 @@ from Map import Map
 
 class Agent:
 
-    def __init__(self, game: Game):
+    def __init__(self, game: Game = None):
         self.cityList = []
         self.game = game
 
