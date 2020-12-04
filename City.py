@@ -4,6 +4,7 @@ class City:
         self.id = id
         self.isRedArmy = False
         self.armyCount = 0
+        
 
     def __lt__(self, other):
         return self.armyCount <= other.armyCount
