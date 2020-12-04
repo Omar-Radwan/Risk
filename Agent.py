@@ -1,19 +1,23 @@
+from typing import List
+
+from City import City
 from Game import Game
 from Map import Map
 
 class Agent:
-    def __init__(self,game: Game):
+
+    def __init__(self, game: Game = None):
         self.cityList = []
         self.game = game
 
     def applyHeuristic(self, game: Game, bonusPlayers: int):
         pass
 
-    def attachCity(self, city):
+    def attachCity(self, city: City):
         self.cityList.append(city)
 
     # TODO: double check that this function is working correctly
-    def removeCity(self, city):
+    def removeCity(self, city: City):
         self.cityList.remove(city)
 
     #bonusArmy is added to certain cities such that it maximizes my number of safe cities where
@@ -55,8 +59,8 @@ class Agent:
     # TODO: get rid of loop in this function
     def countArmy(self) -> int:
         sum = 0
-        for city_id in self.cityList:
-            sum += self.game.cityList[id].armyCount
+        for city in self.cityList:
+            sum += city.armyCount
         return sum
 
     # debugging function
