@@ -13,7 +13,6 @@ class AggressiveAgent:
             if(city.armyCount > max):
                 max = city.armyCount
                 maxCity = city
-
         return maxCity
 
     def AggressiveAgentHeuristic(self):
