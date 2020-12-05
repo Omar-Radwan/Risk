@@ -1,16 +1,15 @@
 from Agent import Agent
-from AggressiveAgent import AggressiveAgent
+from agents.AggressiveAgent import AggressiveAgent
 from Game import Game
 from Map import Map
 from PassiveAgent import PassiveAgent
 from City import City
 
-from AStarAgent import AStarAgent
 # code that attaches map to a game and starts the game
 
 
  #code that attaches map to a game and starts the game
-
+from agents.GreedyAgent import GreedyAgent
 
 map = Map(filename="map1.txt")
 print(map)
@@ -51,5 +50,7 @@ game.cityList[6].armyCount = 3
 game.cityList[7].isRedArmy = False
 game.cityList[7].armyCount = 8
 
-aggressiveAgent = AggressiveAgent(game,(255,0,0))
-aggressiveAgent.AggressiveAgentHeuristic()
+# aggressiveAgent = AggressiveAgent(game,(255,0,0))
+# aggressiveAgent.AggressiveAgentHeuristic()
+greedyAgent = GreedyAgent(game,(255,0,0))
+greedyAgent.GreedyMode()
