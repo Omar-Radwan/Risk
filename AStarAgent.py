@@ -31,7 +31,6 @@ class AStarAgent:
     def AStarHeuristic(self,game:Game):
         q = PriorityQueue()
         currGame=copy.deepcopy(game)
-        print(game)
         for city in self.cityList:
             for neighbourId in self.map.graph[city.id]:
                 neighbour=game.cityList[neighbourId]
@@ -54,8 +53,8 @@ class AStarAgent:
             next_item = q.get()
             fromCity=next_item[1]
             toCity=next_item[2]
-            print("from",fromCity)
-            print("to",toCity.id)
+            print(fromCity)
+            print(toCity.id)
             print(fromCity.armyCount-1)
         self.attack(fromCity.id,toCity.id,fromCity.armyCount-1,currGame)
 
