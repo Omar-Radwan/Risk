@@ -34,19 +34,27 @@ class AggressiveAgent:
                     maxCity = city
         return maxCity.id
 
-    def attack(self,maxCity):
-        min = self.game.cityList[maxCity].armyCount
-        #adjacentcities is a list of ids, city is an  id
-        for city in self.game.cityList[maxCity].adjacentcities:
-            #fadel condition elcolors yeb2a dynamic
-            if self.game.cityList[city].armyCount < min:
-                min = self.game.cityList[city].armyCount
-                minCity = city
-        attackarmy = self.game.cityList[maxCity].armyCount-1
-        self.game.cityList[maxCity].armyCount-=attackarmy
-        self.game.cityList[minCity].isRedArmy = True
-        self.game.cityList[minCity].armyCount +=attackarmy
-        print("attacked city  ", minCity, " with army ", attackarmy, "from City ",maxCity)
+    def attack(self):
+        ##shoof elcities ely momken tehgem 3aleha w ehgem 3ala aktar wa7da 3andaha armies
+        maxarmy = 0
+        for city in self.game.cityList:
+            if city.isRedArmy and self.color == (255,0,0):
+                for adjcity in city.adjacentcities:
+                    if self.game.cityList[adjcity].armyCount < city.armyCount-1 and self.game.cityList[adjcity].armyCount > maxarmy:
+                        maxarmy = self.game.cityList[adjcity].armyCount
+                        enemycity = self.game.cityList[adjcity]
+                        attackingcity = city
+        print("maxarmy " , maxarmy)
+        print("enemycity " , enemycity)
+        print("attackingcity " , attackingcity)
+        movingarmy = attackingcity.armyCount-1
+        self.game.cityList[attackingcity.id].armyCount-=movingarmy
+        self.game.cityList[enemycity.id].armyCount = movingarmy
+        self.game.cityList[enemycity.id].redArmy = True
+        print("After Attack ")
+        print("movingarmy ", movingarmy)
+        print("enemycity ", enemycity)
+        print("attackingcity ", attackingcity)
 
     def AggressiveAgentHeuristic(self):
         bonusArmy = self.calculateBonusArmy()
@@ -61,4 +69,4 @@ class AggressiveAgent:
         print(self.game.cityList[maxCity].armyCount)
         print("Maximum City after adding bonus army")
         print(self.game.cityList[maxCity].armyCount,  "   armycount after")
-        self.attack(maxCity)
+        self.attack()
