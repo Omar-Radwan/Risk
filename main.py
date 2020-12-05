@@ -15,11 +15,11 @@ from AStarAgent import AStarAgent
 map = Map(filename="map1.txt")
 print(map)
 game = Game(map, False, None, None)
-game.prepare()
 redPlayer = Agent(game)
 greenPlayer = Agent(game)
 game.redPlayer=redPlayer
 game.greenPlayer=greenPlayer
+game.prepare()
 #for trial to debug A star agent.
 cityOne=City(1)
 cityTwo=City(2)
