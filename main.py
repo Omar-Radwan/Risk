@@ -39,7 +39,7 @@ cityTwo.armyCount=12
 # print(game)
 # print(greenPlayer)
 
-
+game.cityList[0].isRedArmy = True
 game.cityList[0].armyCount+=5
 aggressiveAgent = AggressiveAgent(game,(255,0,0))
 aggressiveAgent.AggressiveAgentHeuristic()
