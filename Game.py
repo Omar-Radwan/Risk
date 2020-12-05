@@ -24,22 +24,13 @@ class Game:
     def prepare(self):
         for city in self.cityList:
             #generate a list of false booleans with size 40
-            for i in range(0,39,1):
+            for i in range(0,40,1):
                 self.cityList[i].isRedArmy = False
                 self.cityList[i].armyCount = 1
             #generate random 20 indices in range 0, 39
             res = random.sample(range(0, 39), 20)
-            #print(len(res))
             for i in range(0, len(res),1):
                 self.cityList[res[i]].isRedArmy = True
-            # Truess = []
-            # Falses = []
-            # print("CityList size ", len(self.cityList))
-            # for i in range(0, len(self.cityList),1):
-            #     if self.cityList[i].isRedArmy is True:
-            #         Truess.append(i)
-            #     else:
-            #         Falses.append(i)
 
             ##old code
             # city.isRedArmy = bool(random.getrandbits(1))

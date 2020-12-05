@@ -14,7 +14,7 @@ from AStarAgent import AStarAgent
 
 map = Map(filename="map1.txt")
 print(map)
-game = Game(map, False, None, None)
+game = Game(map, False )
 game.prepare()
 redPlayer = Agent(game)
 greenPlayer = Agent(game)
@@ -25,20 +25,21 @@ cityOne=City(1)
 cityTwo=City(2)
 #cityOne.armyCount=10
 #cityTwo.armyCount=5
-aStarAgent=AStarAgent(map)
-aStarAgent.cityList=[cityOne,cityTwo]
-aStarAgent.AStarHeuristicPickHighestAdjacentCity()
+# aStarAgent=AStarAgent(map)
+# aStarAgent.cityList=[cityOne,cityTwo]
+# aStarAgent.AStarHeuristicPickHighestAdjacentCity()
 #for trial to debug passive agent.
 passiveAgent=PassiveAgent()
 cityOne=City(1)
 cityTwo=City(2)
 cityOne.armyCount=2
 cityTwo.armyCount=12
-passiveAgent.cityList=[cityOne,cityTwo]
-passiveAgent.passiveAgentHeuristic()
+# passiveAgent.cityList=[cityOne,cityTwo]
+# passiveAgent.passiveAgentHeuristic()
 # print(game)
 # print(greenPlayer)
 
-aggressiveAgent = AggressiveAgent()
-aggressiveAgent.cityList=[cityOne,cityTwo]
+
+game.cityList[0].armyCount+=5
+aggressiveAgent = AggressiveAgent(game,(255,0,0))
 aggressiveAgent.AggressiveAgentHeuristic()

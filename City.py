@@ -4,6 +4,8 @@ class City:
         self.id = id
         self.isRedArmy = False
         self.armyCount = 0
+        #list of all adjacent cities
+        self.adjacentcities = []
         
 
     def __lt__(self, other):
