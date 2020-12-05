@@ -10,6 +10,8 @@ clock = pygame.time.Clock()
 gamemap = Map(filename="map1.txt")
 game = Game(map=gamemap, isSimulation=True)
 game.prepare()
+
+
 # pygame.mouse.set_visible(False)
 
 
@@ -31,15 +33,15 @@ class Crosshair(pygame.sprite.Sprite):
     def shoot(self):
         self.attack.play()
 
+
 crosshair = Crosshair('sword.png')
 
 crosshairgroup = pygame.sprite.Group()
 crosshairgroup.add(crosshair)
 
+
 class GUI:
     # chaning the cursor of the mouse and making sound on click
-
-
 
     class GameState():
         def __init__(self, ):
@@ -97,15 +99,7 @@ class GUI:
             cityList = game.getCityList()
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(image, (0, 0))
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(pygame.mouse.get_pos())
-                    crosshair.shoot()
-            #loop over the cities to check the color with city is the index (or id) of the city
-            for city in range(0, len(gamemap.map) - 1, 1):
+            for city in range(0, len(gamemap.map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
                     color = (255, 0, 0)
@@ -113,10 +107,39 @@ class GUI:
                     color = (0, 255, 0)
                     # print(color , " " , cityList[city])
                 textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
-                #str(id) because the key in the dictionary is string
+                # str(id) because the key in the dictionary is string
                 textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
                 screen.blit(textsurf, textrect)
-                # print(gamemap.map[city])
+                # draw rectangle over text to detect clicks
+                rect = pygame.draw.rect(screen, color,
+                                        pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20, 40,
+                                                    40), 1)
+
+                #detect if a mouse hovered over a rect
+                #hanzawed code elsoldiers placing wala attack....
+                if rect.collidepoint(pygame.mouse.get_pos()):
+                    rect = pygame.draw.rect(screen, color,
+                                            pygame.Rect(gamemap.map[str(city)][0] - 30, gamemap.map[str(city)][1] - 30,
+                                                        60, 60), 3)
+                else:
+                    rect = pygame.draw.rect(screen, color,
+                                            pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20,
+                                                        40, 40), 3)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for city in range(0, len(gamemap.map) - 1, 1):
+                        if pygame.mouse.get_pos() == gamemap.map[str(city)]:
+                            text = pygame.font.Font('freesansbold.ttf', 30)
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(pygame.mouse.get_pos())
+                    crosshair.shoot()
+            # loop over the cities to check the color with city is the index (or id) of the city
+
             crosshairgroup.draw(screen)
             crosshairgroup.update()
             pygame.display.update()

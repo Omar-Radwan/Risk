@@ -27,7 +27,6 @@ class Game:
             for i in range(0,39,1):
                 self.cityList[i].isRedArmy = False
                 self.cityList[i].armyCount = 1
-            #print(flags)
             #generate random 20 indices in range 0, 39
             res = random.sample(range(0, 39), 20)
             #print(len(res))
@@ -41,16 +40,15 @@ class Game:
                     Truess.append(i)
                 else:
                     Falses.append(i)
-            print(Truess)
-            #print(len(Falses),"    Falses")
-            #print(flags)
-            # flags[for i in range(res)] = True
+
+            ##old code
             # city.isRedArmy = bool(random.getrandbits(1))
             # city.armyCount = random.randint(MIN_ARMY_START, MAX_ARMY_START)  # random integer from 1 to 10 inclusive
             # self.redPlayer.attachCity(city) if city.isRedArmy else self.greenPlayer.attachCity(city)
 
     def getCityList(self):
         return self.cityList
+
     def play(self):
         # TODO: take choice from user to process the current turn or wait a certain amount of time
         currentPlayer = self.redPlayer if self.redPlayerTurn else self.greenPlayer
