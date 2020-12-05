@@ -64,3 +64,4 @@ Shb7ana list:
 TODO LIST for gui
 city class should have x and y attributes
 boolean to indicate red or green city
+on choosing city for bonus army display counter to choose the number of armies
