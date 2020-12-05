@@ -108,22 +108,22 @@ class GUI:
                     # print(color , " " , cityList[city])
                 textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
                 # str(id) because the key in the dictionary is string
-                textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
+                textrect.center = (gamemap.map[city][0], gamemap.map[city][1])  # get city location
                 screen.blit(textsurf, textrect)
                 # draw rectangle over text to detect clicks
                 rect = pygame.draw.rect(screen, color,
-                                        pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20, 40,
+                                        pygame.Rect(gamemap.map[city][0] - 20, gamemap.map[city][1] - 20, 40,
                                                     40), 1)
 
                 #detect if a mouse hovered over a rect
                 #hanzawed code elsoldiers placing wala attack....
                 if rect.collidepoint(pygame.mouse.get_pos()):
                     rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.map[str(city)][0] - 30, gamemap.map[str(city)][1] - 30,
+                                            pygame.Rect(gamemap.map[city][0] - 30, gamemap.map[city][1] - 30,
                                                         60, 60), 3)
                 else:
                     rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20,
+                                            pygame.Rect(gamemap.map[city][0] - 20, gamemap.map[city][1] - 20,
                                                         40, 40), 3)
 
             for event in pygame.event.get():

@@ -32,14 +32,14 @@ class Game:
             #print(len(res))
             for i in range(0, len(res),1):
                 self.cityList[res[i]].isRedArmy = True
-            Truess = []
-            Falses = []
-            print("CityList size ", len(self.cityList))
-            for i in range(0, len(self.cityList),1):
-                if self.cityList[i].isRedArmy is True:
-                    Truess.append(i)
-                else:
-                    Falses.append(i)
+            # Truess = []
+            # Falses = []
+            # print("CityList size ", len(self.cityList))
+            # for i in range(0, len(self.cityList),1):
+            #     if self.cityList[i].isRedArmy is True:
+            #         Truess.append(i)
+            #     else:
+            #         Falses.append(i)
 
             ##old code
             # city.isRedArmy = bool(random.getrandbits(1))

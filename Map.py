@@ -12,7 +12,6 @@ class Map:
         self.graph = [[] for i in range(self.cityCount + 1)]
         self.__readGraph(lines)
         self.__str__()  # for debugging ... remove it later
-        self.infomap = {"0": []}
         self.map = {"0": [683.0, 414.5],
                "1": (503.0, 414.5),
                "2": (333.0, 414.5),
