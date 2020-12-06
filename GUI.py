@@ -1,4 +1,5 @@
 import pygame, sys, ctypes
+from pygame.transform import rotate
 
 from Game import Game
 from Map import Map
@@ -148,13 +149,19 @@ class GUI:
                 crosshairgroup.draw(screen)
                 crosshairgroup.update()
                 pygame.display.update()
-
         def playingmode(self):
             image = pygame.image.load('unitedstatesmap.png')
 
             cityList = game.getCityList()
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(image, (0, 0))
+
+            Quit = pygame.draw.rect(screen, (0,0,255), [0,0, 140, 40])
+            text = pygame.font.Font('freesansbold.ttf', 30)
+            textsurf, textrect = text_objects("Quit", text, (0,0,0))  # get city.armyCount
+            textrect.center = (Quit.center)
+            screen.blit(textsurf, textrect)
+
             for city in range(0, len(gamemap.map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
@@ -167,20 +174,14 @@ class GUI:
                 textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
                 screen.blit(textsurf, textrect)
                 # draw rectangle over text to detect clicks
-                rect = pygame.draw.rect(screen, color,
-                                        pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20, 40,
-                                                    40), 1)
+                center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
+                rect = pygame.draw.circle(screen, color, center, 20,2)  # Here <<<
 
                 #detect if a mouse hovered over a rect
                 #hanzawed code elsoldiers placing wala attack....
                 if rect.collidepoint(pygame.mouse.get_pos()):
-                    rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.map[str(city)][0] - 30, gamemap.map[str(city)][1] - 30,
-                                                        60, 60), 3)
-                else:
-                    rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.map[str(city)][0] - 20, gamemap.map[str(city)][1] - 20,
-                                                        40, 40), 3)
+                    center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
+                    pygame.draw.circle(screen, color, center, 30,3)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -190,8 +191,10 @@ class GUI:
                     for city in range(0, len(gamemap.map) - 1, 1):
                         if pygame.mouse.get_pos() == gamemap.map[str(city)]:
                             text = pygame.font.Font('freesansbold.ttf', 30)
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
+                        print("Quit")
+                        self.state = "intro"
                     print(pygame.mouse.get_pos())
                     crosshair.shoot()
             # loop over the cities to check the color with city is the index (or id) of the city
