@@ -10,7 +10,6 @@ from agents.agressive_agent import AggressiveAgent
 #from agents.realtime_agent import
 from passive_agent import PassiveAgent
 from a_star_agent import AStarAgent
-from logic_gui_controller import LogicGuiController
 from game_controller import GameEngine
 
 pygame.init()
@@ -21,7 +20,6 @@ clock = pygame.time.Clock()
 gamemap = Map(filename="map1.txt")
 game = Game(map=gamemap)
 game.prepare()
-logicGuiController=LogicGuiController()
 
 # pygame.mouse.set_visible(False)
 
@@ -278,7 +276,6 @@ class GUI:
                         0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
                         1] > screen.get_height() - 104:
                         print("play")
-                        logicGuiController.setTuple(True,self.aiAgent,self.nonAiAgent)
 
             # game title
 
@@ -286,62 +283,28 @@ class GUI:
             # for tuple in coordinateList:
             #     width,height,dada,mama,oma7ma = tuple
             #
-            text = pygame.font.Font('freesansbold.ttf', 300)
-            textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
-            screen.blit(textsurf, textrect)
 
-            text = pygame.font.Font('freesansbold.ttf', 50)
-            textsurf, textrect = text_objects("AI Agents", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 - 270, screen.get_height() / 2 - 30)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 - 260, screen.get_height() / 2 + 50)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("A*", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 - 300, screen.get_height() / 2 + 100)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("RT A*", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 - 270, screen.get_height() / 2 + 150)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 - 240, screen.get_height() / 2 + 200)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 50)
-            textsurf, textrect = text_objects("Non AI Agents", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 280, screen.get_height() / 2 - 30)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Passive", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 220, screen.get_height() / 2 + 50)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Agressive", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 240, screen.get_height() / 2 + 100)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Nearly pacifist", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 + 150)
-            screen.blit(textsurf, textrect)
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Play", text, (0, 0, 0))
-            textrect.center = (screen.get_width() / 2 + 320, screen.get_height() / 2 + 300)
-            screen.blit(textsurf, textrect)
+            self.coordinates(screen,0,-200,"RISK")
+            self.coordinates(screen,-270,-30,"AI Agents")
+            self.coordinates(screen,-260,50,"Greedy")
+            self.coordinates(screen,-300,100,"A*")
+            self.coordinates(screen,-270,150,"RT A*")
+            self.coordinates(screen,-240,200,"minimax")
+            self.coordinates(screen,220,50,"Passive")
+            self.coordinates(screen,280,-30,"Non AI Agents")
+            self.coordinates(screen,240,100,"Agressive")
+            self.coordinates(screen,290,150,"Nearly pacifist")
+            self.coordinates(screen,320,300,"Play")
 
             pygame.display.update()
+            #myTuple=(True,self.aiAgent,self.nonAiAgent)
+            #print(myTuple)
+            #return myTuple
+        def coordinates(self,screen,x,y,string):
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects(string, text, (0, 0, 0))
+            textrect.center = (screen.get_width() / 2 + x, screen.get_height() / 2 + y)
+            screen.blit(textsurf, textrect)
 
         def choosePlayerModePlaying(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -349,51 +312,15 @@ class GUI:
             screen.blit(backgroundimage, (0, 0))
 
             # game title
-            text = pygame.font.Font('freesansbold.ttf', 300)
-            textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
-            screen.blit(textsurf, textrect)
 
-            # play button that goes to the playing mode
-            text = pygame.font.Font('freesansbold.ttf', 50)
-            textsurf, textrect = text_objects("AI Agents", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 30)
-            screen.blit(textsurf, textrect)
-            s = pygame.Surface((700, 60), pygame.SRCALPHA)  # per-pixel alpha
-            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            self.coordinates(screen,0,-200,"RISK")
 
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 50)
-            screen.blit(textsurf, textrect)
-            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            self.coordinates(screen,0,-30,"AI Agents")
+            self.coordinates(screen,0,150,"RT A*")
+            self.coordinates(screen,0,100,"A*")
+            self.coordinates(screen,0,50,"Greedy")
+            self.coordinates(screen,0,200,"minimax")
 
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("A*", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 100)
-            screen.blit(textsurf, textrect)
-            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("RT A*", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 150)
-            screen.blit(textsurf, textrect)
-            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
-
-            text = pygame.font.Font('freesansbold.ttf', 40)
-            textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 200)
-            screen.blit(textsurf, textrect)
-            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
             pygame.display.update()
 
         def statemanager(self):

@@ -12,6 +12,7 @@ class LogicGuiController:
         game=Game()
         gameEngine=GameEngine(isSimulation,game,aiAgent,nonAiAgent)
         gameState = GUI.GameState()
+        print(gameState.intro())
         #tul ma m7dsh ksab el while tsht8l w ana sh8ala 3al simulation bs dlw2ty
         while True:
             gameState.renderSimulationMode(gameEngine.game)
