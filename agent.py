@@ -11,7 +11,6 @@ class Agent:
     """
 
     def __init__(self, isRedPlayer: bool, game: Game = None):
-        self.cityList = []
         self.game = game
         self.isRedPlayer = isRedPlayer
 
@@ -74,3 +73,10 @@ class Agent:
         for city in self.cityList:
             s += city.__str__() + '\n'
         return s
+
+    def myCities(self, isRedPlayer: bool) -> []:
+        result = []
+        for city in self.game.cityList:
+            if (city.isRedArmy == isRedPlayer):
+                result.append(city.id)
+        return result
