@@ -57,7 +57,7 @@ class Game:
         return max(math.floor(soldiersCount / 3), 3)
 
     def addSoldiersToCity(self, city_id: int, soldiers: int):
-        self.cityList[city_id] += soldiers
+        self.cityList[city_id].armyCount += soldiers
         self.addSoldiersToPlayer(self.cityList[city_id].isRedArmy, soldiers)
 
     def addSoldiersToPlayer(self, isRedPlayer: bool, soldiers: int):
