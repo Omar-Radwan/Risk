@@ -3,69 +3,67 @@
 import copy
 
 
-class RtaAgent():
+class realtime_agent():
     def __init__(self, isRedPlayer: bool):
         self.isRedPlayer = isRedPlayer
 
-    def calculateBonusArmy(self):
-        return max(3,len(self.cityList)/3)
-
-
-
-    def getBorderCities(self,Map,Game):
+# it returns list of border cities
+    def getBorderCities(self,Map,game):
         borderCities =[]
-        for city in self.cityList:
-            for i in Map.graph[city.id]:
-                if city.isRedArmy and not Game.cityList[i].isRedArmy and not borderCities.__contains__(city):
-                    borderCities.append(city)
-                elif not city.isRedArmy and Game.cityList[i].isRedArmy and not borderCities.__contains__(city):
-                    borderCities.append(city)
+        for city in game.citiesOf(self.isRedPlayer):
+            print(city)
+            for i in Map.graph[city]:
+                if game.cityList[city].isRedArmy and not game.cityList[i].isRedArmy and not borderCities.__contains__(city):
+                    borderCities.append(game.cityList[city])
+                elif not game.cityList[city].isRedArmy and game.cityList[i].isRedArmy and not borderCities.__contains__(city):
+                    borderCities.append(game.cityList[city])
         for i in borderCities:
              print(i.id)
         return borderCities
 
 
 
-    def possibleAttacks(self,Map,Game):
+    def possibleAttacks(self,map,game):
         listOfPossibleAttacks=[]
-        borderCities=self.getBorderCities(Map,Game)
+        borderCities=self.getBorderCities(map,game)
         for city in borderCities:
-            for i in Map.graph[city.id]:
-                if city.isRedArmy and not Game.cityList[i].isRedArmy and city.armyCount - 1 > Game.cityList[i].armyCount:
-                    listOfPossibleAttacks.append([city.id,Game.cityList[i].id])
-                elif not city.isRedArmy and Game.cityList[i].isRedArmy and city.armyCount - 1 > Game.cityList[i].armyCount:
-                    listOfPossibleAttacks.append([city.id, Game.cityList[i].id])
+            for i in map.graph[city.id]:
+                if city.isRedArmy and not game.cityList[i].isRedArmy and city.armyCount - 1 > game.cityList[i].armyCount:
+                    listOfPossibleAttacks.append([city.id,game.cityList[i].id])
+                elif not city.isRedArmy and game.cityList[i].isRedArmy and city.armyCount - 1 > game.cityList[i].armyCount:
+                    listOfPossibleAttacks.append([city.id, game.cityList[i].id])
 
-        for i in Game.cityList:
+        for i in game.cityList:
             print(i)
         return listOfPossibleAttacks
 
-    def heuristic(self,Map,Game):
-        listOfPossibleAttacks=self.possibleAttacks(Map,Game)
+    def heuristic(self,map,game):
+        listOfPossibleAttacks=self.possibleAttacks(map,game)
         print(listOfPossibleAttacks)
         if listOfPossibleAttacks == None:
             print("if od possible attacks")
             return
         for i in listOfPossibleAttacks:
-            print(self.simulateAttack(i[0],i[1],Map,Game))
-            if self.simulateAttack(i[0],i[1],Map,Game) :
-                self.attack(i[0],i[1],Map,Game)
+            print(self.simulateAttack(i[0],i[1],map,game))
+            if self.simulateAttack(i[0],i[1],map,game) :
+                self.attack(i[0],i[1],game)
                 return "attack"
 
         return "no attack"
 
 
 
-    def simulateAttack(self,attackerId,defenderId,Map,Game):
-        copyGame=copy.deepcopy(Game)
+    def simulateAttack(self,attackerId,defenderId,map,game):
+        copyGame=copy.deepcopy(game)
         #for i in copyGame.cityList:
            # print(i.id)
         movingArmy =  copyGame.cityList[defenderId].armyCount + 1
         print(movingArmy)
-        copyGame.cityList[attackerId].armyCount = copyGame.cityList[attackerId].armyCount - movingArmy
-        copyGame.cityList[defenderId].armyCount = movingArmy
-        copyGame.cityList[defenderId].isRedArmy=copyGame.cityList[attackerId].isRedArmy
-        for i in Map.graph[attackerId]:
+        #copyGame.cityList[attackerId].armyCount = copyGame.cityList[attackerId].armyCount - movingArmy
+        #copyGame.cityList[defenderId].armyCount = movingArmy
+        #copyGame.cityList[defenderId].isRedArmy=copyGame.cityList[attackerId].isRedArmy
+        copyGame.move(attackerId,defenderId,movingArmy)
+        for i in map.graph[attackerId]:
             if copyGame.cityList[i].isRedArmy and not copyGame.cityList[attackerId].isRedArmy and copyGame.cityList[i].armyCount - 1 > copyGame.cityList[attackerId].armyCount:
                 print("2wl if")
                 print(i)
@@ -83,7 +81,7 @@ class RtaAgent():
                 print(copyGame.cityList[i].armyCount - 1)
                 print(copyGame.cityList[attackerId].armyCount)
                 return False
-        for i in Map.graph[defenderId]:
+        for i in map.graph[defenderId]:
             if copyGame.cityList[i].isRedArmy and not copyGame.cityList[defenderId].isRedArmy and copyGame.cityList[i].armyCount - 1 > copyGame.cityList[defenderId].armyCount:
                 print("talt if")
                 print(i)
@@ -104,13 +102,13 @@ class RtaAgent():
         print("nehayt el heuristic")
         return True
 
-    def attack(self,attackerId,defenderId,Map,Game):
-        movingArmy = Game.cityList[defenderId].armyCount + 1
-        Game.cityList[attackerId].armyCount = Game.cityList[attackerId].armyCount - movingArmy
-        Game.cityList[defenderId].armyCount = movingArmy
-        Game.cityList[defenderId].isRedArmy = Game.cityList[attackerId].isRedArmy
-        self.cityList.append(Game.cityList[defenderId])
-
+    def attack(self,attackerId,defenderId,game):
+        movingArmy = game.cityList[defenderId].armyCount + 1
+        #Game.cityList[attackerId].armyCount = Game.cityList[attackerId].armyCount - movingArmy
+        #Game.cityList[defenderId].armyCount = movingArmy
+        #Game.cityList[defenderId].isRedArmy = Game.cityList[attackerId].isRedArmy
+        #self.cityList.append(Game.cityList[defenderId])
+        game.move(attackerId,defenderId,movingArmy)
 
   #  def applyHeuristic(self, Map):
    #     chosenCity = None

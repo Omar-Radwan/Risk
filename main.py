@@ -6,6 +6,7 @@ from passive_agent import PassiveAgent
 from city import City
 from a_star_agent import AStarAgent
 from game_controller import GameController
+from agents.realtime_agent import realtime_agent
 # code that attaches map to a game and starts the game
 
 
@@ -14,7 +15,7 @@ from agents.greedy_agent import GreedyAgent
 
 map = Map(filename="map1.txt")
 print(map)
-game = Game(map, False)
+game = Game(map)
 game.prepare()
 redPlayer = Agent(game)
 greenPlayer = Agent(game)
@@ -56,4 +57,9 @@ game.cityList[7].armyCount = 8
 greedyAgent = GreedyAgent(game, (255, 0, 0))
 greedyAgent.GreedyMode()
 
+
+#real time
+print("lllllllllllll")
+realtime= realtime_agent(True)
+realtime.heuristic(map,game)
 
