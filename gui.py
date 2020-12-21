@@ -219,16 +219,41 @@ class GUI:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse = pygame.mouse.get_pos()
 
-                    if screen.get_width() / 4 - 40 + 700 > mouse[
-                        0] > screen.get_width() / 4 - 40 and screen.get_height() / 2 - 50 + 100 > mouse[
-                        1] > screen.get_height() / 2 - 50:
+                    if screen.get_width()-873  > mouse[
+                        0] > screen.get_width()-1013  and screen.get_height() -313 > mouse[
+                        1] > screen.get_height()-354 :
                         print("greedy")
 
                     elif screen.get_width()-898 > mouse[
                         0] > screen.get_width()-1007 and screen.get_height() -214 > mouse[
                         1] > screen.get_height() -254:
                         # scren change
+                        print("RT A*")
+                    elif screen.get_width()-960 > mouse[
+                        0] > screen.get_width()-1005 and screen.get_height() -264 > mouse[
+                        1] > screen.get_height() -304:
+                        # scren change
                         print("A*")
+                    elif screen.get_width()-838 > mouse[
+                        0] > screen.get_width()-1007 and screen.get_height() -164 > mouse[
+                        1] > screen.get_height() -204:
+                        # scren change
+                        print("minimax")
+                    elif screen.get_width() - 387 > mouse[
+                        0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
+                        1] > screen.get_height() - 354:
+                        # scren change
+                        print("passive")
+                    elif screen.get_width() - 346 > mouse[
+                        0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
+                        1] > screen.get_height() - 305:
+                        # scren change
+                        print("agressive")
+                    elif screen.get_width() - 252 > mouse[
+                        0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
+                        1] > screen.get_height() - 254:
+                        # scren change
+                        print("nearly")
             # game title
             text = pygame.font.Font('freesansbold.ttf', 300)
             textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
@@ -248,7 +273,6 @@ class GUI:
             screen.blit(textsurf, textrect)
 
 
-
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("A*", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 300, screen.get_height() / 2 + 100)
@@ -262,14 +286,10 @@ class GUI:
             screen.blit(textsurf, textrect)
 
 
-
-
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 240, screen.get_height() / 2 + 200)
             screen.blit(textsurf, textrect)
-
-
 
 
             text = pygame.font.Font('freesansbold.ttf', 50)
@@ -284,16 +304,21 @@ class GUI:
             screen.blit(textsurf, textrect)
 
 
+
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Agressive", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 240, screen.get_height() / 2 + 100)
             screen.blit(textsurf, textrect)
 
 
+
+
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Nearly pacifist", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 +150)
             screen.blit(textsurf, textrect)
+
+       
 
 
             pygame.display.update()

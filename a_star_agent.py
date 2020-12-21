@@ -17,7 +17,7 @@ class AStarAgent:
             for neighbourId in self.map.graph[enemyCity.id]:
                 neighbour=game.cityList[neighbourId]
                 if neighbour.isRedArmy==enemyCity.isRedArmy and neighbour.armyCount>newArmyInEnemyCity+1:
-                    danger+=1
+                    danger+=2
             return danger
 
     #How many enemies can attack me in my original city if I left it with only 1 army.
@@ -25,10 +25,10 @@ class AStarAgent:
             for neighbourId in self.map.graph[myCity.id]:
                 neighbour=game.cityList[neighbourId]
                 if neighbour.isRedArmy!=myCity.isRedArmy and neighbour.armyCount>newArmyInEnemyCity+1:
-                    danger+=0.5
+                    danger+=1
             return danger
 
-    def AStarHeuristic(self,game:Game):
+    def applyHeuristic(self,game:Game):
         q = PriorityQueue()
         currGame=copy.deepcopy(game)
         for city in self.cityList:
@@ -56,7 +56,8 @@ class AStarAgent:
             print(fromCity)
             print(toCity.id)
             print(fromCity.armyCount-1)
-        self.attack(fromCity.id,toCity.id,fromCity.armyCount-1,currGame)
+            self.attack(fromCity.id,toCity.id,fromCity.armyCount-1,currGame)
+            return currGame
 
     def attack(self,fromCityId,toCityId,fromCityArmyCount,game):
         game.move(fromCityId,toCityId,fromCityArmyCount)
