@@ -50,29 +50,43 @@ class ActionManager:
         self.stack = []
 
     def applyAction(self, action: Action):
+        """
+        takes action applies it and stores it in the stack to be able to roll it back later
+        :param action: move in the game either bonus army placement or attack move
+        :return:
+        """
         self.stack.append(action)
         action.apply(self.game)
 
     def rollBackAction(self):
+        """
+        rollback the last action and removes it from the stack -if it exists-
+        :return:
+        """
         if (len(self.stack) == 0):
             return
         action = self.stack.pop()
         action.rollBack()
 
     def rollBackTwoActions(self):
+        """
+        rollback the last two actions and removes them from the stack -if they exist-
+        :return:
+        """
         if (len(self.stack) < 2):
             return
         self.rollBackAction()
         self.rollBackAction()
 
-    """
+    def adjacentActions1(self, isRedPlayer: bool) -> [(Action, [Action])]:
+        """
         assumptions:
             1. bonus soldiers are added to one city only
             2. attack city y from city x with y.armyCount+1 (with least number of soldiers able to conquer y)
-    """""
-
-    def adjacentActions1(self, isRedPlayer: bool) -> []:
-        myCitiesIds = self.myCities(self.game, isRedPlayer)
+        :param isRedPlayer: true if the current player is red player and false is green player
+        :return: list of tuples where each tuple contains (bonusArmyAction, list of attack actions)
+        """
+        myCitiesIds = self.game.citiesOf(isRedPlayer)
         bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
         result = []
         # O((myCities^2) * adjacentCities)
@@ -85,18 +99,19 @@ class ActionManager:
                             and self.game.cityList[fromCityId].armyCount > self.game.cityList[toCityId].armyCount + 1):
                         attackAction = AttackAction(isRedPlayer, fromCityId, toCityId,
                                                     self.game.cityList[toCityId].armyCount + 1)
-                        result[len(result) - 1][1].append(attackAction)
+                        result[-1][1].append(attackAction)
 
         return result
 
-    """
+    def adjacentActions2(self, isRedPlayer: bool) -> [(Action, [Action])]:
+        """
         assumptions:
             1. bonus soldiers are added to one city only
             2. attack city y from city x with [y.armyCount+1 ... x.armyCount-1]
-    """
-
-    def adjacentActions2(self, isRedPlayer: bool) -> []:
-        myCitiesIds = self.myCities(self.game, isRedPlayer)
+        :param isRedPlayer: true if the current player is red player and false is green player
+        :return: list of tuples where each tuple contains (bonusArmyAction, list of attack actions)
+        """
+        myCitiesIds = self.game.citiesOf(isRedPlayer)
         bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
         result = []
         # O((myCities^2) * adjacentCities)
@@ -109,13 +124,5 @@ class ActionManager:
                         start, end = self.game.cityList[toCityId] + 1, self.game.cityList[fromCityId] - 1
                         for attackers in range(start, end, 1):
                             attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
-                            result[len(result) - 1][1].append(attackAction)
-        return result
-
-
-    def myCities(self, game: Game, isRedPlayer: bool) -> []:
-        result = []
-        for city in game.cityList:
-            if (city.isRedArmy == isRedPlayer):
-                result.append(city.id)
+                            result[-1][1].append(attackAction)
         return result

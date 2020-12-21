@@ -15,7 +15,7 @@ class PassiveAgent:
 
         return minimumTerritory
 
-    def passiveAgentHeuristic(self):
+    def applyHeuristic(self):
         bonusArmy=self.calculateBonusArmy()
         minimumTerritory=self.calculateMinimumTerritory()
         print("bonus army is")

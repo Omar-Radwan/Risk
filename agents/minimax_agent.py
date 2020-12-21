@@ -10,6 +10,11 @@ class MiniMaxAgent(Agent):
         self.actionManager = ActionManager(game)
 
     def applyHeuristic(self, game: Game) -> Game:
+        """
+        apply best bonus army action and best attack action specified by minimax algorithm
+        :param game:
+        :return: game instance after applying best actions specified by minimax algorithm
+        """
         value, bonusArmyAction, attackAction = self.maximize(0, 3, game, int(-1e9), int(1e9))
         if bonusArmyAction != None:
             bonusArmyAction.apply()
@@ -18,6 +23,14 @@ class MiniMaxAgent(Agent):
         return game
 
     def maximize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
+        """
+        :param curDepth: current state depth
+        :param maxDepth: maximum allowed state depth
+        :param game:
+        :param alpha: maximum state value
+        :param beta: minimum state value
+        :return: tuple containing:  value of maximum state, best bonus army action, best attack action
+        """
         if (self.terminalState(curDepth, maxDepth, game)):
             return (self.evaluate(game), None, None)
 
@@ -48,6 +61,14 @@ class MiniMaxAgent(Agent):
         return maxTuple  #
 
     def minimize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
+        """
+        :param curDepth: current state depth
+        :param maxDepth: maximum allowed state depth
+        :param game:
+        :param alpha: maximum state value
+        :param beta: minimum state value
+        :return: tuple containing:  value of maximum state, best bonus army action, best attack action
+        """
         if (self.terminalState(curDepth, maxDepth, game)):
             return (self.evaluate(game), None, None)
 
@@ -78,6 +99,12 @@ class MiniMaxAgent(Agent):
         return minTuple  #
 
     def terminalState(self, curDepth: int, maxDepth: int, game: Game) -> bool:
+        """
+        :param curDepth: current state depth
+        :param maxDepth: maximum allowed state depth
+        :param game:
+        :return: true if the current state is terminal state, false otherwise
+        """
         if (curDepth == maxDepth or game.cityCount[self.isRedPlayer] == 0 or
                 game.cityCount[self.isRedPlayer] == game.map.cityCount):
             return True

@@ -50,9 +50,9 @@ class AStarAgent:
                     #print("total heu ",totalHeuristic)
 
         if (q.not_empty):
-            next_item = q.get()
-            fromCity=next_item[1]
-            toCity=next_item[2]
+            next_item = q.get() #a7la action
+            fromCity=next_item[1] #a7la from city
+            toCity=next_item[2] # a7la to city
             print(fromCity)
             print(toCity.id)
             print(fromCity.armyCount-1)

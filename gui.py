@@ -3,7 +3,14 @@ from pygame.transform import rotate
 
 from game import Game
 from map import Map
-
+from agents.greedy_agent import GreedyAgent
+from agents import minimax_agent
+from agents.nearly_pacifist_agent import NearlyPacifistAgent
+from agents.agressive_agent import AggressiveAgent
+from agents.realtime_agent import RtaAgent
+from passive_agent import PassiveAgent
+from a_star_agent import AStarAgent
+from game_controller import GameController
 pygame.init()
 backgroundimage = pygame.image.load('backgroundimage.jpg')
 unitedstatesmap = pygame.image.load('unitedstatesmap.png')
@@ -101,7 +108,7 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-        def simulationMode(self):
+        def renderSimulationMode(self):
                 image = pygame.image.load('agents\kk.jpg')
 
                 cityList = game.getCityList()
@@ -155,7 +162,7 @@ class GUI:
                 crosshairgroup.draw(screen)
                 crosshairgroup.update()
                 pygame.display.update()
-        def playingmode(self):
+        def renderPlayingmode(self):
             image = pygame.image.load('unitedstatesmap.png')
 
             cityList = game.getCityList()
@@ -223,49 +230,62 @@ class GUI:
                         0] > screen.get_width()-1013  and screen.get_height() -313 > mouse[
                         1] > screen.get_height()-354 :
                         print("greedy")
+                        self.aiAgent=GreedyAgent()
 
                     elif screen.get_width()-898 > mouse[
                         0] > screen.get_width()-1007 and screen.get_height() -214 > mouse[
                         1] > screen.get_height() -254:
                         # scren change
                         print("RT A*")
+                        self.aiAgent=RtaAgent()
                     elif screen.get_width()-960 > mouse[
                         0] > screen.get_width()-1005 and screen.get_height() -264 > mouse[
                         1] > screen.get_height() -304:
                         # scren change
+                        self.aiAgent=AStarAgent(gamemap)
                         print("A*")
                     elif screen.get_width()-838 > mouse[
                         0] > screen.get_width()-1007 and screen.get_height() -164 > mouse[
                         1] > screen.get_height() -204:
                         # scren change
                         print("minimax")
+                        self.aiAgent=minimax_agent()
                     elif screen.get_width() - 387 > mouse[
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
+                        self.nonAiAgent=PassiveAgent()
                     elif screen.get_width() - 346 > mouse[
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
+                        self.nonAiAgent=AggressiveAgent()
                     elif screen.get_width() - 252 > mouse[
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
+                        self.nonAiAgent=NearlyPacifistAgent()
+                    elif screen.get_width() - 321 > mouse[
+                        0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
+                        1] > screen.get_height() - 104:
+                        print("play")
+                        self.state="simulationMode"
+                         #gameController=GameController(game,self.aiAgent,self.nonAiAgent)
+                        # gameController.play()
             # game title
+
             text = pygame.font.Font('freesansbold.ttf', 300)
             textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
             textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
             screen.blit(textsurf, textrect)
 
-            # play button that goes to the playing mode
             text = pygame.font.Font('freesansbold.ttf', 50)
             textsurf, textrect = text_objects("AI Agents", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 270, screen.get_height() / 2 - 30)
             screen.blit(textsurf, textrect)
-
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
@@ -278,50 +298,43 @@ class GUI:
             textrect.center = (screen.get_width() / 2 - 300, screen.get_height() / 2 + 100)
             screen.blit(textsurf, textrect)
 
-
-
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("RT A*", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 270, screen.get_height() / 2 + 150)
             screen.blit(textsurf, textrect)
-
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 240, screen.get_height() / 2 + 200)
             screen.blit(textsurf, textrect)
 
-
             text = pygame.font.Font('freesansbold.ttf', 50)
             textsurf, textrect = text_objects("Non AI Agents", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 280, screen.get_height() / 2 -30)
             screen.blit(textsurf, textrect)
-
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Passive", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 220, screen.get_height() / 2 + 50)
             screen.blit(textsurf, textrect)
 
-
-
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Agressive", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 240, screen.get_height() / 2 + 100)
             screen.blit(textsurf, textrect)
-
-
-
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Nearly pacifist", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 +150)
             screen.blit(textsurf, textrect)
 
-       
-
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects("Play", text, (0, 0, 0))
+            textrect.center = (screen.get_width() / 2 + 320, screen.get_height() / 2 + 300)
+            screen.blit(textsurf, textrect)
 
             pygame.display.update()
+
         def choosePlayerModePlaying(self):
                 image = pygame.image.load('backgroundimage.jpg')
                 screen = pygame.display.set_mode((image.get_width(), image.get_height()))
@@ -384,9 +397,11 @@ class GUI:
             elif self.state == 'choosePlayerSimulation':
                 self.choosePlayerModeSimulation()
             elif self.state == 'playingmode':
-                self.playingmode()
+                self.renderPlayingmode()
             elif self.state == 'simulationMode':
-                self.simulationMode()
+                self.renderSimulationMode()
+
+
 
     # initializing gamestate
     gamestate = GameState()
