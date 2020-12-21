@@ -4,9 +4,8 @@ class City:
         self.id = id
         self.isRedArmy = False
         self.armyCount = 0
-        #list of all adjacent cities
+        # list of all adjacent cities
         self.adjacentcities = []
-        
 
     def __lt__(self, other):
         return self.armyCount <= other.armyCount
@@ -14,3 +13,5 @@ class City:
     # debugging function
     def __str__(self):
         return f'id={self.id}, redArmy={self.isRedArmy}, armyCount={self.armyCount}'
+
+

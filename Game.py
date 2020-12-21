@@ -1,7 +1,7 @@
 import copy
 import math
 import random
-#from Agent import Agent
+# from Agent import Agent
 
 from City import City
 from Map import Map
@@ -9,27 +9,32 @@ from constants import MIN_ARMY_START, MAX_ARMY_START
 
 
 class Game:
+    """"
+    map: id of each city maps to ids of adjacent cities
+    cityList: id of each city maps to information about this city
+    redPlayerTurn
+    isSimulation
+    """""
 
     def __init__(self, map: Map, isSimulation: bool):
-        #redPlayer:Agent =None, greenPlayer:Agent =None):
+        # redPlayer:Agent =None, greenPlayer:Agent =None):
         self.redPlayerTurn = True  # the red player starts first
         self.isSimulation = isSimulation
         self.map = map
         self.cityList = [City(i) for i in range(self.map.cityCount)]
-        #self.redPlayer = redPlayer
-        #self.greenPlayer = greenPlayer
-
+        # self.redPlayer = redPlayer
+        # self.greenPlayer = greenPlayer
 
     # this method need to be modified according to the pdf
     def prepare(self):
         for city in self.cityList:
-            #generate a list of false booleans with size 40
-            for i in range(0,48,1):
+            # generate a list of false booleans with size 40
+            for i in range(0, 48, 1):
                 self.cityList[i].isRedArmy = False
                 self.cityList[i].armyCount = 1
-            #generate random 20 indices in range 0, 39
+            # generate random 20 indices in range 0, 39
             res = random.sample(range(0, 48), 20)
-            for i in range(0, len(res),1):
+            for i in range(0, len(res), 1):
                 self.cityList[res[i]].isRedArmy = True
 
             ##old code
@@ -51,21 +56,31 @@ class Game:
 
     # conquer city with some army count
     def move(self, from_id, to_id, count: int):
-        #print(from_id)
-        #print(to_id)
-        #print(count)
-        self.cityList[from_id].armyCount-=count
-        self.cityList[to_id].armyCount=count
-        self.cityList[to_id].isRedArmy=self.cityList[from_id].isRedArmy
+        # print(from_id)
+        # print(to_id)
+        # print(count)
+
+        self.cityList[from_id].armyCount -= count
+        self.cityList[to_id].armyCount = count
+        self.cityList[to_id].isRedArmy = self.cityList[from_id].isRedArmy
+
         if self.cityList[from_id].isRedArmy:
             self.redPlayer.attachCity(self.cityList[to_id])
-            #self.greenPlayer.removeCity(self.cityList[to_id])
-        else :
+            # self.greenPlayer.removeCity(self.cityList[to_id])
+        else:
             self.greenPlayer.attachCity(self.cityList[to_id])
-            #self.redPlayer.removeCity(self.cityList[to_id])
+            # self.redPlayer.removeCity(self.cityList[to_id])
 
+    def countSoldiers(self, isRedPlayer: bool):
+        result = 0
+        for city in self.cityList:
+            if (city.isRedArmy == isRedPlayer):
+                result += 1
+        return result
 
-
+    def bonusSoldiers(self, isRedPlayer: bool):
+        soldiersCount = self.countSoldiers(isRedPlayer)
+        return max(math.floor(soldiersCount / 3), 3)
 
     # debugging functions
     def __str__(self):

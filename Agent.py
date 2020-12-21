@@ -4,11 +4,16 @@ from City import City
 from Game import Game
 from Map import Map
 
-class Agent:
 
-    def __init__(self, game: Game = None):
+class Agent:
+    """
+
+    """
+
+    def __init__(self, isRedPlayer: bool, game: Game = None):
         self.cityList = []
         self.game = game
+        self.isRedPlayer = isRedPlayer
 
     def applyHeuristic(self, game: Game, bonusPlayers: int):
         pass
@@ -20,12 +25,12 @@ class Agent:
     def removeCity(self, city: City):
         self.cityList.remove(city)
 
-    #bonusArmy is added to certain cities such that it maximizes my number of safe cities where
-    #enemies can't attack it.
+    # bonusArmy is added to certain cities such that it maximizes my number of safe cities where
+    # enemies can't attack it.
     def bonusArmyHeuristic(self, map: Map, bonusArmy):
         tupleList = []
         maximumArmyNeededToBeSafe = 0
-        #loop on each city owned by the agent and get maximum number
+        # loop on each city owned by the agent and get maximum number
         # of armies needed to be added in this city to be safe and
         # store them in tuple <city,maximumArmyNeededToBeSafe> and store each tuple in tupleList
         for city in self.cityList:
@@ -36,24 +41,24 @@ class Agent:
                     maximumArmyNeededToBeSafe = max(maximumArmyNeededToBeSafe, neededArmyToBeSafe)
 
             newTuple = (city, maximumArmyNeededToBeSafe)
-            tupleObject=tuple(newTuple)
+            tupleObject = tuple(newTuple)
             tupleList.append(tupleObject)
-        tupleList.sort(key=lambda x:x[1])
-        #loop on tupleList which is sorted in ascending order according to maximumArmyNeededToBeSafe
-        #and add maximumArmyNeededToBeSafe to the city to make it safe (if can)
+        tupleList.sort(key=lambda x: x[1])
+        # loop on tupleList which is sorted in ascending order according to maximumArmyNeededToBeSafe
+        # and add maximumArmyNeededToBeSafe to the city to make it safe (if can)
         for singleTuple in tupleList:
-            cityToBeSafe=singleTuple.__getitem__(0)
-            maximumArmyToBeSafe=singleTuple.__getitem__(1)
+            cityToBeSafe = singleTuple.__getitem__(0)
+            maximumArmyToBeSafe = singleTuple.__getitem__(1)
 
-            if maximumArmyToBeSafe<=bonusArmy:
-                bonusArmy-=maximumArmyToBeSafe
-                cityToBeSafe.armyCount+=maximumArmyToBeSafe
+            if maximumArmyToBeSafe <= bonusArmy:
+                bonusArmy -= maximumArmyToBeSafe
+                cityToBeSafe.armyCount += maximumArmyToBeSafe
 
-            elif neededArmyToBeSafe>bonusArmy:
-                cityToBeSafe.armyCount+=bonusArmy
-                bonusArmy=0
+            elif neededArmyToBeSafe > bonusArmy:
+                cityToBeSafe.armyCount += bonusArmy
+                bonusArmy = 0
 
-            if bonusArmy==0:
+            if bonusArmy == 0:
                 break
 
     # TODO: get rid of loop in this function
