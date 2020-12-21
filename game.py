@@ -72,6 +72,13 @@ class Game:
         for city in self.cityList:
             self.addSoldiersToCity(city.id, city.armyCount)
 
+    def citiesOf(self, isRedPlayer: bool) -> []:
+        result = []
+        for city in self.cityList:
+            if (city.isRedArmy == isRedPlayer):
+                result.append(city.id)
+        return result
+
     # # debugging functions
-    # def __str__(self):
-    #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'
+# def __str__(self):
+#     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'
