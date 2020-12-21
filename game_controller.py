@@ -1,7 +1,6 @@
 from game import Game
 from agent import Agent
 from copy import deepcopy
-# from gui import GUI
 
 class GameEngine:
     def __init__(self,isSimulation, game: Game, redPlayer: Agent = None, greenPlayer: Agent = None):

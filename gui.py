@@ -7,9 +7,10 @@ from agents.greedy_agent import GreedyAgent
 from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from agents.agressive_agent import AggressiveAgent
-from agents.realtime_agent import RtaAgent
+#from agents.realtime_agent import
 from passive_agent import PassiveAgent
 from a_star_agent import AStarAgent
+from logic_gui_controller import LogicGuiController
 from game_controller import GameEngine
 
 pygame.init()
@@ -20,7 +21,7 @@ clock = pygame.time.Clock()
 gamemap = Map(filename="map1.txt")
 game = Game(map=gamemap)
 game.prepare()
-
+logicGuiController=LogicGuiController()
 
 # pygame.mouse.set_visible(False)
 
@@ -167,6 +168,7 @@ class GUI:
 
         def renderPlayingmode(self):
             image = pygame.image.load('unitedstatesmap.png')
+            print(self.state)
 
             cityList = game.getCityList()
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
@@ -234,51 +236,50 @@ class GUI:
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
                         print("greedy")
-                        self.aiAgent = GreedyAgent()
+                        self.aiAgent = "greedy"
 
                     elif screen.get_width() - 898 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("RT A*")
-                        self.aiAgent = RtaAgent()
+                        self.aiAgent = "realTime"
                     elif screen.get_width() - 960 > mouse[
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        self.aiAgent = AStarAgent(gamemap)
+                        self.aiAgent = "aStar"
                         print("A*")
                     elif screen.get_width() - 838 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
                         1] > screen.get_height() - 204:
                         # scren change
                         print("minimax")
-                        self.aiAgent = MiniMaxAgent()
+                        self.aiAgent = "minimax"
                     elif screen.get_width() - 387 > mouse[
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
-                        self.nonAiAgent = PassiveAgent()
+                        self.nonAiAgent = "passive"
                     elif screen.get_width() - 346 > mouse[
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
-                        self.nonAiAgent = AggressiveAgent()
+                        self.nonAiAgent = "agressive"
                     elif screen.get_width() - 252 > mouse[
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
-                        self.nonAiAgent = NearlyPacifistAgent()
+                        self.nonAiAgent = "nearly"
                     elif screen.get_width() - 321 > mouse[
                         0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
                         1] > screen.get_height() - 104:
                         print("play")
-                        # self.state = "simulationMode"
-                        # gameController=GameController(game,self.aiAgent,self.nonAiAgent)
-                        # gameController.play()
+                        logicGuiController.setTuple(True,self.aiAgent,self.nonAiAgent)
+
             # game title
 
             # coordinateList = [(),(),(),() .... ]
