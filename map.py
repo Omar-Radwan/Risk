@@ -1,4 +1,4 @@
-from City import City
+from city import City
 from helping_functions import list2dToStr
 
 

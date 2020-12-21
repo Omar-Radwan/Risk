@@ -1,8 +1,8 @@
 import pygame, sys, ctypes
 from pygame.transform import rotate
 
-from Game import Game
-from Map import Map
+from game import Game
+from map import Map
 
 pygame.init()
 backgroundimage = pygame.image.load('backgroundimage.jpg')

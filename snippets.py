@@ -9,9 +9,18 @@ def tupleTest():
     a = min(a, b)
     print(a)
     a = (b[0] + 1, b[1] + 2)
+    x = 1
+    y = []
+    a = (x,y)
+    a[1].append(123)
+    a[1].append(23123)
     print(a)
 
+
 tupleTest()
+
+
+
 # some empty class to test deepcopy function
 class dummy:
     def __init__(self, x=None, y=None):

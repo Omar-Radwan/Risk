@@ -1,8 +1,8 @@
 from typing import List
 
-from City import City
-from Game import Game
-from Map import Map
+from city import City
+from game import Game
+from map import Map
 
 
 class Agent:

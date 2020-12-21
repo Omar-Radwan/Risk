@@ -1,7 +1,7 @@
-from Map import Map
+from map import Map
 import heapq
 from queue import PriorityQueue
-from Game import Game
+from game import Game
 import copy
 
 class AStarAgent:

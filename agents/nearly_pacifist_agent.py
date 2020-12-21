@@ -1,8 +1,8 @@
 from typing import List, Any
 
-from Agent import Agent
-from City import City
-from Game import Game
+from agent import Agent
+from city import City
+from game import Game
 
 
 class NearlyPacifistAgent(Agent):
@@ -39,7 +39,7 @@ class NearlyPacifistAgent(Agent):
     def applyHeuristic(self, game: Game, bonusPlayers: int):
         myMinArmyCityId = self.myMinArmyCity(game)
         u, v = self.hisMinArmyCityToAttack(game)
-        game.addSoldiersTo(myMinArmyCityId, bonusPlayers)
+        game.addSoldiersToPlayer(myMinArmyCityId, bonusPlayers)
         game.move(u, v, game.cityList[v].armyCount + 1)
 
 # should add bonus players to city id
