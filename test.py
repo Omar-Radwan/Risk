@@ -1,7 +1,7 @@
 from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from game import Game
-from game_controller import GameEngine
+from game_engine import GameEngine
 from map import Map
 from gui import GUI
 import gui

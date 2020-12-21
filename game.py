@@ -38,7 +38,7 @@ class Game:
         # generate a list of false booleans with size 40
         for i in range(0, self.map.cityCount, 1):
             self.cityList[i].isRedArmy = False
-            self.cityList[i].armyCount = 2
+            self.cityList[i].armyCount = 1
         # generate random 20 indices in range 0, 39
         res = random.sample(range(0, self.map.cityCount), 20)
         for i in range(0, len(res), 1):
