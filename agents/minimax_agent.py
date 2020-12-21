@@ -9,12 +9,13 @@ class MiniMaxAgent(Agent):
         super().__init__(isRedPlayer)
         self.actionManager = ActionManager(game)
 
-    def applyHeuristic(self, game: Game):
+    def applyHeuristic(self, game: Game) -> Game:
         value, bonusArmyAction, attackAction = self.maximize(0, 3, game, int(-1e9), int(1e9))
         if bonusArmyAction != None:
             bonusArmyAction.apply()
         if attackAction != None:
             attackAction.apply()
+        return game
 
     def maximize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
         if (self.terminalState(curDepth, maxDepth, game)):

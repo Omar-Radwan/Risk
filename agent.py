@@ -13,7 +13,7 @@ class Agent:
     def __init__(self, isRedPlayer: bool):
         self.isRedPlayer = isRedPlayer
 
-    def applyHeuristic(self, game: Game):
+    def applyHeuristic(self, game: Game) -> Game:
         pass
 
     # def attachCity(self, city: City):

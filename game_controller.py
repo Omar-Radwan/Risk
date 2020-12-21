@@ -1,5 +1,6 @@
 from game import Game
 from agent import Agent
+from copy import deepcopy
 
 
 class GameController:
@@ -11,6 +12,5 @@ class GameController:
 
     def play(self):
         # TODO: take choice from user to process the current turn or wait a certain amount of time
-        bonusSoldiers = self.game.bonusSoldiers(self.isRedPlayerTurn)
-        self.players[self.isRedPlayerTurn].applyHeuristic(self.game, bonusSoldiers)
+        self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
