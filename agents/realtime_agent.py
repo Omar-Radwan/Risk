@@ -42,14 +42,14 @@ class realtime_agent():
         print(listOfPossibleAttacks)
         if listOfPossibleAttacks == None:
             print("if od possible attacks")
-            return
+            return game
         for i in listOfPossibleAttacks:
             print(self.simulateAttack(i[0],i[1],map,game))
             if self.simulateAttack(i[0],i[1],map,game) :
                 self.attack(i[0],i[1],game)
-                return "attack"
+                return game
 
-        return "no attack"
+        return game
 
 
 
