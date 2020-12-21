@@ -14,3 +14,5 @@ class GameController:
         # TODO: take choice from user to process the current turn or wait a certain amount of time
         self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
+
+
