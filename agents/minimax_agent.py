@@ -28,7 +28,7 @@ class MiniMaxAgent(Agent):
     def maximize(self, curDepth: int, maxDepth: int, actionTuple: Game, alpha: int, beta: int):
         if (self.shouldTerminate(curDepth, maxDepth, actionTuple)):
             return self.evaluate(actionTuple)
-
+    ##
         actionTuples = self.actionManager.adjacentActions1(self.isRedPlayer)
         maxTuple = (int(-1e9), None)
         for actionTuple in actionTuples:
