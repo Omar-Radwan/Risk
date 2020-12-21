@@ -10,20 +10,20 @@ class Agent:
 
     """
 
-    def __init__(self, isRedPlayer: bool, game: Game = None):
-        self.game = game
+    def __init__(self, isRedPlayer: bool):
         self.isRedPlayer = isRedPlayer
 
-    def applyHeuristic(self, game: Game, bonusPlayers: int):
+    def applyHeuristic(self, game: Game):
         pass
 
-    def attachCity(self, city: City):
-        self.cityList.append(city)
+    # def attachCity(self, city: City):
+    #     self.cityList.append(city)
 
-    # TODO: double check that this function is working correctly
-    def removeCity(self, city: City):
-        self.cityList.remove(city)
+    # # TODO: double check that this function is working correctly
+    # def removeCity(self, city: City):
+    #     self.cityList.remove(city)
 
+    # lazm tt3dl 3shan cityList w game etshalo
     # bonusArmy is added to certain cities such that it maximizes my number of safe cities where
     # enemies can't attack it.
     def bonusArmyHeuristic(self, map: Map, bonusArmy):
@@ -60,23 +60,23 @@ class Agent:
             if bonusArmy == 0:
                 break
 
-    # TODO: get rid of loop in this function
-    def countArmy(self) -> int:
-        sum = 0
-        for city in self.cityList:
-            sum += city.armyCount
-        return sum
+    # # TODO: get rid of loop in this function
+    # def countArmy(self) -> int:
+    #     sum = 0
+    #     for city in self.cityList:
+    #         sum += city.armyCount
+    #     return sum
 
-    # debugging function
-    def __str__(self):
-        s = ""
-        for city in self.cityList:
-            s += city.__str__() + '\n'
-        return s
-
-    def myCities(self, isRedPlayer: bool) -> []:
-        result = []
-        for city in self.game.cityList:
-            if (city.isRedArmy == isRedPlayer):
-                result.append(city.id)
-        return result
+    # # debugging function
+    # def __str__(self):
+    #     s = ""
+    #     for city in self.cityList:
+    #         s += city.__str__() + '\n'
+    #     return s
+    #
+    # def myCities(self, isRedPlayer: bool) -> []:
+    #     result = []
+    #     for city in self.game.cityList:
+    #         if (city.isRedArmy == isRedPlayer):
+    #             result.append(city.id)
+    #     return result

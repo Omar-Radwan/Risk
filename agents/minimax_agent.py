@@ -1,87 +1,89 @@
-import copy
-
 from action_manager import ActionManager
 from agent import Agent
 from game import Game
 
 
 class MiniMaxAgent(Agent):
-    """
-        isRedPlayer
-        game
-    """
 
     def __init__(self, isRedPlayer: bool, game: Game = None):
-        super().__init__(isRedPlayer, game)
+        super().__init__(isRedPlayer)
         self.actionManager = ActionManager(game)
 
-    def applyHeuristic(self, game, bonusPlayers):
-        self.maximize(0, 3, game, int(-1e9), int(1e9))
+    def applyHeuristic(self, game: Game):
+        value, bonusArmyAction, attackAction = self.maximize(0, 3, game, int(-1e9), int(1e9))
+        if bonusArmyAction != None:
+            bonusArmyAction.apply()
+        if attackAction != None:
+            attackAction.apply()
 
-    def evaluate(self, game: Game):
-        result = 0
-        for city in game.cityList:
-            if (city.isRedArmy == self.isRedPlayer):
-                result += 1
-        return result
+    def maximize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
+        if (self.terminalState(curDepth, maxDepth, game)):
+            return (self.evaluate(game), None, None)
 
-    def maximize(self, curDepth: int, maxDepth: int, actionTuple: Game, alpha: int, beta: int):
-        if (self.shouldTerminate(curDepth, maxDepth, actionTuple)):
-            return self.evaluate(actionTuple)
+        actionTuples = self.actionManager.adjacentActions1(self.isRedPlayer)  #
+        maxTuple = (int(-1e9), None, None)  #
 
-        actionTuples = self.actionManager.adjacentActions1(self.isRedPlayer)
-        maxTuple = (int(-1e9), None)
         for actionTuple in actionTuples:
+
             bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
             bonusSoldiersAction.apply()
 
             for attackAction in attackActionList:
 
                 attackAction.apply()
-                curTuple = self.minimize(curDepth + 1, maxDepth, self.game, alpha, beta)
+                childTuple = self.minimize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
-                maxTuple = max(maxTuple, curTuple)
+                if childTuple[0] > maxTuple[0]:  #
+                    maxTuple = (childTuple[0], bonusSoldiersAction, attackAction)  #
 
-                alpha = max(alpha, maxTuple[0])
+                alpha = max(alpha, maxTuple[0])  #
+
                 if (alpha >= beta):
                     break
 
             self.actionManager.rollBackAction()
 
-        return maxTuple
+        return maxTuple  #
 
-    def minimize(self, curDepth: int, maxDepth: int, actionTuple: Game, alpha: int, beta: int):
-        if (self.shouldTerminate(curDepth, maxDepth, actionTuple)):
-            return self.evaluate(actionTuple)
+    def minimize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
+        if (self.terminalState(curDepth, maxDepth, game)):
+            return (self.evaluate(game), None, None)
 
-        actionTuples = self.actionManager.adjacentActions1(not self.isRedPlayer)
-        minTuple = (int(1e9), None)
+        actionTuples = self.actionManager.adjacentActions1(not self.isRedPlayer)  #
+        minTuple = (int(1e9), None, None)  #
+
         for actionTuple in actionTuples:
+
             bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
             bonusSoldiersAction.apply()
 
             for attackAction in attackActionList:
 
                 attackAction.apply()
-                curTuple = self.maximize(curDepth + 1, maxDepth, self.game, alpha, beta)
+                childTuple = self.maximize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
-                minTuple = min(minTuple, curTuple)
+                if childTuple[0] < minTuple[0]:  #
+                    minTuple = (childTuple[0], bonusSoldiersAction, attackAction)  #
 
-                beta = min(beta, minTuple[0])
+                beta = min(beta, minTuple[0])  #
+
                 if (alpha >= beta):
                     break
 
             self.actionManager.rollBackAction()
 
-        return minTuple
+        return minTuple  #
 
-    def shouldTerminate(self, curDepth: int, maxDepth: int, game: Game) -> bool:
-        if (curDepth == maxDepth or game.cityCount[self.isRedPlayer] == 0 or game.cityCount[
-            self.isRedPlayer] == game.map.cityCount):
+    def terminalState(self, curDepth: int, maxDepth: int, game: Game) -> bool:
+        if (curDepth == maxDepth or game.cityCount[self.isRedPlayer] == 0 or
+                game.cityCount[self.isRedPlayer] == game.map.cityCount):
             return True
         return False
+
+    def evaluate(self, game: Game):
+        return game.cityCount[self.isRedPlayer] * 2 + game.soldiersCount[self.isRedPlayer]
 
 # code that copies game a lot
 # class StateFinder:

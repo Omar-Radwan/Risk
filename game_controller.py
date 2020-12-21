@@ -3,16 +3,14 @@ from agent import Agent
 
 
 class GameController:
-    def __init__(self, game: Game, redPlayer: Agent, greenPlayer: Agent):
-        self.redPlayerTurn = True
+    def __init__(self, game: Game, redPlayer: Agent = None, greenPlayer: Agent = None):
+        self.isRedPlayerTurn = True
         self.game = game
-        self.greenPlayer = greenPlayer
-        self.redPlayer = redPlayer
-        pass
+        self.players = {False: greenPlayer,
+                        True: redPlayer}
 
     def play(self):
         # TODO: take choice from user to process the current turn or wait a certain amount of time
-        currentPlayer = self.redPlayer if self.redPlayerTurn else self.greenPlayer
-        bonusSoldiers = self.game.bonusSoldiers(self.redPlayerTurn)
-        currentPlayer.applyHeuristic(self.game, bonusSoldiers)
-        self.redPlayerTurn = not self.redPlayerTurn
+        bonusSoldiers = self.game.bonusSoldiers(self.isRedPlayerTurn)
+        self.players[self.isRedPlayerTurn].applyHeuristic(self.game, bonusSoldiers)
+        self.isRedPlayerTurn = not self.isRedPlayerTurn
