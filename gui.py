@@ -4,17 +4,18 @@ from pygame.transform import rotate
 from game import Game
 from map import Map
 from agents.greedy_agent import GreedyAgent
-from agents import minimax_agent
+from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from agents.agressive_agent import AggressiveAgent
 from agents.realtime_agent import RtaAgent
 from passive_agent import PassiveAgent
 from a_star_agent import AStarAgent
-from game_controller import GameController
+from game_controller import GameEngine
+
 pygame.init()
 backgroundimage = pygame.image.load('backgroundimage.jpg')
 unitedstatesmap = pygame.image.load('unitedstatesmap.png')
-worldMap=pygame.image.load('agents\kk.jpg')
+worldMap = pygame.image.load('agents\kk.jpg')
 clock = pygame.time.Clock()
 gamemap = Map(filename="map1.txt")
 game = Game(map=gamemap)
@@ -52,11 +53,11 @@ crosshairgroup.add(crosshair)
 class GUI:
     # chaning the cursor of the mouse and making sound on click
 
-    class GameState():
-        def __init__(self, ):
+    class GameState:
+        def __init__(self):
             self.state = 'intro'
-            self.aiAgent=''
-            self.nonAiAgent=''
+            self.aiAgent = ''
+            self.nonAiAgent = ''
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -73,15 +74,15 @@ class GUI:
                     if screen.get_width() / 4 - 40 + 700 > mouse[
                         0] > screen.get_width() / 4 - 40 and screen.get_height() / 2 - 50 + 100 > mouse[
                         1] > screen.get_height() / 2 - 50:
-                        #self.state = "playingmode"
-                        self.state="choosePlayerPlaying"
+                        # self.state = "playingmode"
+                        self.state = "choosePlayerPlaying"
                     # if simulation mode pressed
                     elif screen.get_width() / 4 - 100 + 850 > mouse[
                         0] > screen.get_width() / 4 - 100 and screen.get_height() / 2 + 100 + 100 > mouse[
                         1] > screen.get_height() / 2 + 100:
                         # scren change
-                        #self.state = "simulationMode"
-                        self.state="choosePlayerSimulation"
+                        # self.state = "simulationMode"
+                        self.state = "choosePlayerSimulation"
 
             # game title
             text = pygame.font.Font('freesansbold.ttf', 300)
@@ -108,60 +109,62 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-        def renderSimulationMode(self):
-                image = pygame.image.load('agents\kk.jpg')
+        def renderSimulationMode(self, game: Game):
+            image = pygame.image.load('agents\kk.jpg')
 
-                cityList = game.getCityList()
-                image = pygame.transform.scale(image, (1380, 720))
-                screen = pygame.display.set_mode((image.get_width(), image.get_height()))
-                screen.blit(image, (0, 0))
-                for city in range(0, len(gamemap.worldMap), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
-                    text = pygame.font.Font('freesansbold.ttf', 30)
-                    if cityList[city].isRedArmy:
-                        color = (255, 0, 0)
-                    else:
-                        color = (0, 255, 0)
-                        # print(color , " " , cityList[city])
-                    textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
-                    # str(id) because the key in the dictionary is string
-                    textrect.center = (gamemap.worldMap[str(city)][0], gamemap.worldMap[str(city)][1])  # get city location
-                    screen.blit(textsurf, textrect)
-                    # draw rectangle over text to detect clicks
+            cityList = game.getCityList()
+            image = pygame.transform.scale(image, (1380, 720))
+            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
+            screen.blit(image, (0, 0))
+            for city in range(0, len(gamemap.worldMap), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+                text = pygame.font.Font('freesansbold.ttf', 30)
+                if cityList[city].isRedArmy:
+                    color = (255, 0, 0)
+                else:
+                    color = (0, 255, 0)
+                    # print(color , " " , cityList[city])
+                textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
+                # str(id) because the key in the dictionary is string
+                textrect.center = (gamemap.worldMap[str(city)][0], gamemap.worldMap[str(city)][1])  # get city location
+                screen.blit(textsurf, textrect)
+                # draw rectangle over text to detect clicks
+                rect = pygame.draw.rect(screen, color,
+                                        pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
+                                                    gamemap.worldMap[str(city)][1] - 15,
+                                                    30,
+                                                    30), 1)
+
+                # detect if a mouse hovered over a rect
+                # hanzawed code elsoldiers placing wala attack....
+                if rect.collidepoint(pygame.mouse.get_pos()):
                     rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.worldMap[str(city)][0] - 15, gamemap.worldMap[str(city)][1] - 15,
-                                                        30,
-                                                        30), 1)
+                                            pygame.Rect(gamemap.worldMap[str(city)][0] - 20,
+                                                        gamemap.worldMap[str(city)][1] - 20,
+                                                        40, 40), 3)
+                else:
+                    rect = pygame.draw.rect(screen, color,
+                                            pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
+                                                        gamemap.worldMap[str(city)][1] - 15,
+                                                        30, 30), 3)
 
-                    # detect if a mouse hovered over a rect
-                    # hanzawed code elsoldiers placing wala attack....
-                    if rect.collidepoint(pygame.mouse.get_pos()):
-                        rect = pygame.draw.rect(screen, color,
-                                                pygame.Rect(gamemap.worldMap[str(city)][0] - 20,
-                                                            gamemap.worldMap[str(city)][1] - 20,
-                                                            40, 40), 3)
-                    else:
-                        rect = pygame.draw.rect(screen, color,
-                                                pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
-                                                            gamemap.worldMap[str(city)][1] - 15,
-                                                            30, 30), 3)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for city in range(0, len(gamemap.worldMap) - 1, 1):
+                        if pygame.mouse.get_pos() == gamemap.worldMap[str(city)]:
+                            text = pygame.font.Font('freesansbold.ttf', 30)
 
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                    if event.type == pygame.MOUSEMOTION:
-                        for city in range(0, len(gamemap.worldMap) - 1, 1):
-                            if pygame.mouse.get_pos() == gamemap.worldMap[str(city)]:
-                                text = pygame.font.Font('freesansbold.ttf', 30)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print(pygame.mouse.get_pos())
+                    crosshair.shoot()
+            # loop over the cities to check the color with city is the index (or id) of the city
 
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        print(pygame.mouse.get_pos())
-                        crosshair.shoot()
-                # loop over the cities to check the color with city is the index (or id) of the city
+            crosshairgroup.draw(screen)
+            crosshairgroup.update()
+            pygame.display.update()
 
-                crosshairgroup.draw(screen)
-                crosshairgroup.update()
-                pygame.display.update()
         def renderPlayingmode(self):
             image = pygame.image.load('unitedstatesmap.png')
 
@@ -169,9 +172,9 @@ class GUI:
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(image, (0, 0))
 
-            Quit = pygame.draw.rect(screen, (0,0,255), [0,0, 140, 40])
+            Quit = pygame.draw.rect(screen, (0, 0, 255), [0, 0, 140, 40])
             text = pygame.font.Font('freesansbold.ttf', 30)
-            textsurf, textrect = text_objects("Quit", text, (0,0,0))  # get city.armyCount
+            textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
             textrect.center = (Quit.center)
             screen.blit(textsurf, textrect)
 
@@ -188,13 +191,13 @@ class GUI:
                 screen.blit(textsurf, textrect)
                 # draw rectangle over text to detect clicks
                 center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-                rect = pygame.draw.circle(screen, color, center, 20,2)  # Here <<<
+                rect = pygame.draw.circle(screen, color, center, 20, 2)  # Here <<<
 
-                #detect if a mouse hovered over a rect
-                #hanzawed code elsoldiers placing wala attack....
+                # detect if a mouse hovered over a rect
+                # hanzawed code elsoldiers placing wala attack....
                 if rect.collidepoint(pygame.mouse.get_pos()):
                     center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-                    pygame.draw.circle(screen, color, center, 30,3)
+                    pygame.draw.circle(screen, color, center, 30, 3)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -215,6 +218,7 @@ class GUI:
             crosshairgroup.draw(screen)
             crosshairgroup.update()
             pygame.display.update()
+
         def choosePlayerModeSimulation(self):
             image = pygame.image.load('backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
@@ -226,57 +230,61 @@ class GUI:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse = pygame.mouse.get_pos()
 
-                    if screen.get_width()-873  > mouse[
-                        0] > screen.get_width()-1013  and screen.get_height() -313 > mouse[
-                        1] > screen.get_height()-354 :
+                    if screen.get_width() - 873 > mouse[
+                        0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
+                        1] > screen.get_height() - 354:
                         print("greedy")
-                        self.aiAgent=GreedyAgent()
+                        self.aiAgent = GreedyAgent()
 
-                    elif screen.get_width()-898 > mouse[
-                        0] > screen.get_width()-1007 and screen.get_height() -214 > mouse[
-                        1] > screen.get_height() -254:
+                    elif screen.get_width() - 898 > mouse[
+                        0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
+                        1] > screen.get_height() - 254:
                         # scren change
                         print("RT A*")
-                        self.aiAgent=RtaAgent()
-                    elif screen.get_width()-960 > mouse[
-                        0] > screen.get_width()-1005 and screen.get_height() -264 > mouse[
-                        1] > screen.get_height() -304:
+                        self.aiAgent = RtaAgent()
+                    elif screen.get_width() - 960 > mouse[
+                        0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
+                        1] > screen.get_height() - 304:
                         # scren change
-                        self.aiAgent=AStarAgent(gamemap)
+                        self.aiAgent = AStarAgent(gamemap)
                         print("A*")
-                    elif screen.get_width()-838 > mouse[
-                        0] > screen.get_width()-1007 and screen.get_height() -164 > mouse[
-                        1] > screen.get_height() -204:
+                    elif screen.get_width() - 838 > mouse[
+                        0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
+                        1] > screen.get_height() - 204:
                         # scren change
                         print("minimax")
-                        self.aiAgent=minimax_agent()
+                        self.aiAgent = MiniMaxAgent()
                     elif screen.get_width() - 387 > mouse[
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
-                        self.nonAiAgent=PassiveAgent()
+                        self.nonAiAgent = PassiveAgent()
                     elif screen.get_width() - 346 > mouse[
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
-                        self.nonAiAgent=AggressiveAgent()
+                        self.nonAiAgent = AggressiveAgent()
                     elif screen.get_width() - 252 > mouse[
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
-                        self.nonAiAgent=NearlyPacifistAgent()
+                        self.nonAiAgent = NearlyPacifistAgent()
                     elif screen.get_width() - 321 > mouse[
                         0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
                         1] > screen.get_height() - 104:
                         print("play")
-                        self.state="simulationMode"
-                         #gameController=GameController(game,self.aiAgent,self.nonAiAgent)
+                        # self.state = "simulationMode"
+                        # gameController=GameController(game,self.aiAgent,self.nonAiAgent)
                         # gameController.play()
             # game title
 
+            # coordinateList = [(),(),(),() .... ]
+            # for tuple in coordinateList:
+            #     width,height,dada,mama,oma7ma = tuple
+            #
             text = pygame.font.Font('freesansbold.ttf', 300)
             textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
             textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
@@ -291,7 +299,6 @@ class GUI:
             textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
             textrect.center = (screen.get_width() / 2 - 260, screen.get_height() / 2 + 50)
             screen.blit(textsurf, textrect)
-
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("A*", text, (255, 255, 255))
@@ -310,7 +317,7 @@ class GUI:
 
             text = pygame.font.Font('freesansbold.ttf', 50)
             textsurf, textrect = text_objects("Non AI Agents", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 280, screen.get_height() / 2 -30)
+            textrect.center = (screen.get_width() / 2 + 280, screen.get_height() / 2 - 30)
             screen.blit(textsurf, textrect)
 
             text = pygame.font.Font('freesansbold.ttf', 40)
@@ -325,7 +332,7 @@ class GUI:
 
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects("Nearly pacifist", text, (255, 255, 255))
-            textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 +150)
+            textrect.center = (screen.get_width() / 2 + 290, screen.get_height() / 2 + 150)
             screen.blit(textsurf, textrect)
 
             text = pygame.font.Font('freesansbold.ttf', 40)
@@ -336,58 +343,57 @@ class GUI:
             pygame.display.update()
 
         def choosePlayerModePlaying(self):
-                image = pygame.image.load('backgroundimage.jpg')
-                screen = pygame.display.set_mode((image.get_width(), image.get_height()))
-                screen.blit(backgroundimage, (0, 0))
+            image = pygame.image.load('backgroundimage.jpg')
+            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
+            screen.blit(backgroundimage, (0, 0))
 
-                # game title
-                text = pygame.font.Font('freesansbold.ttf', 300)
-                textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
-                textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
-                screen.blit(textsurf, textrect)
+            # game title
+            text = pygame.font.Font('freesansbold.ttf', 300)
+            textsurf, textrect = text_objects("RISK", text, (0, 0, 0))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 200)
+            screen.blit(textsurf, textrect)
 
-                # play button that goes to the playing mode
-                text = pygame.font.Font('freesansbold.ttf', 50)
-                textsurf, textrect = text_objects("AI Agents", text, (255, 255, 255))
-                textrect.center = (screen.get_width() / 2 , screen.get_height() / 2 - 30)
-                screen.blit(textsurf, textrect)
-                s = pygame.Surface((700, 60), pygame.SRCALPHA)  # per-pixel alpha
-                s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-                screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            # play button that goes to the playing mode
+            text = pygame.font.Font('freesansbold.ttf', 50)
+            textsurf, textrect = text_objects("AI Agents", text, (255, 255, 255))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 - 30)
+            screen.blit(textsurf, textrect)
+            s = pygame.Surface((700, 60), pygame.SRCALPHA)  # per-pixel alpha
+            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
+            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
 
-                text = pygame.font.Font('freesansbold.ttf', 40)
-                textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
-                textrect.center = (screen.get_width() / 2 , screen.get_height() / 2 + 50)
-                screen.blit(textsurf, textrect)
-                s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-                s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-                screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects("Greedy", text, (255, 255, 255))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 50)
+            screen.blit(textsurf, textrect)
+            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
+            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
+            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
 
-                text = pygame.font.Font('freesansbold.ttf', 40)
-                textsurf, textrect = text_objects("A*", text, (255, 255, 255))
-                textrect.center = (screen.get_width() / 2 , screen.get_height() / 2 + 100)
-                screen.blit(textsurf, textrect)
-                s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-                s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-                screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects("A*", text, (255, 255, 255))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 100)
+            screen.blit(textsurf, textrect)
+            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
+            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
+            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
 
-                text = pygame.font.Font('freesansbold.ttf', 40)
-                textsurf, textrect = text_objects("RT A*", text, (255, 255, 255))
-                textrect.center = (screen.get_width() / 2 , screen.get_height() / 2 + 150)
-                screen.blit(textsurf, textrect)
-                s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-                s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-                screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects("RT A*", text, (255, 255, 255))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 150)
+            screen.blit(textsurf, textrect)
+            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
+            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
+            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
 
-                text = pygame.font.Font('freesansbold.ttf', 40)
-                textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
-                textrect.center = (screen.get_width() / 2 , screen.get_height() / 2 + 200)
-                screen.blit(textsurf, textrect)
-                s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
-                s.fill((255, 255, 255, 0))  # notice the alpha value in the color
-                screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
-                pygame.display.update()
-
+            text = pygame.font.Font('freesansbold.ttf', 40)
+            textsurf, textrect = text_objects("minimax", text, (255, 255, 255))
+            textrect.center = (screen.get_width() / 2, screen.get_height() / 2 + 200)
+            screen.blit(textsurf, textrect)
+            s = pygame.Surface((700, 100), pygame.SRCALPHA)  # per-pixel alpha
+            s.fill((255, 255, 255, 0))  # notice the alpha value in the color
+            screen.blit(s, (screen.get_width() / 4 - 40, screen.get_height() / 2 - 50))
+            pygame.display.update()
 
         def statemanager(self):
             if self.state == 'intro':
@@ -396,12 +402,10 @@ class GUI:
                 self.choosePlayerModePlaying()
             elif self.state == 'choosePlayerSimulation':
                 self.choosePlayerModeSimulation()
-            elif self.state == 'playingmode':
-                self.renderPlayingmode()
-            elif self.state == 'simulationMode':
-                self.renderSimulationMode()
-
-
+            # elif self.state == 'playingmode':
+            #     self.renderPlayingmode()
+            # elif self.state == 'simulationMode':
+            #     self.renderSimulationMode()
 
     # initializing gamestate
     gamestate = GameState()

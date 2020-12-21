@@ -5,7 +5,7 @@ from map import Map
 from passive_agent import PassiveAgent
 from city import City
 from a_star_agent import AStarAgent
-from game_controller import GameController
+from game_controller import GameEngine
 from agents.realtime_agent import realtime_agent
 # code that attaches map to a game and starts the game
 
