@@ -1,3 +1,7 @@
+from time import sleep
+
+from agents.minimax_agent import MiniMaxAgent
+from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from game_engine import GameEngine
 from game_engine import GameEngine
 from game import Game
@@ -10,20 +14,23 @@ class LogicGuiController:
         pass
 
     def start(self):
-        #tuple(map, isSimulation, agent1, agent2)
-
+        gui = GUI()
+        isSimulation, redAgentString, greenAgentString = gui.introScenes()
+        gameState = GUI.GameState()
+        map = Map()
+        game = Game(map)
+        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False))
+        while True:
+            gameState.renderSimulationMode(gameEngine.game)
+            sleep(3)
+            gameEngine.play()
         pass
 
     def setTuple(self, isSimulation, aiAgent, nonAiAgent):
-        map = Map()
-        game = Game(map)
-        gameEngine = GameEngine(isSimulation, game, aiAgent, nonAiAgent)
         gameState = GUI.GameState()
         print(gameState.intro())
         # tul ma m7dsh ksab el while tsht8l w ana sh8ala 3al simulation bs dlw2ty
-        while True:
-            gameState.renderSimulationMode(gameEngine.game)
-            gameEngine.play()
+
         # print(isSimulation)
         # print(aiAgent)
         # print(nonAiAgent)
@@ -36,6 +43,3 @@ class LogicGuiController:
         # render the new game to gui
         # ask gameEngine to process a new play
         # ........
-
-
-

@@ -7,10 +7,9 @@ from agents.greedy_agent import GreedyAgent
 from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from agents.agressive_agent import AggressiveAgent
-#from agents.realtime_agent import
+# from agents.realtime_agent import
 from passive_agent import PassiveAgent
 from a_star_agent import AStarAgent
-from game_controller import GameEngine
 
 pygame.init()
 backgroundimage = pygame.image.load('backgroundimage.jpg')
@@ -20,6 +19,7 @@ clock = pygame.time.Clock()
 gamemap = Map(filename="map1.txt")
 game = Game(map=gamemap)
 game.prepare()
+
 
 # pygame.mouse.set_visible(False)
 
@@ -284,23 +284,24 @@ class GUI:
             #     width,height,dada,mama,oma7ma = tuple
             #
 
-            self.coordinates(screen,0,-200,"RISK")
-            self.coordinates(screen,-270,-30,"AI Agents")
-            self.coordinates(screen,-260,50,"Greedy")
-            self.coordinates(screen,-300,100,"A*")
-            self.coordinates(screen,-270,150,"RT A*")
-            self.coordinates(screen,-240,200,"minimax")
-            self.coordinates(screen,220,50,"Passive")
-            self.coordinates(screen,280,-30,"Non AI Agents")
-            self.coordinates(screen,240,100,"Agressive")
-            self.coordinates(screen,290,150,"Nearly pacifist")
-            self.coordinates(screen,320,300,"Play")
+            self.coordinates(screen, 0, -200, "RISK")
+            self.coordinates(screen, -270, -30, "AI Agents")
+            self.coordinates(screen, -260, 50, "Greedy")
+            self.coordinates(screen, -300, 100, "A*")
+            self.coordinates(screen, -270, 150, "RT A*")
+            self.coordinates(screen, -240, 200, "minimax")
+            self.coordinates(screen, 220, 50, "Passive")
+            self.coordinates(screen, 280, -30, "Non AI Agents")
+            self.coordinates(screen, 240, 100, "Agressive")
+            self.coordinates(screen, 290, 150, "Nearly pacifist")
+            self.coordinates(screen, 320, 300, "Play")
 
             pygame.display.update()
-            #myTuple=(True,self.aiAgent,self.nonAiAgent)
-            #print(myTuple)
-            #return myTuple
-        def coordinates(self,screen,x,y,string):
+            # myTuple=(True,self.aiAgent,self.nonAiAgent)
+            # print(myTuple)
+            # return myTuple
+
+        def coordinates(self, screen, x, y, string):
             text = pygame.font.Font('freesansbold.ttf', 40)
             textsurf, textrect = text_objects(string, text, (0, 0, 0))
             textrect.center = (screen.get_width() / 2 + x, screen.get_height() / 2 + y)
@@ -313,13 +314,13 @@ class GUI:
 
             # game title
 
-            self.coordinates(screen,0,-200,"RISK")
+            self.coordinates(screen, 0, -200, "RISK")
 
-            self.coordinates(screen,0,-30,"AI Agents")
-            self.coordinates(screen,0,150,"RT A*")
-            self.coordinates(screen,0,100,"A*")
-            self.coordinates(screen,0,50,"Greedy")
-            self.coordinates(screen,0,200,"minimax")
+            self.coordinates(screen, 0, -30, "AI Agents")
+            self.coordinates(screen, 0, 150, "RT A*")
+            self.coordinates(screen, 0, 100, "A*")
+            self.coordinates(screen, 0, 50, "Greedy")
+            self.coordinates(screen, 0, 200, "minimax")
 
             pygame.display.update()
 
@@ -335,11 +336,21 @@ class GUI:
             # elif self.state == 'simulationMode':
             #     self.renderSimulationMode()
 
-    # initializing gamestate
-    gamestate = GameState()
-    while True:
-        gamestate.statemanager()
-        clock.tick(60)
+        def returnTuple(self):
+            return (True, self.aiAgent, self.nonAiAgent)
+
+    def introScenes(self):
+        gamestate = self.GameState()
+        while len(gamestate.aiAgent) == 0 or len(gamestate.nonAiAgent) == 0:
+            gamestate.statemanager()
+            clock.tick(60)
+        return (True, gamestate.aiAgent, gamestate.nonAiAgent)
+        # initializing gamestate
+    #
+    # gamestate = GameState()
+    # while True:
+    #     gamestate.statemanager()
+    #     clock.tick(60)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)
