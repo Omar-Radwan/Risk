@@ -2,7 +2,8 @@ import copy
 
 
 
-
+for i in range(9, -1, -1):
+    print(i)
 def tupleTest():
     a = (1, 2)
     b = (0, 4)

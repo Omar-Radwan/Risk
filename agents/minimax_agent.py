@@ -20,7 +20,7 @@ class MiniMaxAgent(Agent):
         value, bonusArmyAction, attackAction = self.maximize(0, 1, game, int(-1e9), int(1e9))
         print(value)
         if bonusArmyAction != None:
-            self.actionManager.applyAction(bonusArmyAction)
+            self.actionManager.applyAction(bonusArmyAction[0])
         if attackAction != None:
             self.actionManager.applyAction(attackAction)
 
@@ -37,7 +37,6 @@ class MiniMaxAgent(Agent):
         :param beta: minimum state value
         :return: tuple containing:  value of maximum state, best bonus army action, best attack action
         """
-
         if (self.terminalState(curDepth, maxDepth, game)):
             return (self.evaluate2(game), None, None)
 
@@ -45,25 +44,26 @@ class MiniMaxAgent(Agent):
         maxTuple = (int(-1e18), None, None)  #
 
         for actionTuple in actionTuples:
+            bonusSoldiersActionList, attackActionList = actionTuple[0], actionTuple[1]
 
-            bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
-            self.actionManager.applyAction(bonusSoldiersAction)
+            for bonusSoldiersAction in bonusSoldiersActionList:
+                self.actionManager.applyAction(bonusSoldiersAction)
 
             for attackAction in attackActionList:
-
                 self.actionManager.applyAction(attackAction)
                 childTuple = self.minimize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
                 if childTuple[0] > maxTuple[0]:  #
-                    maxTuple = (childTuple[0], bonusSoldiersAction, attackAction)  #
+                    maxTuple = (childTuple[0], bonusSoldiersActionList, attackAction)  #
 
                 alpha = max(alpha, maxTuple[0])  #
 
                 if (alpha >= beta):
                     break
 
-            self.actionManager.rollBackAction()
+            for i in range(len(bonusSoldiersActionList)):
+                self.actionManager.rollBackAction()
 
         return maxTuple  #
 
@@ -83,9 +83,10 @@ class MiniMaxAgent(Agent):
         minTuple = (int(1e18), None, None)  #
 
         for actionTuple in actionTuples:
+            bonusSoldiersActionList, attackActionList = actionTuple[0], actionTuple[1]
 
-            bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
-            self.actionManager.applyAction(bonusSoldiersAction)
+            for bonusSoldiersAction in bonusSoldiersActionList:
+                self.actionManager.applyAction(bonusSoldiersAction)
 
             for attackAction in attackActionList:
 
@@ -94,14 +95,15 @@ class MiniMaxAgent(Agent):
                 self.actionManager.rollBackAction()
 
                 if childTuple[0] < minTuple[0]:  #
-                    minTuple = (childTuple[0], bonusSoldiersAction, attackAction)  #
+                    minTuple = (childTuple[0], bonusSoldiersActionList, attackAction)  #
 
                 beta = min(beta, minTuple[0])  #
 
                 if (alpha >= beta):
                     break
 
-            self.actionManager.rollBackAction()
+            for i in range(len(bonusSoldiersActionList)):
+                self.actionManager.rollBackAction()
 
         return minTuple  #
 
