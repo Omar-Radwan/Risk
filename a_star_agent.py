@@ -26,7 +26,7 @@ class AStarAgent(Agent):
 
     def applyHeuristic(self,game:Game):
         q = PriorityQueue()
-        for cityId in game.citiesOf(False):
+        for cityId in game.citiesOf(self.isRedPlayer):
             for neighbourId in game.map.graph[cityId]:
                 neighbour=game.cityList[neighbourId]
                 city=game.cityList[cityId]

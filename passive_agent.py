@@ -11,6 +11,10 @@ class PassiveAgent(Agent):
 
     def calculateMinimumTerritory(self,list,game):
         minimum=1e18
+        if len(list)!=0:
+            minimumTerritory=game.cityList[list[0]]
+        else :
+            return
         for cityId in list:
             city=game.cityList[cityId]
             if(city.armyCount<minimum):
@@ -20,17 +24,11 @@ class PassiveAgent(Agent):
         return minimumTerritory
 
     def applyHeuristic(self,game:Game)-> Game:
-        cityListId=game.citiesOf(True)
+        cityListId=game.citiesOf(self.isRedPlayer)
         bonusArmy=self.calculateBonusArmy(cityListId)
-        minimumTerritory=self.calculateMinimumTerritory(cityListId,game)
-        print("bonus army is")
-        print(bonusArmy)
-        print("minimum territory before adding bonus army")
-        print(minimumTerritory)
-        minimumTerritory.armyCount+=bonusArmy
-        print("minimum territory after adding bonus army")
-        print(minimumTerritory)
-        game.addSoldiersToCity(minimumTerritory.id,bonusArmy)
+        minimumTerritor=self.calculateMinimumTerritory(cityListId,game)
+        if minimumTerritor!=None:
+            game.addSoldiersToCity(minimumTerritor.id,bonusArmy)
         return game
 
     #def debug(self):
