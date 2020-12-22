@@ -22,11 +22,7 @@ class Game:
 
     def __init__(self, map: Map):
         self.map = map
-        # self.gameimage = gameimage
-        # if gameimage == "US":
         self.cityList = [City(i) for i in range(self.map.cityCount)]
-        # else:
-        #     self.cityList = [City(i) for i in range(self.map.worldmap.cityCount)]
         self.soldiersCount = {False: 0,
                               True: 0}
         self.cityCount = {False: 0,
@@ -48,7 +44,6 @@ class Game:
         for i in range(0, len(res), 1):
             self.cityList[res[i]].isRedArmy = True
         self.initializeCounts()
-        print(len(self.cityList) , "   cityLsit coutn")
 
     def getCityList(self):
         return self.cityList
@@ -63,11 +58,14 @@ class Game:
         :param soldiers: number of soldiers attacking
         :return:
         """
-        print(f'fromId={fromId}, toId={toId}, soldiers={soldiers}')
+        # print(f'fromId= {fromId}, toId= {toId}, soldiers= {soldiers}')
+        # print(f'fromBefore {self.cityList[fromId]}, toBefore {self.cityList[toId]}')
         self.addSoldiersToCity(fromId, -soldiers)
         self.addSoldiersToCity(toId, -self.cityList[toId].armyCount)
         self.changeCityOwner(toId)
         self.addSoldiersToCity(toId, soldiers)
+        # print(f'fromAfter {self.cityList[fromId]}, toAfter {self.cityList[toId]}')
+        # print()
 
     def bonusSoldiers(self, isRedPlayer: bool):
         """
@@ -77,6 +75,12 @@ class Game:
         """
         soldiersCount = self.soldiersCount[isRedPlayer]
         return max(math.floor(soldiersCount / 3), 3)
+
+    def placeBonusSoldiers(self, city_id: int, soldiers: int):
+        # print(f'{"red" if (self.cityList[city_id]) else "green"} soldiers= {soldiers} city->{self.cityList[city_id]}')
+        self.cityList[city_id].armyCount += soldiers
+        self.soldiersCount[self.cityList[city_id].isRedArmy] += soldiers
+        # print()
 
     def addSoldiersToCity(self, city_id: int, soldiers: int):
         """
@@ -118,6 +122,12 @@ class Game:
                 result.append(city.id)
         return result
 
+    def notSameOwner(self, fromId: int, toId: int) -> bool:
+        return self.cityList[fromId].isRedArmy != self.cityList[toId].isRedArmy
+
+    def canAttack(self, fromId: int, toId: int) -> bool:
+        return (self.notSameOwner(fromId, toId) and
+                self.cityList[fromId].armyCount > self.cityList[toId].armyCount + 1)
 # # debugging functions
 # def __str__(self):
 #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'

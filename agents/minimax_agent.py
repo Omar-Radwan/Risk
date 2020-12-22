@@ -1,13 +1,14 @@
-from action_manager import ActionManager
+from action_manager import ActionManager, BonusSoldiersAction, AttackAction
 from agent import Agent
 from game import Game
+from heuristics import HeuristicsManager
 
 
 class MiniMaxAgent(Agent):
 
-    def __init__(self, isRedPlayer: bool, game: Game = None):
+    def __init__(self, isRedPlayer: bool):
         super().__init__(isRedPlayer)
-        self.actionManager = ActionManager(game)
+        self.heuristicManager = HeuristicsManager()
 
     def applyHeuristic(self, game: Game) -> Game:
         """
@@ -15,11 +16,16 @@ class MiniMaxAgent(Agent):
         :param game:
         :return: game instance after applying best actions specified by minimax algorithm
         """
-        value, bonusArmyAction, attackAction = self.maximize(0, 3, game, int(-1e9), int(1e9))
+        self.actionManager = ActionManager(game)
+        value, bonusArmyAction, attackAction = self.maximize(0, 1, game, int(-1e9), int(1e9))
+        print(value)
         if bonusArmyAction != None:
-            bonusArmyAction.apply()
+            self.actionManager.applyAction(bonusArmyAction)
         if attackAction != None:
-            attackAction.apply()
+            self.actionManager.applyAction(attackAction)
+
+        print(bonusArmyAction)
+        print(attackAction)
         return game
 
     def maximize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
@@ -31,20 +37,21 @@ class MiniMaxAgent(Agent):
         :param beta: minimum state value
         :return: tuple containing:  value of maximum state, best bonus army action, best attack action
         """
-        if (self.terminalState(curDepth, maxDepth, game)):
-            return (self.evaluate(game), None, None)
 
-        actionTuples = self.actionManager.adjacentActions1(self.isRedPlayer)  #
-        maxTuple = (int(-1e9), None, None)  #
+        if (self.terminalState(curDepth, maxDepth, game)):
+            return (self.evaluate2(game), None, None)
+
+        actionTuples = self.actionManager.adjacentActions2(self.isRedPlayer)  #
+        maxTuple = (int(-1e18), None, None)  #
 
         for actionTuple in actionTuples:
 
             bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
-            bonusSoldiersAction.apply()
+            self.actionManager.applyAction(bonusSoldiersAction)
 
             for attackAction in attackActionList:
 
-                attackAction.apply()
+                self.actionManager.applyAction(attackAction)
                 childTuple = self.minimize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
@@ -70,19 +77,19 @@ class MiniMaxAgent(Agent):
         :return: tuple containing:  value of maximum state, best bonus army action, best attack action
         """
         if (self.terminalState(curDepth, maxDepth, game)):
-            return (self.evaluate(game), None, None)
+            return (self.evaluate2(game), None, None)
 
-        actionTuples = self.actionManager.adjacentActions1(not self.isRedPlayer)  #
-        minTuple = (int(1e9), None, None)  #
+        actionTuples = self.actionManager.adjacentActions2(not self.isRedPlayer)  #
+        minTuple = (int(1e18), None, None)  #
 
         for actionTuple in actionTuples:
 
             bonusSoldiersAction, attackActionList = actionTuple[0], actionTuple[1]
-            bonusSoldiersAction.apply()
+            self.actionManager.applyAction(bonusSoldiersAction)
 
             for attackAction in attackActionList:
 
-                attackAction.apply()
+                self.actionManager.applyAction(attackAction)
                 childTuple = self.maximize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
@@ -111,7 +118,11 @@ class MiniMaxAgent(Agent):
         return False
 
     def evaluate(self, game: Game):
-        return game.cityCount[self.isRedPlayer] * 2 + game.soldiersCount[self.isRedPlayer]
+        return (game.cityCount[self.isRedPlayer] * 2 + game.soldiersCount[self.isRedPlayer] -
+                game.cityCount[not self.isRedPlayer] * 2 - game.soldiersCount[not self.isRedPlayer])
+
+    def evaluate2(self, game: Game):
+        return self.heuristicManager.defensiveAndAttacking(self.isRedPlayer, game)
 
 # code that copies game a lot
 # class StateFinder:

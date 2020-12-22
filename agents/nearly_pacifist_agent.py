@@ -34,7 +34,7 @@ class NearlyPacifistAgent(Agent):
             uCity = game.cityList[uId]
             for vId in graph[uId]:
                 vCity = game.cityList[vId]
-                if uCity.armyCount > vCity.armyCount + 1:
+                if uCity.isRedArmy != vCity.isRedArmy and uCity.armyCount > vCity.armyCount + 1:
                     if bestVId == -1:
                         bestUId, bestVId = uId, vId
                     elif (self.compareCity(game.cityList[vId], game.cityList[bestVId])):
@@ -49,7 +49,7 @@ class NearlyPacifistAgent(Agent):
         """
         myCities = game.citiesOf(self.isRedPlayer)
         myMinArmyCityId = self.minArmyCityId(game, myCities)
-        game.addSoldiersToCity(myMinArmyCityId, game.bonusSoldiers(self.isRedPlayer))
+        game.placeBonusSoldiers(myMinArmyCityId, game.bonusSoldiers(self.isRedPlayer))
         bestUId, bestVId = self.hisMinArmyCityToAttack(game, myCities)
         if bestUId != -1 and bestVId != -1:
             game.move(bestUId, bestVId, game.cityList[bestVId].armyCount + 1)
