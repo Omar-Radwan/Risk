@@ -164,7 +164,7 @@ class GUI:
             crosshairgroup.update()
             pygame.display.update()
 
-        def renderPlayingmode(self):
+        def renderPlayingmode(self, game: Game):
             image = pygame.image.load('unitedstatesmap.png')
             print(self.state)
 

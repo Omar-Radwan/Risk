@@ -9,7 +9,7 @@ class Map:
         file = open(filename, 'r')
         lines = file.readlines()
         self.cityCount = len(lines)
-        self.graph = [[] for i in range(self.cityCount + 1)]
+        self.graph = [[] for i in range(self.cityCount)]
         self.__readGraph(lines)
         self.__str__()  # for debugging ... remove it later
         self.worldMap = {"0": [119, 118],

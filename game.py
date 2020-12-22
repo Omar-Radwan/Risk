@@ -58,6 +58,7 @@ class Game:
         :param soldiers: number of soldiers attacking
         :return:
         """
+        print(f'fromId={fromId}, toId={toId}, soldiers={soldiers}')
         self.addSoldiersToCity(fromId, -soldiers)
         self.addSoldiersToCity(toId, -self.cityList[toId].armyCount)
         self.changeCityOwner(toId)
@@ -98,7 +99,8 @@ class Game:
         :return:
         """
         for city in self.cityList:
-            self.addSoldiersToCity(city.id, city.armyCount)
+            self.soldiersCount[city.isRedArmy] += city.armyCount
+            self.cityCount[city.isRedArmy] += 1
 
     def citiesOf(self, isRedPlayer: bool) -> [int]:
         """

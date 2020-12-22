@@ -37,8 +37,7 @@ class NearlyPacifistAgent(Agent):
                 if uCity.armyCount > vCity.armyCount + 1:
                     if bestVId == -1:
                         bestUId, bestVId = uId, vId
-                else:
-                    if (self.compareCity(game.cityList[vId], game.cityList[bestVId])):
+                    elif (self.compareCity(game.cityList[vId], game.cityList[bestVId])):
                         bestUId, bestVId = uId, vId
         return (bestUId, bestVId)
 
