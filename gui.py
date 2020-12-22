@@ -1,3 +1,5 @@
+from time import sleep
+
 import pygame, sys, ctypes
 from pygame.transform import rotate
 
@@ -59,6 +61,7 @@ class GUI:
             self.agent2 = ''
             self.agent1bool = False
             self.agent2bool = False
+            self.isSimulation = False
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -166,11 +169,12 @@ class GUI:
             crosshairgroup.update()
             pygame.display.update()
 
-        def renderPlayingmode(self, game: Game):
+        def renderPlayingmode(self, game):
             image = pygame.image.load('unitedstatesmap.png')
             print(self.state)
 
             cityList = game.getCityList()
+
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(image, (0, 0))
 
@@ -186,7 +190,7 @@ class GUI:
                     color = (255, 0, 0)
                 else:
                     color = (0, 255, 0)
-                print(color , " " , cityList[city])
+                #print(color , " " , cityList[city])
                 textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
                 # str(id) because the key in the dictionary is string
                 textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
@@ -439,23 +443,27 @@ class GUI:
                 self.state = "playingmode"
             pygame.display.update()
 
-        def statemanager(self, game):
+        def statemanager(self):
             if self.state == 'intro':
                 self.intro()
             elif self.state == 'choosePlayerPlaying':
                 self.choosePlayerModePlaying()
             elif self.state == 'choosePlayerSimulation':
+                self.isSimulation = True
                 self.choosePlayerModeSimulation()
-            elif self.state == 'playingmode':
+        def modesmanager(self, game):
+            if self.state == 'playingmode':
                 self.renderPlayingmode(game)
             elif self.state == 'simulationMode':
                 self.renderSimulationMode(game)
 
-        def returnTuple(self,game):
-            while len(self.agent1) == 0 or len(self.agent2) == 0:
-                self.statemanager(game)
+        def returnTuple(self):
+            while (self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))\
+                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0))\
+                    or self.state == "intro":
+                self.statemanager()
                 clock.tick(60)
-            return (True, self.agent1, self.agent2)
+            return (self.isSimulation, self.agent1, self.agent2)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)

@@ -14,15 +14,16 @@ class LogicGuiController:
         pass
 
     def start(self):
-        gui = GUI()
+        # gui = GUI()
         gameState = GUI.GameState()
         map = Map()
         game = Game(map)
-        isSimulation, redAgentString, greenAgentString = gameState.returnTuple(game)
+        isSimulation, redAgentString, greenAgentString = gameState.returnTuple()
+        print("alo")
         gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False))
         while True:
-            gameState.statemanager(gameEngine.game)
-            sleep(3)
+            gameState.modesmanager(gameEngine.game)
+            sleep(1)
             gameEngine.play()
         pass
 
