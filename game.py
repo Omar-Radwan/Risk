@@ -20,13 +20,13 @@ class Game:
                     cityCount[true]: number of cities that belong to red player
     """
 
-    def __init__(self, map: Map, gameimage):
+    def __init__(self, map: Map):
         self.map = map
-        self.gameimage = gameimage
-        if gameimage == "US":
-            self.cityList = [City(i) for i in range(self.map.USmap.cityCount)]
-        else:
-            self.cityList = [City(i) for i in range(self.map.worldmap.cityCount)]
+        # self.gameimage = gameimage
+        # if gameimage == "US":
+        self.cityList = [City(i) for i in range(self.map.cityCount)]
+        # else:
+        #     self.cityList = [City(i) for i in range(self.map.worldmap.cityCount)]
         self.soldiersCount = {False: 0,
                               True: 0}
         self.cityCount = {False: 0,
@@ -48,6 +48,7 @@ class Game:
         for i in range(0, len(res), 1):
             self.cityList[res[i]].isRedArmy = True
         self.initializeCounts()
+        print(len(self.cityList) , "   cityLsit coutn")
 
     def getCityList(self):
         return self.cityList
