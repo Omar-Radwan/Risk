@@ -18,9 +18,6 @@ backgroundimage = pygame.image.load('backgroundimage.jpg')
 unitedstatesmap = pygame.image.load('unitedstatesmap.png')
 worldMap = pygame.image.load('agents\kk.jpg')
 clock = pygame.time.Clock()
-gamemap = Map(filename="USmap.txt")
-game = Game(map=gamemap)
-game.prepare()
 
 
 # pygame.mouse.set_visible(False)
@@ -62,7 +59,8 @@ class GUI:
             self.agent1bool = False
             self.agent2bool = False
             self.isSimulation = False
-            self.gameimage = pygame.image.load('agents\kk.jpg')
+            self.gameimage = pygame.image.load("unitedstatesmap.png")
+            self.chosenimage = "us"  #made for comparison only in GUI class
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -114,8 +112,14 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-        def rendermap(self, map, cityList, screen):
-            for city in range(0, len(map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+
+        def rendermap(self,map,cityList,screen):
+            if self.gameimage is pygame.image.load("unitedstatesmap.png"):
+                print("unitedstates image tmam ")
+            else:
+                print("worldmap is the gameimage")
+
+            for city in range(0, len(cityList), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
                     color = (255, 0, 0)
@@ -145,13 +149,10 @@ class GUI:
                                             pygame.Rect(map[str(city)][0] - 15,
                                                         map[str(city)][1] - 15,
                                                         30, 30), 3)
-
         def renderSimulationMode(self, game: Game):
-
             cityList = game.getCityList()
-            image = pygame.transform.scale(self.gameimage, (1380, 720))
-            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
-            screen.blit(image, (0, 0))
+            screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
+            screen.blit(self.gameimage, (0, 0))
             # for city in range(0, len(gamemap.worldMap), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
             #     text = pygame.font.Font('freesansbold.ttf', 30)
             #     if cityList[city].isRedArmy:
@@ -183,18 +184,19 @@ class GUI:
             #                                             gamemap.worldMap[str(city)][1] - 15,
             #                                             30, 30), 3)
             if self.gameimage == pygame.image.load("unitedstatesmap.png"):
-                map = "US"
+                map = game.map.USmap
             else:
-                map = "WORLD"
-            self.rendermap(map, cityList, screen)
+                map = game.map.worldMap
+            print(str(map))
+            self.rendermap(map,cityList,screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEMOTION:
-                    for city in range(0, len(gamemap.worldMap) - 1, 1):
-                        if pygame.mouse.get_pos() == gamemap.worldMap[str(city)]:
+                    for city in range(0, len(map) - 1, 1):
+                        if pygame.mouse.get_pos() == map[str(city)]:
                             text = pygame.font.Font('freesansbold.ttf', 30)
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -209,7 +211,6 @@ class GUI:
         def renderPlayingmode(self, game):
 
             cityList = game.getCityList()
-
             screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
             screen.blit(self.gameimage, (0, 0))
 
@@ -218,40 +219,22 @@ class GUI:
             textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
             textrect.center = (Quit.center)
             screen.blit(textsurf, textrect)
-
-            # for city in range(0, len(gamemap.map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
-            #     text = pygame.font.Font('freesansbold.ttf', 30)
-            #     if cityList[city].isRedArmy:
-            #         color = (255, 0, 0)
-            #     else:
-            #         color = (0, 255, 0)
-            #     #print(color , " " , cityList[city])
-            #     textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
-            #     # str(id) because the key in the dictionary is string
-            #     textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
-            #     screen.blit(textsurf, textrect)
-            #     # draw rectangle over text to detect clicks
-            #     center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-            #     rect = pygame.draw.circle(screen, color, center, 20, 2)  # Here <<<
-            #
-            #     # detect if a mouse hovered over a rect
-            #     # hanzawed code elsoldiers placing wala attack....
-            #     if rect.collidepoint(pygame.mouse.get_pos()):
-            #         center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-            #         pygame.draw.circle(screen, color, center, 30, 3)
-            if self.gameimage == pygame.image.load("unitedstatesmap.png"):
-                map = gamemap.map
+            if self.chosenimage == "us":
+                map = game.map.USmap
+                print("us ya sa7by")
             else:
-                map = gamemap.worldMap
-            self.rendermap(map, cityList, screen)
+                map = game.map.worldMap
+                print("map is worldmap to rendermap")
+            self.rendermap(map,cityList,screen)
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.MOUSEMOTION:
-                    for city in range(0, len(gamemap.map) - 1, 1):
-                        if pygame.mouse.get_pos() == gamemap.map[str(city)]:
+                    for city in range(0, len(map) , 1):
+                        if pygame.mouse.get_pos() == map[str(city)]: #USmap to be changed to a varicable indicating wwhich map has been chosens
                             text = pygame.font.Font('freesansbold.ttf', 30)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
@@ -280,7 +263,7 @@ class GUI:
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
                         print("greedy")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "greedy"
                         else:
@@ -292,7 +275,7 @@ class GUI:
                         1] > screen.get_height() - 254:
                         # scren change
                         print("RT A*")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "RT A*"
                         else:
@@ -302,7 +285,7 @@ class GUI:
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "aStar"
                         else:
@@ -314,7 +297,7 @@ class GUI:
                         1] > screen.get_height() - 204:
                         # scren change
                         print("minimax")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "minimax"
                         else:
@@ -325,7 +308,7 @@ class GUI:
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "passive"
                         else:
@@ -336,7 +319,7 @@ class GUI:
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "agressive"
                         else:
@@ -347,7 +330,7 @@ class GUI:
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
-                        if (self.agent1bool is False):
+                        if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "nearly"
                         else:
@@ -355,10 +338,10 @@ class GUI:
                             self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
+                        print("us chosen")
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
-                        # self.gameimage = pygame.transform.scale(self.gameimage, (1380, 720))
-
+                        print("worldmap chosen")
             # game title
 
             # coordinateList = [(),(),(),() .... ]
@@ -461,8 +444,12 @@ class GUI:
                             self.agent1 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
+                        self.chosenimage = "us"
+                        print(self.chosenimage)
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
+                        self.chosenimage = "world"
+                        print(self.chosenimage)
 
             # game title
 
@@ -494,7 +481,6 @@ class GUI:
             elif self.state == 'choosePlayerSimulation':
                 self.isSimulation = True
                 self.choosePlayerModeSimulation()
-
         def modesmanager(self, game):
             if self.state == 'playingmode':
                 self.renderPlayingmode(game)
@@ -503,16 +489,12 @@ class GUI:
 
         def returnTuple(self):
             while ((self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))
-                   or (self.state == "choosePlayerSimulation" and (
-                            len(self.agent1) == 0 or len(self.agent2) == 0))  # neb2a nshof elsimulation
-                   or self.state == "intro"):
+                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0)) #neb2a nshof elsimulation
+                    or self.state == "intro"):
                 self.statemanager()
                 clock.tick(60)
-            if self.gameimage == pygame.image.load("unitedstatesmap.png"):
-                image = "US"
-            else:
-                image = "WORLD"
-            return (self.isSimulation, self.agent1, self.agent2, image)
+            print(self.chosenimage)
+            return (self.isSimulation, self.agent1, self.agent2, self.chosenimage)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)

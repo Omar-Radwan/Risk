@@ -17,8 +17,7 @@ class LogicGuiController:
         # gui = GUI()
         gameState = GUI.GameState()
         isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
-        print(gameimage)
-        map = Map()
+        map = Map() #for now just read the USmap
         game = Game(map)
         print("alo")
         gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False))
