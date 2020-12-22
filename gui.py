@@ -114,8 +114,7 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-
-        def rendermap(self,map,cityList,screen):
+        def rendermap(self, map, cityList, screen):
             for city in range(0, len(map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
@@ -146,6 +145,7 @@ class GUI:
                                             pygame.Rect(map[str(city)][0] - 15,
                                                         map[str(city)][1] - 15,
                                                         30, 30), 3)
+
         def renderSimulationMode(self, game: Game):
 
             cityList = game.getCityList()
@@ -183,10 +183,10 @@ class GUI:
             #                                             gamemap.worldMap[str(city)][1] - 15,
             #                                             30, 30), 3)
             if self.gameimage == pygame.image.load("unitedstatesmap.png"):
-                map = gamemap.map
+                map = "US"
             else:
-                map = gamemap.worldMap
-            self.rendermap(map,cityList,screen)
+                map = "WORLD"
+            self.rendermap(map, cityList, screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -243,8 +243,7 @@ class GUI:
                 map = gamemap.map
             else:
                 map = gamemap.worldMap
-            self.rendermap(map,cityList,screen)
-
+            self.rendermap(map, cityList, screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -281,7 +280,7 @@ class GUI:
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
                         print("greedy")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "greedy"
                         else:
@@ -293,7 +292,7 @@ class GUI:
                         1] > screen.get_height() - 254:
                         # scren change
                         print("RT A*")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "RT A*"
                         else:
@@ -303,7 +302,7 @@ class GUI:
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "aStar"
                         else:
@@ -315,7 +314,7 @@ class GUI:
                         1] > screen.get_height() - 204:
                         # scren change
                         print("minimax")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "minimax"
                         else:
@@ -326,7 +325,7 @@ class GUI:
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "passive"
                         else:
@@ -337,7 +336,7 @@ class GUI:
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "agressive"
                         else:
@@ -348,7 +347,7 @@ class GUI:
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "nearly"
                         else:
@@ -503,8 +502,8 @@ class GUI:
 
         def returnTuple(self):
             while ((self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))
-                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0)) #neb2a nshof elsimulation
-                    or self.state == "intro"):
+                   or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0))  # neb2a nshof elsimulation
+                   or self.state == "intro"):
                 self.statemanager()
                 clock.tick(60)
             if self.gameimage == pygame.image.load("unitedstatesmap.png"):

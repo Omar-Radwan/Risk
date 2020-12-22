@@ -20,13 +20,9 @@ class Game:
                     cityCount[true]: number of cities that belong to red player
     """
 
-    def __init__(self, map: Map, gameimage):
+    def __init__(self, map: Map):
         self.map = map
-        self.gameimage = gameimage
-        if gameimage == "US":
-            self.cityList = [City(i) for i in range(self.map.USmap.cityCount)]
-        else:
-            self.cityList = [City(i) for i in range(self.map.worldmap.cityCount)]
+        self.cityList = [City(i) for i in range(self.map.cityCount)]
         self.soldiersCount = {False: 0,
                               True: 0}
         self.cityCount = {False: 0,
@@ -62,11 +58,14 @@ class Game:
         :param soldiers: number of soldiers attacking
         :return:
         """
-        print(f'fromId={fromId}, toId={toId}, soldiers={soldiers}')
+        # print(f'fromId= {fromId}, toId= {toId}, soldiers= {soldiers}')
+        # print(f'fromBefore {self.cityList[fromId]}, toBefore {self.cityList[toId]}')
         self.addSoldiersToCity(fromId, -soldiers)
         self.addSoldiersToCity(toId, -self.cityList[toId].armyCount)
         self.changeCityOwner(toId)
         self.addSoldiersToCity(toId, soldiers)
+        # print(f'fromAfter {self.cityList[fromId]}, toAfter {self.cityList[toId]}')
+        # print()
 
     def bonusSoldiers(self, isRedPlayer: bool):
         """
@@ -76,6 +75,12 @@ class Game:
         """
         soldiersCount = self.soldiersCount[isRedPlayer]
         return max(math.floor(soldiersCount / 3), 3)
+
+    def placeBonusSoldiers(self, city_id: int, soldiers: int):
+        # print(f'{"red" if (self.cityList[city_id]) else "green"} soldiers= {soldiers} city->{self.cityList[city_id]}')
+        self.cityList[city_id].armyCount += soldiers
+        self.soldiersCount[self.cityList[city_id].isRedArmy] += soldiers
+        # print()
 
     def addSoldiersToCity(self, city_id: int, soldiers: int):
         """

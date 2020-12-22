@@ -17,4 +17,6 @@ class GameEngine:
         gameAfterMove = self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
         self.game = gameAfterMove
-        
+
+    def gameEnded(self):
+        return (self.game.cityCount[True] == 0 or self.game.cityCount[False] == 0)

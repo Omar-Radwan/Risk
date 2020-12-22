@@ -17,10 +17,11 @@ class LogicGuiController:
         # gui = GUI()
         gameState = GUI.GameState()
         isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
-        map = Map(gameimage)
+        print(gameimage)
+        map = Map()
         game = Game(map)
         print("alo")
-        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False), gameimage)
+        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False))
         while True:
             gameState.modesmanager(gameEngine.game)
             sleep(0.05)
