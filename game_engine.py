@@ -11,12 +11,14 @@ class GameEngine:
                         True: redPlayer}
         self.isSimulationMode = isSimulation
         self.isPlayingMode = not isSimulation
+        self.gamePlayCounts = 0
         game.prepare()
 
     def play(self):
         gameAfterMove = self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
         self.game = gameAfterMove
+        self.gamePlayCounts += 1
 
     def gameEnded(self):
         return (self.game.cityCount[True] == 0 or self.game.cityCount[False] == 0)
