@@ -14,7 +14,6 @@ class GameEngine:
         game.prepare()
 
     def play(self):
-        # TODO: take choice from user to process the current turn or wait a certain amount of time
         gameAfterMove = self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
         self.game = gameAfterMove

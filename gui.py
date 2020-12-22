@@ -55,8 +55,10 @@ class GUI:
     class GameState:
         def __init__(self):
             self.state = 'intro'
-            self.aiAgent = ''
-            self.nonAiAgent = ''
+            self.agent1 = ''
+            self.agent2 = ''
+            self.agent1bool = False
+            self.agent2bool = False
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -79,7 +81,7 @@ class GUI:
                     elif screen.get_width() / 4 - 100 + 850 > mouse[
                         0] > screen.get_width() / 4 - 100 and screen.get_height() / 2 + 100 + 100 > mouse[
                         1] > screen.get_height() / 2 + 100:
-                        # scren change
+                        # screen change
                         # self.state = "simulationMode"
                         self.state = "choosePlayerSimulation"
 
@@ -184,7 +186,7 @@ class GUI:
                     color = (255, 0, 0)
                 else:
                     color = (0, 255, 0)
-                    # print(color , " " , cityList[city])
+                print(color , " " , cityList[city])
                 textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
                 # str(id) because the key in the dictionary is string
                 textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
@@ -234,44 +236,79 @@ class GUI:
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
                         print("greedy")
-                        self.aiAgent = "greedy"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "greedy"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "greedy"
 
                     elif screen.get_width() - 898 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("RT A*")
-                        self.aiAgent = "realTime"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "RT A*"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "RT A*"
                     elif screen.get_width() - 960 > mouse[
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        self.aiAgent = "aStar"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "aStar"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "aStar"
                         print("A*")
                     elif screen.get_width() - 838 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
                         1] > screen.get_height() - 204:
                         # scren change
                         print("minimax")
-                        self.aiAgent = "minimax"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "minimax"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "minimax"
                     elif screen.get_width() - 387 > mouse[
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
                         print("passive")
-                        self.nonAiAgent = "passive"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "passive"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "passive"
                     elif screen.get_width() - 346 > mouse[
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
                         print("agressive")
-                        self.nonAiAgent = "agressive"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "agressive"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "agressive"
                     elif screen.get_width() - 252 > mouse[
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
                         print("nearly")
-                        self.nonAiAgent = "nearly"
+                        if(self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "nearly"
+                        else:
+                            self.agent2bool = True
+                            self.agent2 = "nearly"
                     elif screen.get_width() - 321 > mouse[
                         0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
                         1] > screen.get_height() - 104:
@@ -296,6 +333,8 @@ class GUI:
             self.coordinates(screen, 290, 150, "Nearly pacifist")
             self.coordinates(screen, 320, 300, "Play")
 
+            if self.agent1bool is True and self.agent2bool is True:
+                self.state = "simulationMode"
             pygame.display.update()
             # myTuple=(True,self.aiAgent,self.nonAiAgent)
             # print(myTuple)
@@ -311,46 +350,112 @@ class GUI:
             image = pygame.image.load('backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(backgroundimage, (0, 0))
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse = pygame.mouse.get_pos()
+
+                    if screen.get_width() - 873 > mouse[
+                        0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
+                        1] > screen.get_height() - 354:
+                        print("greedy")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "greedy"
+
+                    elif screen.get_width() - 898 > mouse[
+                        0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
+                        1] > screen.get_height() - 254:
+                        # scren change
+                        print("RT A*")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "RT A*"
+                    elif screen.get_width() - 960 > mouse[
+                        0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
+                        1] > screen.get_height() - 304:
+                        # scren change
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "aStar"
+                        print("A*")
+                    elif screen.get_width() - 838 > mouse[
+                        0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
+                        1] > screen.get_height() - 204:
+                        # scren change
+                        print("minimax")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "minimax"
+                    elif screen.get_width() - 387 > mouse[
+                        0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
+                        1] > screen.get_height() - 354:
+                        # scren change
+                        print("passive")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "passive"
+                    elif screen.get_width() - 346 > mouse[
+                        0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
+                        1] > screen.get_height() - 305:
+                        # scren change
+                        print("agressive")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "agressive"
+                    elif screen.get_width() - 252 > mouse[
+                        0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
+                        1] > screen.get_height() - 254:
+                        # scren change
+                        print("nearly")
+                        if (self.agent1bool is False):
+                            self.agent1bool = True
+                            self.agent1 = "nearly"
+                    elif screen.get_width() - 321 > mouse[
+                        0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
+                        1] > screen.get_height() - 104:
+                        print("play")
 
             # game title
 
+            # coordinateList = [(),(),(),() .... ]
+            # for tuple in coordinateList:
+            #     width,height,dada,mama,oma7ma = tuple
+
             self.coordinates(screen, 0, -200, "RISK")
-
-            self.coordinates(screen, 0, -30, "AI Agents")
-            self.coordinates(screen, 0, 150, "RT A*")
-            self.coordinates(screen, 0, 100, "A*")
-            self.coordinates(screen, 0, 50, "Greedy")
-            self.coordinates(screen, 0, 200, "minimax")
-
+            self.coordinates(screen, -270, -30, "AI Agents")
+            self.coordinates(screen, -260, 50, "Greedy")
+            self.coordinates(screen, -300, 100, "A*")
+            self.coordinates(screen, -270, 150, "RT A*")
+            self.coordinates(screen, -240, 200, "minimax")
+            self.coordinates(screen, 220, 50, "Passive")
+            self.coordinates(screen, 280, -30, "Non AI Agents")
+            self.coordinates(screen, 240, 100, "Agressive")
+            self.coordinates(screen, 290, 150, "Nearly pacifist")
+            self.coordinates(screen, 320, 300, "Play")
+            if self.agent1bool is True:
+                self.state = "playingmode"
             pygame.display.update()
 
-        def statemanager(self):
+        def statemanager(self, game):
             if self.state == 'intro':
                 self.intro()
             elif self.state == 'choosePlayerPlaying':
                 self.choosePlayerModePlaying()
             elif self.state == 'choosePlayerSimulation':
                 self.choosePlayerModeSimulation()
-            # elif self.state == 'playingmode':
-            #     self.renderPlayingmode()
-            # elif self.state == 'simulationMode':
-            #     self.renderSimulationMode()
+            elif self.state == 'playingmode':
+                self.renderPlayingmode(game)
+            elif self.state == 'simulationMode':
+                self.renderSimulationMode(game)
 
-        def returnTuple(self):
-            return (True, self.aiAgent, self.nonAiAgent)
-
-    def introScenes(self):
-        gamestate = self.GameState()
-        while len(gamestate.aiAgent) == 0 or len(gamestate.nonAiAgent) == 0:
-            gamestate.statemanager()
-            clock.tick(60)
-        return (True, gamestate.aiAgent, gamestate.nonAiAgent)
-        # initializing gamestate
-    #
-    # gamestate = GameState()
-    # while True:
-    #     gamestate.statemanager()
-    #     clock.tick(60)
+        def returnTuple(self,game):
+            while len(self.agent1) == 0 or len(self.agent2) == 0:
+                self.statemanager(game)
+                clock.tick(60)
+            return (True, self.agent1, self.agent2)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)
