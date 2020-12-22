@@ -494,6 +494,7 @@ class GUI:
             elif self.state == 'choosePlayerSimulation':
                 self.isSimulation = True
                 self.choosePlayerModeSimulation()
+
         def modesmanager(self, game):
             if self.state == 'playingmode':
                 self.renderPlayingmode(game)
@@ -502,7 +503,8 @@ class GUI:
 
         def returnTuple(self):
             while ((self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))
-                   or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0))  # neb2a nshof elsimulation
+                   or (self.state == "choosePlayerSimulation" and (
+                            len(self.agent1) == 0 or len(self.agent2) == 0))  # neb2a nshof elsimulation
                    or self.state == "intro"):
                 self.statemanager()
                 clock.tick(60)

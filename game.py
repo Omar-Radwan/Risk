@@ -122,6 +122,12 @@ class Game:
                 result.append(city.id)
         return result
 
+    def notSameOwner(self, fromId: int, toId: int) -> bool:
+        return self.cityList[fromId].isRedArmy != self.cityList[toId].isRedArmy
+
+    def canAttack(self, fromId: int, toId: int) -> bool:
+        return (self.notSameOwner(fromId, toId) and
+                self.cityList[fromId].armyCount > self.cityList[toId].armyCount + 1)
 # # debugging functions
 # def __str__(self):
 #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'

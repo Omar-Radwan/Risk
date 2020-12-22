@@ -145,30 +145,32 @@ class ActionManager:
     def adjacentActions2(self, isRedPlayer: bool) -> [(Action, [Action])]:
         return self.__adjActions(isRedPlayer, self.__adj2)
 
-    def __adj1(self, isRedPlayer: bool, fromCityId: int, toCityId: int, result: [(Action, [Action])]):
+    def __adj1(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
         attackAction = AttackAction(isRedPlayer, fromCityId, toCityId,
                                     self.game.cityList[toCityId].armyCount + 1)
-        result[-1][1].append(attackAction)
+        container.append(attackAction)
 
-    def __adj2(self, isRedPlayer: bool, fromCityId: int, toCityId: int, result: [(Action, [Action])]):
+    def __adj2(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
         start, end = self.game.cityList[toCityId].armyCount + 1, self.game.cityList[
             fromCityId].armyCount
         step = max(int((end - start) / 3), 1)
         for attackers in range(start, end, step):
             attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
-            result[-1][1].append(attackAction)
+            container.append(attackAction)
 
-    def __adjActions(self, isRedPlayer: bool, adjFunc) -> [(Action, [Action])]:
+    def __onAttackPairs(self, isRedPlayer: bool, myCitiesIds: [], conatiner: [Action], adjFunc) -> [Action]:
+        for myCityId in myCitiesIds:
+            for adjCityId in self.game.map.graph[myCityId]:
+                if self.game.canAttack(myCityId, adjCityId):
+                    adjFunc(isRedPlayer, myCityId, adjCityId, conatiner)
+
+    def __adjActions(self, isRedPlayer: bool, adjFunc) -> [([Action], [Action])]:
         myCitiesIds = self.game.citiesOf(isRedPlayer)
         bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
         result = []
         for bonusArmyCityId in myCitiesIds:
             bonusSoldiersAction = BonusSoldiersAction(isRedPlayer, bonusArmyCityId, bonusSoldiers)
             self.applyAction(bonusSoldiersAction)
-            result.append((bonusSoldiersAction, []))
-            for fromCityId in myCitiesIds:
-                for toCityId in self.game.map.graph[fromCityId]:
-                    if (self.game.cityList[fromCityId].isRedArmy != self.game.cityList[toCityId].isRedArmy and
-                            self.game.cityList[fromCityId].armyCount > self.game.cityList[toCityId].armyCount + 1):
-                        adjFunc(isRedPlayer, fromCityId, toCityId, result)
+            result.append(([bonusSoldiersAction], []))
+            self.__onAttackPairs(isRedPlayer, myCitiesIds, result[-1][1], adjFunc)
         return result
