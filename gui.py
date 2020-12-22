@@ -62,6 +62,7 @@ class GUI:
             self.agent1bool = False
             self.agent2bool = False
             self.isSimulation = False
+            self.gameimage = pygame.image.load('agents\kk.jpg')
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -113,14 +114,9 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-        def renderSimulationMode(self, game: Game):
-            image = pygame.image.load('agents\kk.jpg')
 
-            cityList = game.getCityList()
-            image = pygame.transform.scale(image, (1380, 720))
-            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
-            screen.blit(image, (0, 0))
-            for city in range(0, len(gamemap.worldMap), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+        def rendermap(self,map,cityList,screen):
+            for city in range(0, len(map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
                     color = (255, 0, 0)
@@ -129,12 +125,12 @@ class GUI:
                     # print(color , " " , cityList[city])
                 textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
                 # str(id) because the key in the dictionary is string
-                textrect.center = (gamemap.worldMap[str(city)][0], gamemap.worldMap[str(city)][1])  # get city location
+                textrect.center = (map[str(city)][0], map[str(city)][1])  # get city location
                 screen.blit(textsurf, textrect)
                 # draw rectangle over text to detect clicks
                 rect = pygame.draw.rect(screen, color,
-                                        pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
-                                                    gamemap.worldMap[str(city)][1] - 15,
+                                        pygame.Rect(map[str(city)][0] - 15,
+                                                    map[str(city)][1] - 15,
                                                     30,
                                                     30), 1)
 
@@ -142,14 +138,55 @@ class GUI:
                 # hanzawed code elsoldiers placing wala attack....
                 if rect.collidepoint(pygame.mouse.get_pos()):
                     rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.worldMap[str(city)][0] - 20,
-                                                        gamemap.worldMap[str(city)][1] - 20,
+                                            pygame.Rect(map[str(city)][0] - 20,
+                                                        map[str(city)][1] - 20,
                                                         40, 40), 3)
                 else:
                     rect = pygame.draw.rect(screen, color,
-                                            pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
-                                                        gamemap.worldMap[str(city)][1] - 15,
+                                            pygame.Rect(map[str(city)][0] - 15,
+                                                        map[str(city)][1] - 15,
                                                         30, 30), 3)
+        def renderSimulationMode(self, game: Game):
+
+            cityList = game.getCityList()
+            image = pygame.transform.scale(self.gameimage, (1380, 720))
+            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
+            screen.blit(image, (0, 0))
+            # for city in range(0, len(gamemap.worldMap), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+            #     text = pygame.font.Font('freesansbold.ttf', 30)
+            #     if cityList[city].isRedArmy:
+            #         color = (255, 0, 0)
+            #     else:
+            #         color = (0, 255, 0)
+            #         # print(color , " " , cityList[city])
+            #     textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
+            #     # str(id) because the key in the dictionary is string
+            #     textrect.center = (gamemap.worldMap[str(city)][0], gamemap.worldMap[str(city)][1])  # get city location
+            #     screen.blit(textsurf, textrect)
+            #     # draw rectangle over text to detect clicks
+            #     rect = pygame.draw.rect(screen, color,
+            #                             pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
+            #                                         gamemap.worldMap[str(city)][1] - 15,
+            #                                         30,
+            #                                         30), 1)
+            #
+            #     # detect if a mouse hovered over a rect
+            #     # hanzawed code elsoldiers placing wala attack....
+            #     if rect.collidepoint(pygame.mouse.get_pos()):
+            #         rect = pygame.draw.rect(screen, color,
+            #                                 pygame.Rect(gamemap.worldMap[str(city)][0] - 20,
+            #                                             gamemap.worldMap[str(city)][1] - 20,
+            #                                             40, 40), 3)
+            #     else:
+            #         rect = pygame.draw.rect(screen, color,
+            #                                 pygame.Rect(gamemap.worldMap[str(city)][0] - 15,
+            #                                             gamemap.worldMap[str(city)][1] - 15,
+            #                                             30, 30), 3)
+            if self.gameimage == pygame.image.load("unitedstatesmap.png"):
+                map = gamemap.map
+            else:
+                map = gamemap.worldMap
+            self.rendermap(map,cityList,screen)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -170,13 +207,11 @@ class GUI:
             pygame.display.update()
 
         def renderPlayingmode(self, game):
-            image = pygame.image.load('unitedstatesmap.png')
-            print(self.state)
 
             cityList = game.getCityList()
 
-            screen = pygame.display.set_mode((image.get_width(), image.get_height()))
-            screen.blit(image, (0, 0))
+            screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
+            screen.blit(self.gameimage, (0, 0))
 
             Quit = pygame.draw.rect(screen, (0, 0, 255), [0, 0, 140, 40])
             text = pygame.font.Font('freesansbold.ttf', 30)
@@ -184,26 +219,32 @@ class GUI:
             textrect.center = (Quit.center)
             screen.blit(textsurf, textrect)
 
-            for city in range(0, len(gamemap.map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
-                text = pygame.font.Font('freesansbold.ttf', 30)
-                if cityList[city].isRedArmy:
-                    color = (255, 0, 0)
-                else:
-                    color = (0, 255, 0)
-                #print(color , " " , cityList[city])
-                textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
-                # str(id) because the key in the dictionary is string
-                textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
-                screen.blit(textsurf, textrect)
-                # draw rectangle over text to detect clicks
-                center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-                rect = pygame.draw.circle(screen, color, center, 20, 2)  # Here <<<
+            # for city in range(0, len(gamemap.map), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+            #     text = pygame.font.Font('freesansbold.ttf', 30)
+            #     if cityList[city].isRedArmy:
+            #         color = (255, 0, 0)
+            #     else:
+            #         color = (0, 255, 0)
+            #     #print(color , " " , cityList[city])
+            #     textsurf, textrect = text_objects(str(cityList[city].armyCount), text, color)  # get city.armyCount
+            #     # str(id) because the key in the dictionary is string
+            #     textrect.center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])  # get city location
+            #     screen.blit(textsurf, textrect)
+            #     # draw rectangle over text to detect clicks
+            #     center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
+            #     rect = pygame.draw.circle(screen, color, center, 20, 2)  # Here <<<
+            #
+            #     # detect if a mouse hovered over a rect
+            #     # hanzawed code elsoldiers placing wala attack....
+            #     if rect.collidepoint(pygame.mouse.get_pos()):
+            #         center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
+            #         pygame.draw.circle(screen, color, center, 30, 3)
+            if self.gameimage == pygame.image.load("unitedstatesmap.png"):
+                map = gamemap.map
+            else:
+                map = gamemap.worldMap
+            self.rendermap(map,cityList,screen)
 
-                # detect if a mouse hovered over a rect
-                # hanzawed code elsoldiers placing wala attack....
-                if rect.collidepoint(pygame.mouse.get_pos()):
-                    center = (gamemap.map[str(city)][0], gamemap.map[str(city)][1])
-                    pygame.draw.circle(screen, color, center, 30, 3)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -235,7 +276,7 @@ class GUI:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse = pygame.mouse.get_pos()
-
+                    print(mouse)
                     if screen.get_width() - 873 > mouse[
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
@@ -313,10 +354,11 @@ class GUI:
                         else:
                             self.agent2bool = True
                             self.agent2 = "nearly"
-                    elif screen.get_width() - 321 > mouse[
-                        0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
-                        1] > screen.get_height() - 104:
-                        print("play")
+                    elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
+                        self.gameimage = pygame.image.load("unitedstatesmap.png")
+                    elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
+                        self.gameimage = pygame.image.load("agents/kk.jpg")
+                        # self.gameimage = pygame.transform.scale(self.gameimage, (1380, 720))
 
             # game title
 
@@ -335,7 +377,8 @@ class GUI:
             self.coordinates(screen, 280, -30, "Non AI Agents")
             self.coordinates(screen, 240, 100, "Agressive")
             self.coordinates(screen, 290, 150, "Nearly pacifist")
-            self.coordinates(screen, 320, 300, "Play")
+            self.coordinates(screen, 0, 300, "USMAP")
+            self.coordinates(screen, 380, 300, "WORLD MAP")
 
             if self.agent1bool is True and self.agent2bool is True:
                 self.state = "simulationMode"
@@ -417,10 +460,10 @@ class GUI:
                         if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "nearly"
-                    elif screen.get_width() - 321 > mouse[
-                        0] > screen.get_width() - 405 and screen.get_height() - 63 > mouse[
-                        1] > screen.get_height() - 104:
-                        print("play")
+                    elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
+                        self.gameimage = pygame.image.load("unitedstatesmap.png")
+                    elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
+                        self.gameimage = pygame.image.load("agents/kk.jpg")
 
             # game title
 
@@ -438,7 +481,8 @@ class GUI:
             self.coordinates(screen, 280, -30, "Non AI Agents")
             self.coordinates(screen, 240, 100, "Agressive")
             self.coordinates(screen, 290, 150, "Nearly pacifist")
-            self.coordinates(screen, 320, 300, "Play")
+            self.coordinates(screen, 0, 300, "USMAP")
+            self.coordinates(screen, 380, 300, "WORLD MAP")
             if self.agent1bool is True:
                 self.state = "playingmode"
             pygame.display.update()
@@ -458,9 +502,9 @@ class GUI:
                 self.renderSimulationMode(game)
 
         def returnTuple(self):
-            while (self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))\
-                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0))\
-                    or self.state == "intro":
+            while ((self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))
+                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0)) #neb2a nshof elsimulation
+                    or self.state == "intro"):
                 self.statemanager()
                 clock.tick(60)
             return (self.isSimulation, self.agent1, self.agent2)

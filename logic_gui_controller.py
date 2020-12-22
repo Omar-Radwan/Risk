@@ -23,7 +23,7 @@ class LogicGuiController:
         gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), NearlyPacifistAgent(False))
         while True:
             gameState.modesmanager(gameEngine.game)
-            sleep(1)
+            sleep(0.05)
             gameEngine.play()
         pass
 
