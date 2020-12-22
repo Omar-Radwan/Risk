@@ -18,7 +18,7 @@ backgroundimage = pygame.image.load('backgroundimage.jpg')
 unitedstatesmap = pygame.image.load('unitedstatesmap.png')
 worldMap = pygame.image.load('agents\kk.jpg')
 clock = pygame.time.Clock()
-gamemap = Map(filename="map1.txt")
+gamemap = Map(filename="USmap.txt")
 game = Game(map=gamemap)
 game.prepare()
 
@@ -507,7 +507,11 @@ class GUI:
                     or self.state == "intro"):
                 self.statemanager()
                 clock.tick(60)
-            return (self.isSimulation, self.agent1, self.agent2)
+            if self.gameimage == pygame.image.load("unitedstatesmap.png"):
+                image = "US"
+            else:
+                image = "WORLD"
+            return (self.isSimulation, self.agent1, self.agent2, image)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)

@@ -5,7 +5,7 @@ from helping_functions import list2dToStr
 class Map:
     # cityCount..graph..cityList
 
-    def __init__(self, filename="map1.txt"):  # default loaded map is map1
+    def __init__(self, filename="USmap.txt"):  # default loaded map is USmap
         file = open(filename, 'r')
         lines = file.readlines()
         self.cityCount = len(lines)
@@ -61,7 +61,7 @@ class Map:
                     "46": (307, 424),
                     "47":(1043,228)
                          }
-        self.map = {"0": [683.0, 414.5],
+        self.USmap = {"0": [683.0, 414.5],
                "1": (503.0, 414.5),
                "2": (333.0, 414.5),
                "3": (203.0, 414.5),

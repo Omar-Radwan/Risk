@@ -13,7 +13,7 @@ from agents.realtime_agent import realtime_agent
 # code that attaches map to a game and starts the game
 from agents.greedy_agent import GreedyAgent
 
-map = Map(filename="map1.txt")
+map = Map(filename="USmap.txt")
 print(map)
 game = Game(map)
 game.prepare()
