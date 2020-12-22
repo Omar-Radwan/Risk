@@ -22,7 +22,7 @@ class Game:
 
     def __init__(self, map: Map):
         self.map = map
-        # self.cityList = [City(i) for i in range(self.map.cityCount)]
+        self.cityList = [City(i) for i in range(self.map.cityCount)]
         self.soldiersCount = {False: 0,
                               True: 0}
         self.cityCount = {False: 0,
