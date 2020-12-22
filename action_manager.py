@@ -139,10 +139,10 @@ class ActionManager:
     #         self.rollBackAction()
     #     return result
 
-    def adjacentActions1(self, isRedPlayer: bool) -> [(Action, [Action])]:
+    def adjacentActions1(self, isRedPlayer: bool) -> [([Action], [Action])]:
         return self.__adjActions(isRedPlayer, self.__adj1)
 
-    def adjacentActions2(self, isRedPlayer: bool) -> [(Action, [Action])]:
+    def adjacentActions2(self, isRedPlayer: bool) -> [([Action], [Action])]:
         return self.__adjActions(isRedPlayer, self.__adj2)
 
     def __adj1(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
@@ -173,4 +173,6 @@ class ActionManager:
             self.applyAction(bonusSoldiersAction)
             result.append(([bonusSoldiersAction], []))
             self.__onAttackPairs(isRedPlayer, myCitiesIds, result[-1][1], adjFunc)
+            self.rollBackAction()
         return result
+
