@@ -1,4 +1,6 @@
+from city import City
 from game import Game
+from heuristics import HeuristicsManager
 
 
 class Action:
@@ -27,6 +29,9 @@ class BonusSoldiersAction(Action):
     def __str__(self) -> str:
         return f'city_id={self.cityId}, soldiers={self.soldiers}'
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class AttackAction(Action):
     def __init__(self, isRedPlayer: bool, fromId: int, toId: int, attackers: int):
@@ -54,6 +59,7 @@ class ActionManager:
     def __init__(self, game: Game):
         self.game = game
         self.stack = []
+        self.heuristicsManager = HeuristicsManager()
 
     def applyAction(self, action: Action):
         """
@@ -84,61 +90,6 @@ class ActionManager:
         self.rollBackAction()
         self.rollBackAction()
 
-    # def adjacentActions1(self, isRedPlayer: bool) -> [(Action, [Action])]:
-    #     """
-    #     assumptions:
-    #         1. bonus soldiers are added to one city only
-    #         2. attack city y from city x with y.armyCount+1 (with least number of soldiers able to conquer y)
-    #     :param isRedPlayer: true if the current player is red player and false is green player
-    #     :return: list of tuples where each tuple contains (bonusArmyAction, list of attack actions)
-    #     """
-    #     myCitiesIds = self.game.citiesOf(isRedPlayer)
-    #     bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
-    #     result = []
-    #     # O((myCities^2) * adjacentCities)
-    #     for bonusArmyCityId in myCitiesIds:  # O(cities)
-    #         bonusSoldiersAction = BonusSoldiersAction(isRedPlayer, bonusArmyCityId, bonusSoldiers)
-    #         self.applyAction(bonusSoldiersAction)
-    #         result.append((bonusSoldiersAction, []))
-    #         for fromCityId in myCitiesIds:  # O(cities)
-    #             for toCityId in self.game.map.graph[fromCityId]:  # O(adjacent)
-    #                 if (self.game.cityList[fromCityId].isRedArmy != self.game.cityList[toCityId].isRedArmy
-    #                         and self.game.cityList[fromCityId].armyCount > self.game.cityList[toCityId].armyCount + 1):
-    #                     attackAction = AttackAction(isRedPlayer, fromCityId, toCityId,
-    #                                                 self.game.cityList[toCityId].armyCount + 1)
-    #                     result[-1][1].append(attackAction)
-    #         self.rollBackAction()
-    #     return result
-    #
-    # def adjacentActions2(self, isRedPlayer: bool) -> [(Action, [Action])]:
-    #     """
-    #     assumptions:
-    #         1. bonus soldiers are added to one city only
-    #         2. attack city y from city x with [y.armyCount+1 ... x.armyCount-1]
-    #     :param isRedPlayer: true if the current player is red player and false is green player
-    #     :return: list of tuples where each tuple contains (bonusArmyAction, list of attack actions)
-    #     """
-    #     myCitiesIds = self.game.citiesOf(isRedPlayer)
-    #     bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
-    #     result = []
-    #     # O((myCities^2) * adjacentCities)
-    #     for bonusArmyCityId in myCitiesIds:  # O(cities)
-    #         bonusSoldiersAction = BonusSoldiersAction(isRedPlayer, bonusArmyCityId, bonusSoldiers)
-    #         self.applyAction(bonusSoldiersAction)
-    #         result.append((bonusSoldiersAction, []))
-    #         for fromCityId in myCitiesIds:  # O(cities)
-    #             for toCityId in self.game.map.graph[fromCityId]:  # O(adjacent)
-    #                 if (self.game.cityList[fromCityId].isRedArmy != self.game.cityList[toCityId].isRedArmy
-    #                         and self.game.cityList[fromCityId].armyCount > self.game.cityList[toCityId].armyCount + 1):
-    #                     start, end = self.game.cityList[toCityId].armyCount + 1, self.game.cityList[
-    #                         fromCityId].armyCount
-    #                     step = max(int((end - start) / 3), 1)
-    #                     for attackers in range(start, end, step):
-    #                         attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
-    #                         result[-1][1].append(attackAction)
-    #         self.rollBackAction()
-    #     return result
-
     def adjacentActions1(self, isRedPlayer: bool) -> [([Action], [Action])]:
         return self.__adjActions(isRedPlayer, self.__adj1)
 
@@ -153,7 +104,7 @@ class ActionManager:
     def __adj2(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
         start, end = self.game.cityList[toCityId].armyCount + 1, self.game.cityList[
             fromCityId].armyCount
-        step = max(int((end - start) / 3), 1)
+        step = max(int((end - start) / 2), 1)
         for attackers in range(start, end, step):
             attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
             container.append(attackAction)
@@ -176,3 +127,94 @@ class ActionManager:
             self.rollBackAction()
         return result
 
+    def compareCity(self, x: City, y: City) -> bool:
+        """
+            given two cities x and y the function returns true if number of soldiers in x is less than number of soldiers in y
+            if both cities have the same number of soldiers the function true if id of x is less than id of y
+        """
+        return x.armyCount < y.armyCount if x.armyCount != y.armyCount else x.id < y.id
+
+    def minArmyCityId(self, citiesIds: []) -> int:
+        """
+            returns id of the city with min army count from list of cities
+        """
+        minArmyCityId = citiesIds[0]
+        for cityId in citiesIds:
+            if (self.compareCity(self.game.cityList[cityId], self.game.cityList[minArmyCityId])):
+                minArmyCityId = cityId
+        return minArmyCityId
+
+
+
+    def applyListOfActions(self, actionList: [Action]):
+        for action in actionList:
+            self.applyAction(action)
+
+    def rollBackNAction(self, numberOfActions: int):
+        for i in range(numberOfActions):
+            self.rollBackAction()
+
+    def attackAdjacentActions(self, currentIsRed: bool, maxiIsRed):
+
+        optimalBonusSoldiersActionList = self.optimalSoldiersPlacement(currentIsRed, maxiIsRed,
+                                                                       self.heuristicsManager.defensiveAndAttacking)
+        self.applyListOfActions(optimalBonusSoldiersActionList)
+
+        attackActionList = []
+        self.__onAttackPairs(currentIsRed, self.game.citiesOf(currentIsRed), attackActionList, self.__adj2)
+        self.rollBackNAction(len(optimalBonusSoldiersActionList))
+
+        return [(optimalBonusSoldiersActionList, attackActionList)]
+
+    def optimalSoldiersPlacement(self, currentIsRed: bool, maxiIsRed: bool, heuristicFunction) -> [Action]:
+        better = max
+        NEUTRAL = int(-1e9)
+        if (currentIsRed != maxiIsRed):
+            better = min
+            NEUTRAL = int(1e9)
+
+        baseValue = heuristicFunction(maxiIsRed, self.game)
+        myCitiesId = self.game.citiesOf(currentIsRed)
+        bonusSoldiers = self.game.bonusSoldiers(currentIsRed)
+
+        def moveValue(currentIsRed: bool, maxiIsRed: bool, cityId, soldiers):
+            bonusSoldiers = BonusSoldiersAction(currentIsRed, cityId, soldiers)
+            self.applyAction(bonusSoldiers)
+            currentValue = heuristicFunction(maxiIsRed, self.game)
+            value = currentValue - baseValue
+            self.rollBackAction()
+            return value
+
+        n, m = len(myCitiesId), bonusSoldiers
+        dp = [[NEUTRAL for i in range(m + 1)] for i in range(n + 1)]  # 1 based
+        for i in range(0, n + 1):
+            dp[i][0] = 0
+
+        addedToEachCityIndex = [0 for i in range(n + 1)]  # 1 based
+        for i in range(1, n + 1):
+            for s in range(1, m + 1):
+                dp[i][s] = dp[i - 1][s]
+                for j in range(1, s + 1):
+                    v = moveValue(currentIsRed, maxiIsRed, myCitiesId[i - 1], j)
+                    dp[i][s] = better(dp[i][s], v + dp[i - 1][s - j])
+
+        i, s = n, m
+        while i > 0 and s > 0:
+            if dp[i][s] == dp[i - 1][s]:
+                i -= 1
+            else:
+                for j in range(1, s + 1):
+                    v = moveValue(currentIsRed, maxiIsRed, myCitiesId[i - 1], j)
+                    if dp[i][s] == v + dp[i - 1][s - j]:
+                        addedToEachCityIndex[i] = j
+                        i -= 1
+                        s -= j
+                        break
+        actions = []
+
+        for i in range(1, n + 1):
+            if (addedToEachCityIndex[i] != 0):
+                bonusSoldiersAction = BonusSoldiersAction(currentIsRed, myCitiesId[i - 1], addedToEachCityIndex[i])
+                actions.append(bonusSoldiersAction)
+
+        return actions

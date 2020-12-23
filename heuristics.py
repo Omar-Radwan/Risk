@@ -3,11 +3,11 @@ from typing import List, Any
 from city import City
 from game import Game
 
-HIS_WEAK_CITY_WEIGHT = 2
-MY_STRONG_CITY_WEIGHT = 2
+HIS_WEAK_CITY_WEIGHT = 1
+HIS_STRONG_CITY_WEIGHT = 0
 
-MY_WEAK_CITY_WEIGHT = -1
-HIS_STRONG_CITY_WEIGHT = -1
+MY_WEAK_CITY_WEIGHT = 0
+MY_STRONG_CITY_WEIGHT = 1
 
 
 class HeuristicsManager:

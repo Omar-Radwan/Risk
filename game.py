@@ -129,7 +129,7 @@ class Game:
         return (self.notSameOwner(fromId, toId) and
                 self.cityList[fromId].armyCount > self.cityList[toId].armyCount + 1)
 
-    def gameEnded(self):
+    def isFinished(self):
         return self.cityCount[False] == 0 or self.cityList[True] == 0
 # # debugging functions
 # def __str__(self):

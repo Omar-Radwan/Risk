@@ -9,6 +9,7 @@ class MiniMaxAgent(Agent):
     def __init__(self, isRedPlayer: bool):
         super().__init__(isRedPlayer)
         self.heuristicManager = HeuristicsManager()
+        self.cnt = 0
 
     def applyHeuristic(self, game: Game) -> Game:
         """
@@ -17,15 +18,15 @@ class MiniMaxAgent(Agent):
         :return: game instance after applying best actions specified by minimax algorithm
         """
         self.actionManager = ActionManager(game)
-        value, bonusArmyAction, attackAction = self.maximize(0, 1, game, int(-1e9), int(1e9))
-        print(value)
-        if bonusArmyAction != None:
-            self.actionManager.applyAction(bonusArmyAction[0])
+
+        self.cnt = 0
+        value, bonusArmyActionList, attackAction = self.maximize(0, 2, game, int(-1e9), int(1e9))
+        print(f'terimal_states={self.cnt} bonusArmyActionListSize={len(bonusArmyActionList)} value={value}')
+        print(f'bonusArmyActionList= {bonusArmyActionList}, bonusSoldiers={game.bonusSoldiers(self.isRedPlayer)}')
+        if bonusArmyActionList != None:
+            self.actionManager.applyListOfActions(bonusArmyActionList)
         if attackAction != None:
             self.actionManager.applyAction(attackAction)
-
-        print(bonusArmyAction)
-        print(attackAction)
         return game
 
     def maximize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
@@ -42,12 +43,13 @@ class MiniMaxAgent(Agent):
 
         actionTuples = self.actionManager.adjacentActions2(self.isRedPlayer)  #
         maxTuple = (int(-1e18), None, None)  #
+        broke = False
 
         for actionTuple in actionTuples:
+
             bonusSoldiersActionList, attackActionList = actionTuple[0], actionTuple[1]
 
-            for bonusSoldiersAction in bonusSoldiersActionList:
-                self.actionManager.applyAction(bonusSoldiersAction)
+            self.actionManager.applyListOfActions(bonusSoldiersActionList)
 
             for attackAction in attackActionList:
                 self.actionManager.applyAction(attackAction)
@@ -60,11 +62,13 @@ class MiniMaxAgent(Agent):
                 alpha = max(alpha, maxTuple[0])  #
 
                 if (alpha >= beta):
+                    broke = True
                     break
 
-            for i in range(len(bonusSoldiersActionList)):
-                self.actionManager.rollBackAction()
+            self.actionManager.rollBackNAction(len(bonusSoldiersActionList))
 
+            if broke:
+                break
         return maxTuple  #
 
     def minimize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
@@ -79,14 +83,14 @@ class MiniMaxAgent(Agent):
         if (self.terminalState(curDepth, maxDepth, game)):
             return (self.evaluate2(game), None, None)
 
-        actionTuples = self.actionManager.adjacentActions2(not self.isRedPlayer)  #
+        actionTuples = self.actionManager.adjacentActions2(not self.isRedPlayer)
         minTuple = (int(1e18), None, None)  #
+        broke = False
 
         for actionTuple in actionTuples:
             bonusSoldiersActionList, attackActionList = actionTuple[0], actionTuple[1]
 
-            for bonusSoldiersAction in bonusSoldiersActionList:
-                self.actionManager.applyAction(bonusSoldiersAction)
+            self.actionManager.applyListOfActions(bonusSoldiersActionList)
 
             for attackAction in attackActionList:
 
@@ -100,10 +104,13 @@ class MiniMaxAgent(Agent):
                 beta = min(beta, minTuple[0])  #
 
                 if (alpha >= beta):
+                    broke = True
                     break
 
-            for i in range(len(bonusSoldiersActionList)):
-                self.actionManager.rollBackAction()
+            self.actionManager.rollBackNAction(len(bonusSoldiersActionList))
+
+            if broke:
+                break
 
         return minTuple  #
 
@@ -114,74 +121,17 @@ class MiniMaxAgent(Agent):
         :param game:
         :return: true if the current state is terminal state, false otherwise
         """
-        if (curDepth == maxDepth or game.cityCount[self.isRedPlayer] == 0 or
-                game.cityCount[self.isRedPlayer] == game.map.cityCount):
+        if (curDepth == maxDepth or game.isFinished()):
+            self.cnt += 1
             return True
         return False
 
-    def evaluate(self, game: Game):
+    def evaluate1(self, game: Game):
         return (game.cityCount[self.isRedPlayer] * 2 + game.soldiersCount[self.isRedPlayer] -
                 game.cityCount[not self.isRedPlayer] * 2 - game.soldiersCount[not self.isRedPlayer])
 
     def evaluate2(self, game: Game):
         return self.heuristicManager.defensiveAndAttacking(self.isRedPlayer, game)
 
-# code that copies game a lot
-# class StateFinder:
-#     """
-#         assumptions:
-#             1. bonus soldiers are added to one city only
-#             2. attack city y from city x with y.armyCount+1 (with least number of soldiers able to conquer y)
-#     """""
-#
-#     # O(cities^2 * adjacentCities)
-#     def adjacentStates1(self, game: Game, bonusSoldiers: int, isRedPlayer: bool) -> []:
-#         currentPlayerCitiesId = self.myCities(game, isRedPlayer)
-#         result = []
-#         for bonusArmyCityId in currentPlayerCitiesId:  # O(cities)
-#             copyGame1 = copy.deepcopy(game)
-#             copyGame1.addSoldiersToPlayer(bonusArmyCityId, bonusSoldiers)
-#             for uId in currentPlayerCitiesId:  # O(cities)
-#                 adjacentCitiesToU = game.map.graph[uId]
-#                 for vId in adjacentCitiesToU:  # O(adjacent)
-#                     if (game.cityList[uId].isRedArmy != isRedPlayer
-#                             and game.cityList[uId].armyCount > game.cityList[vId].armyCount + 1):
-#                         copyGame2 = copy.deepcopy(copyGame1)
-#                         copyGame2.move(uId, vId, game.cityList[vId].armyCount + 1)
-#                         result.append(copyGame2)
-#         return result
-#
-#     """
-#         assumptions:
-#             1. bonus soldiers are added to one city only
-#             2. attack city y from city x with [y.armyCount+1 ... x.armyCount-1]
-#     """
-#
-#     # O(cities^2 * soldiers attacking * adjacentCities)
-#     def adjacentStates2(self, game: Game, bonusSoldiers: int, isRedPlayer: bool) -> []:
-#         currentPlayerCitiesId = self.myCities(game, isRedPlayer)
-#         result = []
-#         for bonusArmyCityId in currentPlayerCitiesId:  # O(cities)
-#             copyGame1 = copy.deepcopy(game)
-#             copyGame1.addSoldiersToPlayer(bonusArmyCityId, bonusSoldiers)
-#             for uId in currentPlayerCitiesId:  # O(cities)
-#                 adjacentCitiesToU = game.map.graph[uId]
-#                 for vId in adjacentCitiesToU:  # O(adjacent)
-#                     if (game.cityList[uId].isRedArmy != isRedPlayer):
-#                         for soldiers in range(game.cityList[vId].armyCount + 1, game.cityList[uId],
-#                                               1):  # O(y.armyCount+1 ... x.armyCount-1)
-#                             copyGame2 = copy.deepcopy(copyGame1)
-#                             copyGame2.move(uId, vId, soldiers)
-#                             result.append(copyGame2)
-#         return result
-#
-#     """
-#         find all cities that belong to a player
-#     """
-#
-#     def myCities(self, game: Game, isRedPlayer: bool) -> []:
-#         result = []
-#         for city in game.cityList:
-#             if (city.isRedArmy == isRedPlayer):
-#                 result.append(city.id)
-#         return result
+    def evaluate3(self, game: Game):
+        return 1 if (game.cityCount[not self.isRedPlayer] == 0) else 0

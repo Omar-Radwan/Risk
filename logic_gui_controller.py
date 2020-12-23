@@ -8,7 +8,7 @@ from game import Game
 from gui import GUI
 from map import Map
 from passive_agent import PassiveAgent
-from a_star_agent import AStarAgent
+
 
 class LogicGuiController:
     def __init__(self):
@@ -21,10 +21,8 @@ class LogicGuiController:
         map = Map()  # for now just read the USmap
         game = Game(map)
         print("alo")
-        #gameEngine = GameEngine(isSimulation, game, AStarAgent(True), PassiveAgent(False))
-        gameEngine = GameEngine(isSimulation, game, AStarAgent(True), NearlyPacifistAgent(False))
 
-        #gameEngine = GameEngine(isSimulation, game, MiniMaxAgent(True), NearlyPacifistAgent(False))
+        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), MiniMaxAgent(False))
 
         while not gameEngine.gameEnded():
             gameState.modesmanager(gameEngine.game)
