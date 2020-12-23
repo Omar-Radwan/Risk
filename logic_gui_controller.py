@@ -2,6 +2,7 @@ from time import sleep
 
 from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
+from agents.greedy_agent import GreedyAgent
 from game_engine import GameEngine
 from game_engine import GameEngine
 from game import Game
@@ -22,11 +23,11 @@ class LogicGuiController:
         game = Game(map)
         print("alo")
 
-        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), MiniMaxAgent(False))
+        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), GreedyAgent(False))
 
         while not gameEngine.gameEnded():
             gameState.modesmanager(gameEngine.game)
-            sleep(0.05)
+            sleep(0.5)
             gameEngine.play()
         print(gameEngine.gamePlayCounts)
 

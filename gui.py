@@ -114,11 +114,6 @@ class GUI:
 
 
         def rendermap(self,map,cityList,screen):
-            if self.gameimage is pygame.image.load("unitedstatesmap.png"):
-                print("unitedstates image tmam ")
-            else:
-                print("worldmap is the gameimage")
-
             for city in range(0, len(cityList), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
