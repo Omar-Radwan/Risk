@@ -18,18 +18,19 @@ class LogicGuiController:
         # gui = GUI()
         gameState = GUI.GameState()
         isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
-        map = Map() #for now just read the USmap
+        map = Map()  # for now just read the USmap
         game = Game(map)
         print("alo")
-       # gameEngine = GameEngine(isSimulation, game, PassiveAgent(True), NearlyPacifistAgent(False))
-        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), AStarAgent(False))
+        #gameEngine = GameEngine(isSimulation, game, AStarAgent(True), PassiveAgent(False))
+        gameEngine = GameEngine(isSimulation, game, AStarAgent(True), NearlyPacifistAgent(False))
 
         #gameEngine = GameEngine(isSimulation, game, MiniMaxAgent(True), NearlyPacifistAgent(False))
-        while True:
+
+        while not gameEngine.gameEnded():
             gameState.modesmanager(gameEngine.game)
             sleep(0.05)
             gameEngine.play()
-        pass
+        print(gameEngine.gamePlayCounts)
 
     def setTuple(self, isSimulation, aiAgent, nonAiAgent):
         gameState = GUI.GameState()

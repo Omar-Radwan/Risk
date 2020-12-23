@@ -26,17 +26,19 @@ class Agent:
     # lazm tt3dl 3shan cityList w game etshalo
     # bonusArmy is added to certain cities such that it maximizes my number of safe cities where
     # enemies can't attack it.
-    def bonusArmyHeuristic(self, map: Map, bonusArmy):
+    def bonusArmyHeuristic(self, bonusArmy,game,isRedPlayer)->Game:
         tupleList = []
         maximumArmyNeededToBeSafe = 0
         # loop on each city owned by the agent and get maximum number
         # of armies needed to be added in this city to be safe and
         # store them in tuple <city,maximumArmyNeededToBeSafe> and store each tuple in tupleList
-        for city in self.cityList:
-            for neighborId in map.graph[city.id]:
-                neighbor = self.game.cityList[neighborId]
-                if neighbor.isRedArmy != city.isRedArmy and neighbor.armyCount > city.armyCount + 1:
-                    neededArmyToBeSafe = neighbor.armyCount - city.armyCount - 1
+        cityListId=game.citiesOf(isRedPlayer)
+        for cityId in cityListId:
+            for neighborId in game.map.graph[cityId]:
+                neighbor = game.cityList[neighborId]
+                city=game.cityList[cityId]
+                if neighbor.isRedArmy != city.isRedArmy and neighbor.armyCount >= city.armyCount :
+                    neededArmyToBeSafe = neighbor.armyCount - city.armyCount +1
                     maximumArmyNeededToBeSafe = max(maximumArmyNeededToBeSafe, neededArmyToBeSafe)
 
             newTuple = (city, maximumArmyNeededToBeSafe)
@@ -51,15 +53,33 @@ class Agent:
 
             if maximumArmyToBeSafe <= bonusArmy:
                 bonusArmy -= maximumArmyToBeSafe
-                cityToBeSafe.armyCount += maximumArmyToBeSafe
+                game.addSoldiersToCity(cityToBeSafe.id,maximumArmyToBeSafe)
 
             elif neededArmyToBeSafe > bonusArmy:
-                cityToBeSafe.armyCount += bonusArmy
+                game.addSoldiersToCity(cityToBeSafe.id,bonusArmy)
                 bonusArmy = 0
 
             if bonusArmy == 0:
                 break
-
+        return game
+    def bonusArmyPlacing(self,bonusArmy,game,isRedPlayer)->Game:
+        cityListId = game.citiesOf(isRedPlayer)
+        for cityId in cityListId:
+            for neighborId in game.map.graph[cityId]:
+                city=game.cityList[cityId]
+                neighbor=game.cityList[neighborId]
+                if(city.armyCount<neighbor.armyCount+1 and city.isRedArmy!=neighbor.isRedArmy):
+                    toAttack=neighbor.armyCount-city.armyCount+2
+                    if toAttack<=bonusArmy:
+                        game.addSoldiersToCity(city.id,toAttack)
+                        bonusArmy-=toAttack
+                    elif toAttack>bonusArmy:
+                        game.addSoldiersToCity(city.id,bonusArmy)
+                        bonusArmy=0
+                        return game
+            if(bonusArmy==0):
+                return game
+        return game
     # # TODO: get rid of loop in this function
     # def countArmy(self) -> int:
     #     sum = 0

@@ -73,8 +73,8 @@ class Game:
         :param isRedPlayer: type of the player
         :return:
         """
-        soldiersCount = self.soldiersCount[isRedPlayer]
-        return max(math.floor(soldiersCount / 3), 3)
+        cityCount = self.cityCount[isRedPlayer]
+        return max(math.floor(cityCount / 3), 3)
 
     def placeBonusSoldiers(self, city_id: int, soldiers: int):
         # print(f'{"red" if (self.cityList[city_id]) else "green"} soldiers= {soldiers} city->{self.cityList[city_id]}')
@@ -128,6 +128,9 @@ class Game:
     def canAttack(self, fromId: int, toId: int) -> bool:
         return (self.notSameOwner(fromId, toId) and
                 self.cityList[fromId].armyCount > self.cityList[toId].armyCount + 1)
+
+    def gameEnded(self):
+        return self.cityCount[False] == 0 or self.cityList[True] == 0
 # # debugging functions
 # def __str__(self):
 #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'

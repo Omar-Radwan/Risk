@@ -2,7 +2,7 @@
 from queue import PriorityQueue
 from game import Game
 from agent import Agent
-
+import random
 class AStarAgent(Agent):
 
 
@@ -23,18 +23,21 @@ class AStarAgent(Agent):
             return danger
 
     def applyHeuristic(self,game:Game):
-
         q = PriorityQueue()
+        bonusSoldiers=game.bonusSoldiers(self.isRedPlayer)
         cityListId=game.citiesOf(self.isRedPlayer)
-        if(len(cityListId)!=0):
-            game.cityList[cityListId[0]].armyCount+=bonusSoldiers
-        else:
-            return
+        #game=self.bonusArmyHeuristic(bonusSoldiers,game,self.isRedPlayer)
+        game=self.bonusArmyPlacing(bonusSoldiers,game,self.isRedPlayer)
+
+        randomId=random.choice(cityListId)
+#        game.addSoldiersToCity(randomId,bonusSoldiers)
+        canAttack=False
         for cityId in cityListId:
             for neighbourId in game.map.graph[cityId]:
                 neighbour=game.cityList[neighbourId]
                 city=game.cityList[cityId]
                 if(city.armyCount>neighbour.armyCount+1 and city.isRedArmy!=neighbour.isRedArmy):
+                    canAttack=True
                     print("city id : ",city.id," with ",city.armyCount," armies",
                           " and red color is ",city.isRedArmy,"can attack ","neighbour id : ",
                           neighbour.id," with armies ",neighbour.armyCount," armies"," and red color is : ",
@@ -48,17 +51,14 @@ class AStarAgent(Agent):
                     totalHeuristic=numberOfDefeatedEnemies-dangerOnDefeatedCity-dangerOnOriginalCity
                     q.put((totalHeuristic*-1,city,neighbour))
                     #print("total heu ",totalHeuristic)
-                    print(q.__sizeof__())
-        print("k")
+        if(canAttack==False):
+            return game
         if (q.not_empty):
             next_item = q.get() #a7la action
             fromCity=next_item[1] #a7la from city
             toCity=next_item[2] # a7la to city
-            print(fromCity)
-            print(toCity.id)
-            print(fromCity.armyCount-1)
             self.attack(fromCity.id,toCity.id,fromCity.armyCount-1,game)
-            return game
+        return game
 
     def attack(self,fromCityId,toCityId,fromCityArmyCount,game):
         game.move(fromCityId,toCityId,fromCityArmyCount)
