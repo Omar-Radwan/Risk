@@ -5,10 +5,6 @@ from game import Game
 class PassiveAgent(Agent):
 
 
-    def calculateBonusArmy(self,list):
-        return max(3,len(list)/3)
-
-
     def calculateMinimumTerritory(self,list,game):
         minimum=1e18
         if len(list)!=0:
