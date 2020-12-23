@@ -8,6 +8,7 @@ from game_engine import GameEngine
 from game import Game
 from gui import GUI
 from map import Map
+from agents.agressive_agent import AggressiveAgent
 from passive_agent import PassiveAgent
 
 
@@ -23,7 +24,7 @@ class LogicGuiController:
         game = Game(map)
         print("alo")
 
-        gameEngine = GameEngine(isSimulation, game, NearlyPacifistAgent(True), GreedyAgent(False))
+        gameEngine = GameEngine(isSimulation, game, AggressiveAgent(True), GreedyAgent(False))
 
         while not gameEngine.gameEnded():
             gameState.modesmanager(gameEngine.game)
