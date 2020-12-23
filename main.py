@@ -5,7 +5,7 @@ from map import Map
 from passive_agent import PassiveAgent
 from city import City
 from a_star_agent import AStarAgent
-from game_controller import GameController
+from game_engine import GameEngine
 from agents.realtime_agent import realtime_agent
 # code that attaches map to a game and starts the game
 
@@ -13,7 +13,7 @@ from agents.realtime_agent import realtime_agent
 # code that attaches map to a game and starts the game
 from agents.greedy_agent import GreedyAgent
 
-map = Map(filename="map1.txt")
+map = Map(filename="USmap.txt")
 print(map)
 game = Game(map)
 game.prepare()
