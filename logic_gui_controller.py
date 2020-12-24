@@ -4,13 +4,14 @@ from agents.minimax_agent import MiniMaxAgent
 from agents.nearly_pacifist_agent import NearlyPacifistAgent
 from agents.greedy_agent import GreedyAgent
 from game_engine import GameEngine
-from game_engine import GameEngine
 from game import Game
 from gui import GUI
 from map import Map
+from a_star_agent import AStarAgent
 from agents.agressive_agent import AggressiveAgent
 from passive_agent import PassiveAgent
-
+from agents.realtime_agent import realtime_agent
+from agents.HumanAgent import HumanAgent
 
 class LogicGuiController:
     def __init__(self):
@@ -19,18 +20,38 @@ class LogicGuiController:
     def start(self):
         # gui = GUI()
         gameState = GUI.GameState()
+        gameState.start() #start the first two scenes to get the required parameters (tuple)
         isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
+        redAgent = self.getAgent(redAgentString, True)
+        greenAgent = self.getAgent(greenAgentString, False)
         map = Map()  # for now just read the USmap
         game = Game(map)
-        print("alo")
-
-        gameEngine = GameEngine(isSimulation, game, AggressiveAgent(True), GreedyAgent(False))
+        gameEngine = GameEngine(isSimulation, game, redAgent, greenAgent)
 
         while not gameEngine.gameEnded():
             gameState.modesmanager(gameEngine.game)
             sleep(0.5)
             gameEngine.play()
         print(gameEngine.gamePlayCounts)
+
+    def getAgent(self, agent, isRed):
+        if agent == "greedy":
+            return GreedyAgent(isRed)
+        elif agent == "RT A*":
+            return realtime_agent(isRed)
+        elif agent == "aStar":
+            return AStarAgent(isRed)
+        elif agent == "minimax":
+            return MiniMaxAgent(isRed)
+        elif agent == "passive":
+            return PassiveAgent(isRed)
+        elif agent == "agressive":
+            return AggressiveAgent(isRed)
+        elif agent == "nearly":
+            return NearlyPacifistAgent(isRed)
+        elif agent == "human":
+            return HumanAgent(isRed)
+
 
     def setTuple(self, isSimulation, aiAgent, nonAiAgent):
         gameState = GUI.GameState()

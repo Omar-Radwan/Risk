@@ -171,7 +171,6 @@ class GUI:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
                         self.state = "intro"
-                    print(pygame.mouse.get_pos())
                     crosshair.shoot()
             # loop over the cities to check the color with city is the index (or id) of the city
 
@@ -179,44 +178,7 @@ class GUI:
             crosshairgroup.update()
             pygame.display.update()
 
-        def renderPlayingmode(self, game):
-            cityList = game.getCityList()
-            screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
-            screen.blit(self.gameimage, (0, 0))
 
-            Quit = pygame.draw.rect(screen, (0, 0, 255), [0, 0, 140, 40])
-            text = pygame.font.Font('freesansbold.ttf', 30)
-            textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
-            textrect.center = (Quit.center)
-            screen.blit(textsurf, textrect)
-            if self.chosenimage == "us":
-                map = game.map.USmap
-                print("us ya sa7by")
-            else:
-                map = game.map.worldMap
-                print("map is worldmap to rendermap")
-            self.rendermap(map,cityList,screen)
-
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.MOUSEMOTION:
-                    for city in range(0, len(map) , 1):
-                        if pygame.mouse.get_pos() == map[str(city)]: #USmap to be changed to a varicable indicating wwhich map has been chosens
-                            text = pygame.font.Font('freesansbold.ttf', 30)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
-                        print("Quit")
-                        self.state = "intro"
-                    print(pygame.mouse.get_pos())
-                    crosshair.shoot()
-            # loop over the cities to check the color with city is the index (or id) of the city
-
-            crosshairgroup.draw(screen)
-            crosshairgroup.update()
-            pygame.display.update()
 
         def choosePlayerModeSimulation(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -228,11 +190,9 @@ class GUI:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse = pygame.mouse.get_pos()
-                    print(mouse)
                     if screen.get_width() - 873 > mouse[
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
-                        print("greedy")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "greedy"
@@ -244,7 +204,6 @@ class GUI:
                         0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        print("RT A*")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "RT A*"
@@ -261,12 +220,10 @@ class GUI:
                         else:
                             self.agent2bool = True
                             self.agent2 = "aStar"
-                        print("A*")
                     elif screen.get_width() - 838 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
                         1] > screen.get_height() - 204:
                         # scren change
-                        print("minimax")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "minimax"
@@ -277,7 +234,6 @@ class GUI:
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
-                        print("passive")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "passive"
@@ -288,7 +244,6 @@ class GUI:
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
-                        print("agressive")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "agressive"
@@ -299,7 +254,6 @@ class GUI:
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        print("nearly")
                         if(self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "nearly"
@@ -309,11 +263,9 @@ class GUI:
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
                         self.chosenimage = "us"
-                        print(self.chosenimage)
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
                         self.chosenimage = "world"
-                        print(self.chosenimage)
             # game title
 
             # coordinateList = [(),(),(),() .... ]
@@ -347,7 +299,44 @@ class GUI:
             textrect.center = (screen.get_width() / 2 + x, screen.get_height() / 2 + y)
             screen.blit(textsurf, textrect)
 
+        def renderPlayingmode(self, game):
+            cityList = game.getCityList()
+            screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
+            screen.blit(self.gameimage, (0, 0))
+
+            Quit = pygame.draw.rect(screen, (0, 0, 255), [0, 0, 140, 40])
+            text = pygame.font.Font('freesansbold.ttf', 30)
+            textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
+            textrect.center = (Quit.center)
+            screen.blit(textsurf, textrect)
+            if self.chosenimage == "us":
+                map = game.map.USmap
+            else:
+                map = game.map.worldMap
+            self.rendermap(map, cityList, screen)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    for city in range(0, len(map), 1):
+                        if pygame.mouse.get_pos() == map[
+                            str(city)]:  # USmap to be changed to a varicable indicating wwhich map has been chosens
+                            text = pygame.font.Font('freesansbold.ttf', 30)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
+                        self.state = "intro"
+                    crosshair.shoot()
+            # loop over the cities to check the color with city is the index (or id) of the city
+
+            crosshairgroup.draw(screen)
+            crosshairgroup.update()
+            pygame.display.update()
+
         def choosePlayerModePlaying(self):
+            self.agent1 = "human"
+            self.agent1bool = True
             image = pygame.image.load('backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(backgroundimage, (0, 0))
@@ -361,67 +350,58 @@ class GUI:
                     if screen.get_width() - 873 > mouse[
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
-                        print("greedy")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "greedy"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "greedy"
 
                     elif screen.get_width() - 898 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        print("RT A*")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "RT A*"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "RT A*"
                     elif screen.get_width() - 960 > mouse[
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "aStar"
-                        print("A*")
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "aStar"
                     elif screen.get_width() - 838 > mouse[
                         0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
                         1] > screen.get_height() - 204:
                         # scren change
-                        print("minimax")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "minimax"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "minimax"
                     elif screen.get_width() - 387 > mouse[
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
-                        print("passive")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "passive"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "passive"
                     elif screen.get_width() - 346 > mouse[
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
-                        print("agressive")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "agressive"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "agressive"
                     elif screen.get_width() - 252 > mouse[
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        print("nearly")
-                        if (self.agent1bool is False):
-                            self.agent1bool = True
-                            self.agent1 = "nearly"
+                        if (self.agent2bool is False):
+                            self.agent2bool = True
+                            self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
                         self.chosenimage = "us"
-                        print(self.chosenimage)
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
                         self.chosenimage = "world"
-                        print(self.chosenimage)
 
             # game title
 
@@ -441,7 +421,7 @@ class GUI:
             self.coordinates(screen, 290, 150, "Nearly pacifist")
             self.coordinates(screen, 0, 300, "USMAP")
             self.coordinates(screen, 380, 300, "WORLD MAP")
-            if self.agent1bool is True:
+            if self.agent1bool is True and self.agent2bool is True:
                 self.state = "playingmode"
             pygame.display.update()
 
@@ -459,14 +439,13 @@ class GUI:
             elif self.state == 'simulationMode':
                 self.renderSimulationMode(game)
 
-        def returnTuple(self):
-            while ((self.state == "choosePlayerPlaying" and (len(self.agent1) == 0 and len(self.agent2) == 0))
-                    or (self.state == "choosePlayerSimulation" and (len(self.agent1) == 0 or len(self.agent2) == 0)) #neb2a nshof elsimulation
-                    or self.state == "intro"):
+        def start(self):
+            while self.state == "choosePlayerPlaying" or self.state == "choosePlayerSimulation" or self.state == "intro":
                 self.statemanager()
                 clock.tick(60)
-            print(self.chosenimage)
-            return (self.isSimulation, self.agent1, self.agent2, self.chosenimage)
+        def returnTuple(self):
+            if self.state == 'playingmode' or self.state == 'simulationMode':
+                return (self.isSimulation, self.agent1, self.agent2, self.chosenimage)
 
 # # code for making text
 # # text =  pygame.font.Font('freesansbold.ttf',110)

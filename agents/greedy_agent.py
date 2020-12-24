@@ -19,7 +19,6 @@ class GreedyAgent(Agent):
         self.isRed = isRedArmy
 
     def GreedyHeurictic(self, cityA, cityB, game): #armies in the conquered city - neighbour cities who can conquer me
-        # return math.fabs(cityA.armyCount - cityB.armyCount)
         #attack from cityA to cityB
         army = cityA.armyCount-1
         cityList = game.cityList
@@ -31,9 +30,9 @@ class GreedyAgent(Agent):
             neighbour = cityList[neghbourcity]
             if neighbour.isRedArmy != self.isRed and neighbour.armyCount > army:
                 army-=1
-        if army > 0:
-            return army
-        return 0;
+        #if army > 0:
+        return army
+        #return 0;
     def applyHeuristic(self, game: Game):
         q = PriorityQueue()
         bonusSoldiers = game.bonusSoldiers(self.isRed)
