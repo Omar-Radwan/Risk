@@ -190,7 +190,7 @@ class GUI:
                 map = game.map.USmap
             else:
                 map = game.map.worldMap
-            self.rendermap(map,cityList,screen)
+            self.rendermap(map,cityList,screen,game)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
