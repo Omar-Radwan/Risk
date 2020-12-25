@@ -144,11 +144,10 @@ class GUI:
                                             pygame.Rect(map[str(city)][0] - 20,
                                                         map[str(city)][1] - 20,
                                                         40, 40), 3)
-                    usertext = ''
                     for event in pygame.event.get():
                         if event.type == pygame.MOUSEBUTTONDOWN: #detected the human click on city
                             print(cityList[city])
-                            if self.bonusAttack is False:
+                            if self.bonusAttack is False: #turn of placing bonus army
                                 if cityList[city].isRedArmy is True:
                                     army = game.bonusSoldiers(True)
                                     game.placeBonusSoldiers(cityList[city].id, army)

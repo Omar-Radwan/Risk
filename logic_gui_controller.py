@@ -41,11 +41,12 @@ class LogicGuiController:
                     gameState.modesmanager(gameEngine.game)
                 army = gameState.withArmy
                 print("army is  : " ,army)
-                gameEngine.game.move(gameState.attackingCity.id, gameState.defendingCity.id,int(army))
+                if(gameState.attackingCity.armyCount > int(army) and int(army) > 1):
+                    gameEngine.game.move(gameState.attackingCity.id, gameState.defendingCity.id,int(army))
+                    gameEngine.playvsHuman()
                 gameState.defendingCity = ''
                 gameState.attackingCity = ''
                 gameState.bonusAttack = False
-                gameEngine.playvsHuman()
 
     def getAgent(self, agent, isRed):
         if agent == "greedy":
