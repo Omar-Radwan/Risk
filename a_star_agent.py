@@ -29,8 +29,6 @@ class AStarAgent(Agent):
         #game=self.bonusArmyHeuristic(bonusSoldiers,game,self.isRedPlayer)
         game=self.bonusArmyPlacing(bonusSoldiers,game,self.isRedPlayer)
 
-        randomId=random.choice(cityListId)
-#        game.addSoldiersToCity(randomId,bonusSoldiers)
         canAttack=False
         for cityId in cityListId:
             for neighbourId in game.map.graph[cityId]:
