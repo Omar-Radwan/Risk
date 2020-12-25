@@ -131,6 +131,9 @@ class Game:
 
     def isFinished(self):
         return self.cityCount[False] == 0 or self.cityList[True] == 0
+
+    def __lt__(self, other):
+        return self.cityCount[True] < self.cityCount[False]
 # # debugging functions
 # def __str__(self):
 #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'
