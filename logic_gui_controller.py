@@ -15,6 +15,7 @@ from agents.HumanAgent import HumanAgent
 
 class LogicGuiController:
     def __init__(self):
+        self.humanAgent = False
         pass
 
     def start(self):
@@ -27,12 +28,24 @@ class LogicGuiController:
         map = Map()  # for now just read the USmap
         game = Game(map)
         gameEngine = GameEngine(isSimulation, game, redAgent, greenAgent)
-
-        while not gameEngine.gameEnded():
-            gameState.modesmanager(gameEngine.game)
-            sleep(0.5)
-            gameEngine.play()
-        print(gameEngine.gamePlayCounts)
+        if self.humanAgent is False:
+            print("msh human agent")
+            while not gameEngine.gameEnded():
+                gameState.modesmanager(gameEngine.game)
+                # sleep(0.5)
+                gameEngine.play()
+        else:
+            print("human agent")
+            while not gameEngine.gameEnded():
+                while not gameState.Ready():
+                    gameState.modesmanager(gameEngine.game)
+                army = gameState.withArmy
+                print("army is  : " ,army)
+                gameEngine.game.move(gameState.attackingCity.id, gameState.defendingCity.id,int(army))
+                gameState.defendingCity = ''
+                gameState.attackingCity = ''
+                gameState.bonusAttack = False
+                gameEngine.playvsHuman()
 
     def getAgent(self, agent, isRed):
         if agent == "greedy":
@@ -50,6 +63,7 @@ class LogicGuiController:
         elif agent == "nearly":
             return NearlyPacifistAgent(isRed)
         elif agent == "human":
+            self.humanAgent = True
             return HumanAgent(isRed)
 
 
