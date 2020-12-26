@@ -22,7 +22,7 @@ class MiniMaxAgent(Agent):
         self.actionManager = ActionManager(game)
 
         self.cnt = 0
-        value, bonusArmyActionList, attackAction = self.maximize(0, 1, game, int(-1e18), int(1e18))
+        value, bonusArmyActionList, attackAction = self.maximize(0, 2, game, int(-1e18), int(1e18))
         print("TerminalStates= ", self.cnt)
         if bonusArmyActionList != None:
             self.actionManager.applyListOfActions(bonusArmyActionList)
