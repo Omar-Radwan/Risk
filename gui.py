@@ -28,24 +28,24 @@ def text_objects(text, font, color):
     return textSurface, textSurface.get_rect()
 
 
-class Crosshair(pygame.sprite.Sprite):
-    def __init__(self, picturepath):
-        super().__init__()
-        self.image = pygame.image.load(picturepath)
-        self.rect = self.image.get_rect()
-        self.attack = pygame.mixer.Sound('attack.wav')
+# class Crosshair(pygame.sprite.Sprite):
+#     def __init__(self, picturepath):
+#         super().__init__()
+#         self.image = pygame.image.load(picturepath)
+#         self.rect = self.image.get_rect()
+#         self.attack = pygame.mixer.Sound('attack.wav')
+#
+#     def update(self):
+#         self.rect.center = pygame.mouse.get_pos()
+#
+#     def shoot(self):
+#         self.attack.play()
 
-    def update(self):
-        self.rect.center = pygame.mouse.get_pos()
+#
+# crosshair = Crosshair('sword.png')
 
-    def shoot(self):
-        self.attack.play()
-
-
-crosshair = Crosshair('sword.png')
-
-crosshairgroup = pygame.sprite.Group()
-crosshairgroup.add(crosshair)
+# crosshairgroup = pygame.sprite.Group()
+# crosshairgroup.add(crosshair)
 
 
 class GUI:
@@ -53,6 +53,7 @@ class GUI:
 
     class GameState:
         def __init__(self):
+            self.ready = False
             self.state = 'intro'
             self.agent1 = ''
             self.agent2 = ''
@@ -60,12 +61,14 @@ class GUI:
             self.agent2bool = False
             self.isSimulation = False
             self.gameimage = pygame.image.load("unitedstatesmap.png")
-            self.chosenimage = "us"  #made for comparison only in GUI class
+            self.chosenimage = "us"  # made for comparison only in GUI class
             self.bonusArmyCity = ''
-            self.attackingCity =''
-            self.defendingCity =''
+            self.attackingCity = ''
+            self.defendingCity = ''
             self.withArmy = ''
-            self.bonusAttack = False #false means bonus army turn, true means attacking turn
+            self.bonusAttack = False  # false means bonus army turn, true means attacking turn
+            self.citiesRectx = []
+            self.citiesRecty = []
 
         def intro(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -117,9 +120,8 @@ class GUI:
             screen.blit(s, (screen.get_width() / 4 - 100, screen.get_height() / 2 + 100))
             pygame.display.update()
 
-
-        def rendermap(self,map,cityList,screen, game):
-            for city in range(0, len(cityList), 1):  # msh 3aref hena lazem len(gamemap.map)-1 wala la
+        def rendermap(self, map, cityList, screen, game):
+            for city in range(0, len(cityList), 1):
                 text = pygame.font.Font('freesansbold.ttf', 30)
                 if cityList[city].isRedArmy:
                     color = (255, 0, 0)
@@ -136,46 +138,53 @@ class GUI:
                                                     map[str(city)][1] - 15,
                                                     30,
                                                     30), 1)
+                self.citiesRectx.append(map[str(city)][0] - 15)
+                self.citiesRecty.append(map[str(city)][1] - 15)
 
                 # detect if a mouse hovered over a rect
                 # hanzawed code elsoldiers placing wala attack....
                 if rect.collidepoint(pygame.mouse.get_pos()):
+                    # currentCity = cityList[city]
+                    # print(cityList[city].armyCount)
                     rect = pygame.draw.rect(screen, color,
                                             pygame.Rect(map[str(city)][0] - 20,
                                                         map[str(city)][1] - 20,
                                                         40, 40), 3)
-                    for event in pygame.event.get():
-                        if event.type == pygame.MOUSEBUTTONDOWN: #detected the human click on city
-                            print(cityList[city])
-                            if self.bonusAttack is False: #turn of placing bonus army
-                                if cityList[city].isRedArmy is True:
-                                    army = game.bonusSoldiers(True)
-                                    game.placeBonusSoldiers(cityList[city].id, army)
-                                    self.bonusAttack = True
-                            else:
-                                if cityList[city].isRedArmy:
-                                    self.attackingCity = cityList[city]
-                                    print(self.attackingCity , "attack")
-                                    print(game.map.graph[self.attackingCity.id])
-                                    print(city , " city")
-                                elif cityList[city].isRedArmy is False and self.attackingCity != '' and game.map.graph[self.attackingCity.id].__contains__(city):
-                                    self.defendingCity = cityList[city]
-                                    print(self.defendingCity  , " defending")
-                        if self.attackingCity != '' and self.defendingCity != '3' and event.type == pygame.KEYDOWN:
-                            self.withArmy+=event.unicode
-                            print(self.withArmy)
+
+                    # for event in pygame.event.get():
+                    #     if event.type == pygame.MOUSEBUTTONDOWN: #detected the human click on city
+                    #         print(cityList[city])
+                    #         if self.bonusAttack is False: #turn of placing bonus army
+                    #             if cityList[city].isRedArmy is True:
+                    #                 army = game.bonusSoldiers(True)
+                    #                 game.placeBonusSoldiers(cityList[city].id, army)
+                    #                 self.bonusAttack = True
+                    # else:
+                    #     if cityList[city].isRedArmy:
+                    #         self.attackingCity = cityList[city]
+                    #         print(self.attackingCity , "attack")
+                    #         print(game.map.graph[self.attackingCity.id])
+                    #         print(city , " currentCity")
+                    #         elif cityList[city].isRedArmy is False and self.attackingCity != '' and game.map.graph[self.attackingCity.id].__contains__(city):
+                    #             self.defendingCity = cityList[city]
+                    #             print(self.defendingCity  , " defending")
+                    # if self.attackingCity != '' and self.defendingCity != '' and event.type == pygame.KEYDOWN:
+                    #     self.withArmy+=event.unicode
+                    #     self.ready = True
+                    #     print(self.withArmy)
+                    # if event.type == pygame.KEYDOWN:
+                    #     print(event.unicode)
                 else:
                     rect = pygame.draw.rect(screen, color,
                                             pygame.Rect(map[str(city)][0] - 15,
                                                         map[str(city)][1] - 15,
                                                         30, 30), 3)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+
+            pygame.display.update()
 
         def returnHumanBonusArmy(self):
             return self.bonusArmyCity, 3
+
         def renderSimulationMode(self, game: Game):
             cityList = game.getCityList()
             screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
@@ -190,27 +199,25 @@ class GUI:
                 map = game.map.USmap
             else:
                 map = game.map.worldMap
-            self.rendermap(map,cityList,screen,game)
+            self.rendermap(map, cityList, screen, game)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.MOUSEMOTION:
-                    for city in range(0, len(map) , 1):
-                        if pygame.mouse.get_pos() == map[str(city)]:
-                            text = pygame.font.Font('freesansbold.ttf', 30)
+                # if event.type == pygame.MOUSEMOTION:
+                #     for city in range(0, len(map), 1):
+                #         if pygame.mouse.get_pos() == map[str(city)]:
+                #             text = pygame.font.Font('freesansbold.ttf', 30)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
                         self.state = "intro"
-                    crosshair.shoot()
+                    # crosshair.shoot()
             # loop over the cities to check the color with city is the index (or id) of the city
 
-            crosshairgroup.draw(screen)
-            crosshairgroup.update()
+            # crosshairgroup.draw(screen)
+            # crosshairgroup.update()
             pygame.display.update()
-
-
 
         def choosePlayerModeSimulation(self):
             image = pygame.image.load('backgroundimage.jpg')
@@ -225,7 +232,7 @@ class GUI:
                     if screen.get_width() - 873 > mouse[
                         0] > screen.get_width() - 1013 and screen.get_height() - 313 > mouse[
                         1] > screen.get_height() - 354:
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "greedy"
                         else:
@@ -236,7 +243,7 @@ class GUI:
                         0] > screen.get_width() - 1007 and screen.get_height() - 214 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "RT A*"
                         else:
@@ -246,7 +253,7 @@ class GUI:
                         0] > screen.get_width() - 1005 and screen.get_height() - 264 > mouse[
                         1] > screen.get_height() - 304:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "aStar"
                         else:
@@ -256,7 +263,7 @@ class GUI:
                         0] > screen.get_width() - 1007 and screen.get_height() - 164 > mouse[
                         1] > screen.get_height() - 204:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "minimax"
                         else:
@@ -266,7 +273,7 @@ class GUI:
                         0] > screen.get_width() - 538 and screen.get_height() - 314 > mouse[
                         1] > screen.get_height() - 354:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "passive"
                         else:
@@ -276,7 +283,7 @@ class GUI:
                         0] > screen.get_width() - 539 and screen.get_height() - 263 > mouse[
                         1] > screen.get_height() - 305:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "agressive"
                         else:
@@ -286,7 +293,7 @@ class GUI:
                         0] > screen.get_width() - 533 and screen.get_height() - 213 > mouse[
                         1] > screen.get_height() - 254:
                         # scren change
-                        if(self.agent1bool is False):
+                        if (self.agent1bool is False):
                             self.agent1bool = True
                             self.agent1 = "nearly"
                         else:
@@ -330,11 +337,13 @@ class GUI:
             textsurf, textrect = text_objects(string, text, (0, 0, 0))
             textrect.center = (screen.get_width() / 2 + x, screen.get_height() / 2 + y)
             screen.blit(textsurf, textrect)
+
         def Ready(self):
             if self.attackingCity != '' and self.defendingCity != '' and self.withArmy != '':
                 self.bonusAttack = False
                 return True
             return False
+
         def renderPlayingmode(self, game):
             cityList = game.getCityList()
             screen = pygame.display.set_mode((self.gameimage.get_width(), self.gameimage.get_height()))
@@ -349,35 +358,54 @@ class GUI:
                 map = game.map.USmap
             else:
                 map = game.map.worldMap
-            self.rendermap(map, cityList, screen,game)
+            self.rendermap(map, cityList, screen, game)
 
-            # loop over the cities to check the color with city is the index (or id) of the city
+            text = pygame.font.Font('freesansbold.ttf', 30)
+            textsurf, textrect = text_objects("", text, (0, 0, 0))
+            input_box = pygame.Rect(600, 600, 140, 32)
 
-            crosshairgroup.draw(screen)
-            crosshairgroup.update()
+            screen.blit(textsurf, (input_box.x + 5, input_box.y + 5))
+            pygame.draw.rect(screen, (0,0,255), input_box, 1)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONUP:
+                    print("Mouse pressed")
+                    for city in range(0, len(map), 1):
+                        if self.citiesRectx[city] + 40 > pygame.mouse.get_pos()[0] > self.citiesRectx[city]\
+                                and self.citiesRecty[city] + 40 > pygame.mouse.get_pos()[1] > self.citiesRecty[city]:
+                            text = pygame.font.Font('freesansbold.ttf', 30)
+                            print("lelelelellelelelee")
+                            print(cityList[city])
+                            if self.bonusAttack is False: #turn of placing bonus army
+                                if cityList[city].isRedArmy is True:
+                                    army = game.bonusSoldiers(True)
+                                    game.placeBonusSoldiers(cityList[city].id, army)
+                                    self.bonusAttack = True
+                            else:
+                                if cityList[city].isRedArmy:
+                                    self.attackingCity = cityList[city]
+                                    print(self.attackingCity , "attack")
+                                    print(game.map.graph[self.attackingCity.id])
+                                    print(city , " currentCity")
+                                elif cityList[city].isRedArmy is False and self.attackingCity != '' and game.map.graph[self.attackingCity.id].__contains__(city):
+                                    self.defendingCity = cityList[city]
+                                    print(self.defendingCity  , " defending")
+                if self.attackingCity != '' and self.defendingCity != '' and input_box.collidepoint(pygame.mouse.get_pos()):
+                    # print(";lwenroinqweoifmnqwekp")
+                    if event.type == pygame.KEYDOWN:
+                        self.withArmy+=event.unicode
+                        self.ready = True
+                        print(self.withArmy)
+
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
+                        self.state = "intro"
+
             pygame.display.update()
-            # while not self.Ready():
-            #     #ersem input box takhod number of troops
-            #     input_box = pygame.Rect(100, 100, 140, 32)
-            #     color_inactive = pygame.Color('lightskyblue3')
-            #     color_active = pygame.Color('dodgerblue2')
-            #     color = color_inactive
-            #     active = False
-            #     text = ''
-            #     done = False
-            #
-            #     for event in pygame.event.get():
-            #         if event.type == pygame.QUIT:
-            #             pygame.quit()
-            #             sys.exit()
-            #         if event.type == pygame.MOUSEMOTION:
-            #             for city in range(0, len(map), 1):
-            #                 if pygame.mouse.get_pos() == map[str(city)]:
-            #                     text = pygame.font.Font('freesansbold.ttf', 30)
-            #         if event.type == pygame.MOUSEBUTTONDOWN:
-            #             if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
-            #                 self.state = "intro"
-            #             crosshair.shoot()
+
         def choosePlayerModePlaying(self):
             self.agent1 = "human"
             self.agent1bool = True
@@ -477,6 +505,7 @@ class GUI:
             elif self.state == 'choosePlayerSimulation':
                 self.isSimulation = True
                 self.choosePlayerModeSimulation()
+
         def modesmanager(self, game):
             if self.state == 'playingmode':
                 self.renderPlayingmode(game)
@@ -487,6 +516,7 @@ class GUI:
             while self.state == "choosePlayerPlaying" or self.state == "choosePlayerSimulation" or self.state == "intro":
                 self.statemanager()
                 clock.tick(60)
+
         def returnTuple(self):
             if self.state == 'playingmode' or self.state == 'simulationMode':
                 return (self.isSimulation, self.agent1, self.agent2, self.chosenimage)

@@ -39,18 +39,19 @@ class LogicGuiController:
         else:
             print("human agent")
             while not gameEngine.gameEnded():
-                while not gameState.Ready():
+                while gameState.ready is False:
                     gameState.modesmanager(gameEngine.game)
                 army = gameState.withArmy
                 print("army is  : ", army)
-                if (gameState.attackingCity.armyCount > int(army) and int(
-                        army) > 1) and gameState.defendingCity.armyCount < gameState.attackingCity.armyCount:
+                if (gameState.attackingCity.armyCount > int(army) and int(army) > 1) and gameState.defendingCity.armyCount < gameState.attackingCity.armyCount:
                     gameEngine.game.move(gameState.attackingCity.id, gameState.defendingCity.id, int(army))
                     gameEngine.playvsHuman()
                 gameState.defendingCity = ''
                 gameState.attackingCity = ''
                 gameState.withArmy = ''
                 gameState.bonusAttack = False
+                gameState.ready = False
+                # GreedyAgent.print()
 
     def getAgent(self, agent, isRed):
         if agent == "greedy":
@@ -71,17 +72,17 @@ class LogicGuiController:
             self.humanAgent = True
             return HumanAgent(isRed)
 
-    def test(self):
-        gameState = GUI.GameState()
-        gameState.start()  # start the first two scenes to get the required parameters (tuple)
-        isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
-        map = Map()  # for now just read the USmap
-        game = Game(map)
-        gameEngine = GameEngine(isSimulation, game, AStarAgent(True), NearlyPacifistAgent(False))
-        while not gameEngine.gameEnded():
-            gameState.modesmanager(gameEngine.game)
-            # sleep(0.5)
-            gameEngine.play()
+    # def test(self):
+    #     gameState = GUI.GameState()
+    #     gameState.start()  # start the first two scenes to get the required parameters (tuple)
+    #     isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
+    #     map = Map()  # for now just read the USmap
+    #     game = Game(map)
+    #     gameEngine = GameEngine(isSimulation, game, AStarAgent(True), NearlyPacifistAgent(False))
+    #     while not gameEngine.gameEnded():
+    #         gameState.modesmanager(gameEngine.game)
+    #         # sleep(0.5)
+    #         gameEngine.play()
 
     def setTuple(self, isSimulation, aiAgent, nonAiAgent):
         gameState = GUI.GameState()

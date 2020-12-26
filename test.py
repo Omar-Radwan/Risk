@@ -9,4 +9,4 @@ import gui
 
 logicGuiController = LogicGuiController()
 
-logicGuiController.test()
+logicGuiController.start()

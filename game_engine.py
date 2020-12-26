@@ -12,8 +12,8 @@ class GameEngine:
         self.isSimulationMode = isSimulation
         self.isPlayingMode = not isSimulation
         self.gamePlayCounts = 0
-        game.prepare()
-
+        # game.prepare()
+        game.staticPrepareEvaluation()
     def play(self):
         gameAfterMove = self.players[self.isRedPlayerTurn].applyHeuristic(deepcopy(self.game))
         self.isRedPlayerTurn = not self.isRedPlayerTurn
@@ -22,7 +22,7 @@ class GameEngine:
 
     def playvsHuman(self):
         gameAfterMove = self.players[False].applyHeuristic(deepcopy(self.game))
-        self.isRedPlayerTurn = not self.isRedPlayerTurn
+        # self.isRedPlayerTurn = not self.isRedPlayerTurn
         self.game = gameAfterMove
         self.gamePlayCounts += 1
 

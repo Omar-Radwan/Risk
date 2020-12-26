@@ -8,6 +8,10 @@ from heuristics import HeuristicsManager
 
 
 class AStarAgent(Agent):
+    def __init__(self, isRedPlayer: bool):
+        super().__init__(isRedPlayer)
+        self.searchExpansion = 0
+        self.stepstoWin = 0
 
     # How many enemy cities can attack me in my new city if I decided to attack this new city.
     def dangerOnDefeatedCityHeuristic(self, enemyCity, newArmyInEnemyCity, danger, game: Game):
@@ -34,6 +38,7 @@ class AStarAgent(Agent):
         #         neighbour = game.cityList[neighbourId]
         #         if neighbour.armyCount > city.armyCount + 1 and neighbour.isRedArmy != city.isRedArmy:
         #             hnCost += 1
+        self.searchExpansion+=1
         heuristicsManager = HeuristicsManager()
         return 2 * game.cityCount[not self.isRedPlayer] * game.soldiersCount[not self.isRedPlayer] + len(
             game.cityList) - heuristicsManager.mySecuredCities(self.isRedPlayer, game)
@@ -71,6 +76,8 @@ class AStarAgent(Agent):
 
             isFirstMove = False
         print(ansGame)
+        self.stepstoWin+=1
+        self.evaluate()
         return ansGame
 
     def isGoalState(self, gameState: Game, initialState: Game):
@@ -103,3 +110,10 @@ class AStarAgent(Agent):
 
     def attack(self, fromCityId, toCityId, fromCityArmyCount, game):
         game.move(fromCityId, toCityId, fromCityArmyCount)
+
+    def evaluate(self):
+        print("Steps to win ", self.stepstoWin)
+        print("Search Expansion " , self.searchExpansion)
+        print("for f = 1 " , 1*self.stepstoWin + self.searchExpansion)
+        print("for f = 100 " , 100*self.stepstoWin + self.searchExpansion)
+        print("for f = 100000 " , 10000*self.stepstoWin + self.searchExpansion)

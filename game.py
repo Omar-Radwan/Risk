@@ -44,6 +44,14 @@ class Game:
         for i in range(0, len(res), 1):
             self.cityList[res[i]].isRedArmy = True
         self.initializeCounts()
+    def staticPrepareEvaluation(self):
+        for i in range(0, self.map.cityCount, 1):
+            self.cityList[i].isRedArmy = False
+            self.cityList[i].armyCount = 1
+        # generate random 20 indices in range 0, 39
+        for i in range(20, 40, 1):
+            self.cityList[i].isRedArmy = True
+        self.initializeCounts()
 
     def getCityList(self):
         return self.cityList

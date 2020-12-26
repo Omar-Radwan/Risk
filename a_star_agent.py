@@ -4,7 +4,9 @@ from game import Game
 from agent import Agent
 import random
 class AStarAgent(Agent):
-
+    def __init__(self):
+        self.stepstoWin = 0
+        self.searchExpansion = 0
 
     #How many enemy cities can attack me in my new city if I decided to attack this new city.
     def dangerOnDefeatedCityHeuristic(self, enemyCity, newArmyInEnemyCity, danger,game:Game):
@@ -23,6 +25,7 @@ class AStarAgent(Agent):
             return danger
 
     def applyHeuristic(self,game:Game):
+        self.stepstoWin+=1
         q = PriorityQueue()
         bonusSoldiers=game.bonusSoldiers(self.isRedPlayer)
         cityListId=game.citiesOf(self.isRedPlayer)
@@ -47,6 +50,7 @@ class AStarAgent(Agent):
                     # heuristic 3
                     dangerOnOriginalCity=self.dangerOnOriginalCityHeuristic(city,1,0,game)
                     totalHeuristic=numberOfDefeatedEnemies-dangerOnDefeatedCity-dangerOnOriginalCity
+                    self.searchExpansion+=1
                     q.put((totalHeuristic*-1,city,neighbour))
                     #print("total heu ",totalHeuristic)
         if(canAttack==False):
@@ -56,7 +60,15 @@ class AStarAgent(Agent):
             fromCity=next_item[1] #a7la from city
             toCity=next_item[2] # a7la to city
             self.attack(fromCity.id,toCity.id,fromCity.armyCount-1,game)
+        self.evaluate()
         return game
 
     def attack(self,fromCityId,toCityId,fromCityArmyCount,game):
         game.move(fromCityId,toCityId,fromCityArmyCount)
+
+    def evaluate(self):
+        print("Steps to win ", self.stepstoWin)
+        print("Search Expansion " , self.searchExpansion)
+        print("for f = 1 " , 1*self.stepstoWin + self.searchExpansion)
+        print("for f = 100 " , 100*self.stepstoWin + self.searchExpansion)
+        print("for f = 100000 " , 10000*self.stepstoWin + self.searchExpansion)

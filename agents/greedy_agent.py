@@ -17,6 +17,8 @@ class GreedyAgent(Agent):
     def __init__(self, isRedArmy):
         self.game = Game
         self.isRed = isRedArmy
+        self.stepstoWin = 0
+        self.searchExpansion = 0
 
     def GreedyHeurictic(self, cityA, cityB, game): #armies in the conquered city - neighbour cities who can conquer me
         #attack from cityA to cityB
@@ -31,9 +33,11 @@ class GreedyAgent(Agent):
             if neighbour.isRedArmy != self.isRed and neighbour.armyCount > army:
                 army-=1
         #if army > 0:
+        self.searchExpansion+=1
         return army
         #return 0;
     def applyHeuristic(self, game: Game):
+        self.stepstoWin+=1
         q = PriorityQueue()
         bonusSoldiers = game.bonusSoldiers(self.isRed)
         cityListId = game.citiesOf(self.isRed)
@@ -56,11 +60,20 @@ class GreedyAgent(Agent):
             print(fromCity)
             print(toCity)
             self.attack(fromCity.id, toCity.id, fromCity.armyCount - 1, game)
+        self.evaluate()
         return game
 
 
     def attack(self,fromCityId,toCityId,fromCityArmyCount,game):
         game.move(fromCityId,toCityId,fromCityArmyCount)
+
+
+    def evaluate(self):
+        print("Steps to win ", self.stepstoWin)
+        print("Search Expansion " , self.searchExpansion)
+        print("for f = 1 " , 1*self.stepstoWin + self.searchExpansion)
+        print("for f = 100 " , 100*self.stepstoWin + self.searchExpansion)
+        print("for f = 100000 " , 10000*self.stepstoWin + self.searchExpansion)
     # def GreedyMode(self):
     #     bonusArmy = self.calculateBonusArmy()
     #     newCityList = copy.deepcopy(self.game.cityList) #copy by value
