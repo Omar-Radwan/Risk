@@ -7,11 +7,7 @@ from copy import deepcopy
 from heuristics import HeuristicsManager
 
 
-class AStarAgent(Agent):
-    def __init__(self, isRedPlayer: bool):
-        super().__init__(isRedPlayer)
-        self.searchExpansion = 0
-        self.stepstoWin = 0
+class RealTime(Agent):
 
     # How many enemy cities can attack me in my new city if I decided to attack this new city.
     def dangerOnDefeatedCityHeuristic(self, enemyCity, newArmyInEnemyCity, danger, game: Game):
@@ -38,7 +34,6 @@ class AStarAgent(Agent):
         #         neighbour = game.cityList[neighbourId]
         #         if neighbour.armyCount > city.armyCount + 1 and neighbour.isRedArmy != city.isRedArmy:
         #             hnCost += 1
-        self.searchExpansion+=1
         heuristicManager = HeuristicsManager()
         return game.cityCount[not self.isRedPlayer] + game.soldiersCount[not
         self.isRedPlayer] + heuristicManager.mySecuredCities(self.isRedPlayer, game)
@@ -55,29 +50,37 @@ class AStarAgent(Agent):
             return initialGame
         pq = PriorityQueue()
         # value,curGameState , game after first move in path
-
+        visited = {}
         pq.put((0, 0, initialGame, initialGame))
         isFirstMove = True
         ansGame = None
-        while not pq.empty():
-            value, g, curGame, firstMoveInPath = minTuple = pq.get()
+        curTuple = (0, 0, initialGame, initialGame)
+        while True:
+            value, g, curGame, firstMoveInPath = minTuple = curTuple
             if (self.isGoalState(curGame, initialGame)):
                 ansGame = firstMoveInPath
                 break
 
-            print(g, curGame.cityCount[self.isRedPlayer], value, pq._qsize())
-            adjacentStates = self.adjacentStates(curGame)
+        adjacentStates = self.adjacentStates(curGame)
 
-            for nextGameState in adjacentStates:
-                if (isFirstMove):
-                    pq.put((g + self.calculateHeuristic(nextGameState), g + 1, nextGameState, nextGameState))
-                else:
-                    pq.put((g + self.calculateHeuristic(nextGameState), g + 1, nextGameState, firstMoveInPath))
+        for nextGameState in adjacentStates:
+            value: int
+            newG = 0
+            if (nextGameState in visited.keys()):
+                value = visited[nextGameState][0]
+                newG = visited[nextGameState][1]
+            else:
+                value = (newG + self.calculateHeuristic(nextGameState))
+                newG = g + 1
+            if (isFirstMove):
+                pq.put((value, newG, nextGameState, nextGameState))
+            else:
+                pq.put((value, newG, nextGameState, firstMoveInPath))
 
-            isFirstMove = False
-        print(ansGame)
-        self.stepstoWin+=1
-        self.evaluate()
+        frontTuple = pq.get()
+        visited[curTuple] = pq.get()
+        curTuple = frontTuple
+        isFirstMove = False
         return ansGame
 
     def isGoalState(self, gameState: Game, initialState: Game):
@@ -110,10 +113,3 @@ class AStarAgent(Agent):
 
     def attack(self, fromCityId, toCityId, fromCityArmyCount, game):
         game.move(fromCityId, toCityId, fromCityArmyCount)
-
-    def evaluate(self):
-        print("Steps to win ", self.stepstoWin)
-        print("Search Expansion " , self.searchExpansion)
-        print("for f = 1 " , 1*self.stepstoWin + self.searchExpansion)
-        print("for f = 100 " , 100*self.stepstoWin + self.searchExpansion)
-        print("for f = 100000 " , 10000*self.stepstoWin + self.searchExpansion)

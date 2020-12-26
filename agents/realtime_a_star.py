@@ -7,7 +7,7 @@ from copy import deepcopy
 from heuristics import HeuristicsManager
 
 
-class AStarAgent(Agent):
+class RealTimeAStar(Agent):
     def __init__(self, isRedPlayer: bool):
         super().__init__(isRedPlayer)
         self.searchExpansion = 0

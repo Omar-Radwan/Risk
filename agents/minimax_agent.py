@@ -1,3 +1,5 @@
+from random import random
+
 from action_manager import ActionManager, BonusSoldiersAction, AttackAction
 from agent import Agent
 from game import Game
@@ -20,9 +22,8 @@ class MiniMaxAgent(Agent):
         self.actionManager = ActionManager(game)
 
         self.cnt = 0
-        value, bonusArmyActionList, attackAction = self.maximize(0, 2, game, int(-1e9), int(1e9))
-        print(f'terimal_states={self.cnt} bonusArmyActionListSize={len(bonusArmyActionList)} value={value}')
-        print(f'bonusArmyActionList= {bonusArmyActionList}, bonusSoldiers={game.bonusSoldiers(self.isRedPlayer)}')
+        value, bonusArmyActionList, attackAction = self.maximize(0, 1, game, int(-1e18), int(1e18))
+        print("TerminalStates= ", self.cnt)
         if bonusArmyActionList != None:
             self.actionManager.applyListOfActions(bonusArmyActionList)
         if attackAction != None:
@@ -41,8 +42,8 @@ class MiniMaxAgent(Agent):
         if (self.terminalState(curDepth, maxDepth, game)):
             return (self.evaluate2(game), None, None)
 
-        actionTuples = self.actionManager.adjacentActions2(self.isRedPlayer)  #
-        maxTuple = (int(-1e18), None, None)  #
+        actionTuples = self.actionManager.adjacentActions2(self.isRedPlayer)
+        maxTuple = (int(-1e18), actionTuples[0][0], None)  #
         broke = False
 
         for actionTuple in actionTuples:
@@ -55,20 +56,18 @@ class MiniMaxAgent(Agent):
                 self.actionManager.applyAction(attackAction)
                 childTuple = self.minimize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
-
-                if childTuple[0] > maxTuple[0]:  #
+                if (childTuple[0], random()) > (maxTuple[0], random()):  #
                     maxTuple = (childTuple[0], bonusSoldiersActionList, attackAction)  #
 
                 alpha = max(alpha, maxTuple[0])  #
-
-                if (alpha >= beta):
+                if alpha >= beta:
                     broke = True
                     break
 
             self.actionManager.rollBackNAction(len(bonusSoldiersActionList))
 
             if broke:
-                break
+                return maxTuple
         return maxTuple  #
 
     def minimize(self, curDepth: int, maxDepth: int, game: Game, alpha: int, beta: int):
@@ -98,19 +97,19 @@ class MiniMaxAgent(Agent):
                 childTuple = self.maximize(curDepth + 1, maxDepth, game, alpha, beta)  #
                 self.actionManager.rollBackAction()
 
-                if childTuple[0] < minTuple[0]:  #
+                if (childTuple[0], random()) < (minTuple[0], random()):  #
                     minTuple = (childTuple[0], bonusSoldiersActionList, attackAction)  #
 
                 beta = min(beta, minTuple[0])  #
 
-                if (alpha >= beta):
+                if alpha >= beta:
                     broke = True
                     break
 
             self.actionManager.rollBackNAction(len(bonusSoldiersActionList))
 
             if broke:
-                break
+                return minTuple
 
         return minTuple  #
 
@@ -127,11 +126,12 @@ class MiniMaxAgent(Agent):
         return False
 
     def evaluate1(self, game: Game):
-        return (game.cityCount[self.isRedPlayer] * 2 + game.soldiersCount[self.isRedPlayer] -
-                game.cityCount[not self.isRedPlayer] * 2 - game.soldiersCount[not self.isRedPlayer])
+        return 3 * game.cityCount[self.isRedPlayer] + game.soldiersCount[
+            self.isRedPlayer] * 2
 
     def evaluate2(self, game: Game):
-        return self.heuristicManager.defensiveAndAttacking(self.isRedPlayer, game)
+        return 2 * game.cityCount[self.isRedPlayer] + game.soldiersCount[
+            self.isRedPlayer] + 3 * self.heuristicManager.mySecuredCities(self.isRedPlayer, game)
 
     def evaluate3(self, game: Game):
         return 1 if (game.cityCount[not self.isRedPlayer] == 0) else 0

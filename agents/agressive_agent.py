@@ -1,6 +1,6 @@
-#send game state and return the new game state
-#togggle the redArmy boolean in each agent or state
-#check if the parameters are sent by reference not by value
+# send game state and return the new game state
+# togggle the redArmy boolean in each agent or state
+# check if the parameters are sent by reference not by value
 import math
 
 from agent import Agent
@@ -18,11 +18,10 @@ class AggressiveAgent(Agent):
         for cityId in list:
             city = game.cityList[cityId]
             if (city.armyCount > max):
-                amx = city.armyCount
+                max = city.armyCount
                 maxCity = city
 
         return maxCity
-
 
     def applyHeuristic(self, game: Game) -> Game:
         cityListId = game.citiesOf(self.isRedPlayer)
@@ -30,11 +29,11 @@ class AggressiveAgent(Agent):
         maxCity = self.calculateMaxCity(cityListId, game)
         if maxCity != None:
             game.addSoldiersToCity(maxCity.id, bonusArmy)
-        #attack all neighbour cities with most armies
+        # attack all neighbour cities with most armies
         for cityId in cityListId:
             for neighbourId in game.map.graph[cityId]:
                 neighbour = game.cityList[neighbourId]
                 city = game.cityList[cityId]
-                if neighbour.armyCount < city.armyCount-1 and neighbour.isRedArmy != city.isRedArmy:
-                    game.move(city.id, neighbour.id, city.armyCount-1)
+                if neighbour.armyCount < city.armyCount - 1 and neighbour.isRedArmy != city.isRedArmy:
+                    game.move(city.id, neighbour.id, city.armyCount - 1)
         return game

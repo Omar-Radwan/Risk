@@ -141,7 +141,17 @@ class Game:
         return self.cityCount[False] == 0 or self.cityList[True] == 0
 
     def __lt__(self, other):
-        return self.cityCount[True] < self.cityCount[False]
+        return random.random() < random.random()
+
+    def __hash__(self):
+        return hash((self.cityCount[True], self.soldiersCount[True], self.cityCount[False], self.soldiersCount[False]))
+
+    def __eq__(self, other):
+        return self.__str__() == other.__str__()
+
+    def canAttack2(self, fromId: int, bonusFrom: int, toId: int, bonusTo: int):
+        return ((self.cityList[fromId].isRedArmy != self.cityList[toId].isRedArmy) and
+                (self.cityList[fromId].armyCount + bonusFrom > self.cityList[toId].armyCount + bonusTo + 1))
 # # debugging functions
 # def __str__(self):
 #     return f'redPlayerTurn={self.redPlayerTurn}, isSimulation={self.isSimulation} \n{self.map.__str__()}'

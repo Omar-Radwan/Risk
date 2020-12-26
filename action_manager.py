@@ -96,6 +96,29 @@ class ActionManager:
     def adjacentActions2(self, isRedPlayer: bool) -> [([Action], [Action])]:
         return self.__adjActions(isRedPlayer, self.__adj2)
 
+    def adjacentActions3(self, isRedPlayer: bool, isMax) -> [([Action], [Action])]:
+        myCitiesIds = self.game.citiesOf(isRedPlayer)
+        bonusSoldiers = self.game.bonusSoldiers(isRedPlayer)
+        result = []
+        for bonusArmyCityId in myCitiesIds:
+            bonusSoldiersAction = BonusSoldiersAction(isRedPlayer, bonusArmyCityId, bonusSoldiers)
+            self.applyAction(bonusSoldiersAction)
+            for fromCityId in myCitiesIds:
+                for toCityId in self.game.map.graph[fromCityId]:
+                    if self.game.canAttack(fromCityId, toCityId):
+                        start, end = self.game.cityList[toCityId].armyCount + 1, self.game.cityList[
+                            fromCityId].armyCount
+                        step = max(int((end - start) / 3), 1)
+                        for attackers in range(start, end, step):
+                            attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
+                            self.applyAction(attackAction)
+                            result.append((self.heuristicsManager.defensiveAndAttacking(isMax, self.game),
+                                           [bonusSoldiersAction], attackAction))
+                            self.rollBackAction()
+            self.rollBackAction()
+        result.sort(key=lambda x: x[0], reverse=isMax)
+        return result
+
     def __adj1(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
         attackAction = AttackAction(isRedPlayer, fromCityId, toCityId,
                                     self.game.cityList[toCityId].armyCount + 1)
@@ -104,7 +127,7 @@ class ActionManager:
     def __adj2(self, isRedPlayer: bool, fromCityId: int, toCityId: int, container: [Action]):
         start, end = self.game.cityList[toCityId].armyCount + 1, self.game.cityList[
             fromCityId].armyCount
-        step = max(int((end - start) / 2), 1)
+        step = max(int((end - start) / (end - start)), 1)
         for attackers in range(start, end, step):
             attackAction = AttackAction(isRedPlayer, fromCityId, toCityId, attackers)
             container.append(attackAction)
@@ -144,8 +167,6 @@ class ActionManager:
                 minArmyCityId = cityId
         return minArmyCityId
 
-
-
     def applyListOfActions(self, actionList: [Action]):
         for action in actionList:
             self.applyAction(action)
@@ -154,10 +175,9 @@ class ActionManager:
         for i in range(numberOfActions):
             self.rollBackAction()
 
-    def attackAdjacentActions(self, currentIsRed: bool, maxiIsRed):
+    def attackAdjacentActions(self, currentIsRed: bool):
 
-        optimalBonusSoldiersActionList = self.optimalSoldiersPlacement(currentIsRed, maxiIsRed,
-                                                                       self.heuristicsManager.defensiveAndAttacking)
+        optimalBonusSoldiersActionList = self.optimalSoldiersPlacement(currentIsRed)
         self.applyListOfActions(optimalBonusSoldiersActionList)
 
         attackActionList = []
@@ -166,22 +186,16 @@ class ActionManager:
 
         return [(optimalBonusSoldiersActionList, attackActionList)]
 
-    def optimalSoldiersPlacement(self, currentIsRed: bool, maxiIsRed: bool, heuristicFunction) -> [Action]:
-        better = max
-        NEUTRAL = int(-1e9)
-        if (currentIsRed != maxiIsRed):
-            better = min
-            NEUTRAL = int(1e9)
-
-        baseValue = heuristicFunction(maxiIsRed, self.game)
+    def optimalSoldiersPlacement(self, currentIsRed) -> [Action]:
+        NEUTRAL = -1e9
         myCitiesId = self.game.citiesOf(currentIsRed)
         bonusSoldiers = self.game.bonusSoldiers(currentIsRed)
 
-        def moveValue(currentIsRed: bool, maxiIsRed: bool, cityId, soldiers):
+        def moveValue(currentIsRed: bool, cityId, soldiers):
             bonusSoldiers = BonusSoldiersAction(currentIsRed, cityId, soldiers)
             self.applyAction(bonusSoldiers)
-            currentValue = heuristicFunction(maxiIsRed, self.game)
-            value = currentValue - baseValue
+            currentValue = self.heuristicsManager.heuristicFromCity(currentIsRed, cityId, self.game)
+            value = currentValue
             self.rollBackAction()
             return value
 
@@ -195,21 +209,25 @@ class ActionManager:
             for s in range(1, m + 1):
                 dp[i][s] = dp[i - 1][s]
                 for j in range(1, s + 1):
-                    v = moveValue(currentIsRed, maxiIsRed, myCitiesId[i - 1], j)
-                    dp[i][s] = better(dp[i][s], v + dp[i - 1][s - j])
+                    v = moveValue(currentIsRed, myCitiesId[i - 1], j) - moveValue(currentIsRed,
+                                                                                  myCitiesId[i - 1], 0)
+                    dp[i][s] = max(dp[i][s], v + dp[i - 1][s - j])
 
         i, s = n, m
+
         while i > 0 and s > 0:
             if dp[i][s] == dp[i - 1][s]:
                 i -= 1
             else:
                 for j in range(1, s + 1):
-                    v = moveValue(currentIsRed, maxiIsRed, myCitiesId[i - 1], j)
+                    v = moveValue(currentIsRed, myCitiesId[i - 1], j) - moveValue(currentIsRed,
+                                                                                  myCitiesId[i - 1], 0)
                     if dp[i][s] == v + dp[i - 1][s - j]:
                         addedToEachCityIndex[i] = j
                         i -= 1
                         s -= j
                         break
+
         actions = []
 
         for i in range(1, n + 1):

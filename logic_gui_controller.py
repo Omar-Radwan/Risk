@@ -13,6 +13,7 @@ from passive_agent import PassiveAgent
 from agents.realtime_agent import realtime_agent
 from agents.HumanAgent import HumanAgent
 from agents.a_star_depth import AStarAgent
+from agents.RTA import RealTime
 
 
 class LogicGuiController:
@@ -44,7 +45,8 @@ class LogicGuiController:
                     gameState.modesmanager(gameEngine.game)
                 army = gameState.withArmy
                 print("army is  : ", army)
-                if (gameState.attackingCity.armyCount > int(army) and int(army) > 1) and gameState.defendingCity.armyCount < gameState.attackingCity.armyCount:
+                if (gameState.attackingCity.armyCount > int(army) and int(
+                        army) > 1) and gameState.defendingCity.armyCount < gameState.attackingCity.armyCount:
                     gameEngine.game.move(gameState.attackingCity.id, gameState.defendingCity.id, int(army))
                     gameEngine.playvsHuman()
                 gameState.defendingCity = ''

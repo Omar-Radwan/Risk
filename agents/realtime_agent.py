@@ -63,7 +63,7 @@ class realtime_agent(Agent):
             if (self.isGoalState(curGame, initialGame)):
                 ansGame = firstMoveInPath
                 break
-            g += 1
+            
             print(g, curGame.cityCount[self.isRedPlayer])
             adjacentStates = self.adjacentStates(curGame)
 
