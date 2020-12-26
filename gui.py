@@ -397,11 +397,17 @@ class GUI:
                     if event.type == pygame.KEYDOWN:
                         if event.key != pygame.K_RETURN:
                             self.withArmy+=event.unicode
+                            if self.withArmy != '':
+                                if int(self.withArmy) > self.attackingCity.armyCount-1:
+                                    self.withArmy = ''
+                            print(self.withArmy)
+                        elif event.key == pygame.K_BACKSPACE:
+                            self.withArmy = self.withArmy[0:len(self.withArmy)-1]
                             print(self.withArmy)
                         else:
                             print("ready")
-                            self.ready = True
-
+                            if self.withArmy != '':
+                                self.ready = True
 
                 if event.type == pygame.MOUSEBUTTONUP:
                     if 140 > pygame.mouse.get_pos()[0] > 0 and 40 > pygame.mouse.get_pos()[1] > 0:
