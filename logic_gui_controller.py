@@ -27,7 +27,8 @@ class LogicGuiController:
         isSimulation, redAgentString, greenAgentString, gameimage = gameState.returnTuple()
         redAgent = self.getAgent(redAgentString, True)
         greenAgent = self.getAgent(greenAgentString, False)
-        map = Map()  # for now just read the USmap
+        print(gameimage)
+        map = Map(gameimage)  # for now just read the USmap
         game = Game(map)
         gameEngine = GameEngine(isSimulation, game, redAgent, greenAgent)
         if self.humanAgent is False:

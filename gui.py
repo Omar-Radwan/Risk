@@ -61,7 +61,7 @@ class GUI:
             self.agent2bool = False
             self.isSimulation = False
             self.gameimage = pygame.image.load("unitedstatesmap.png")
-            self.chosenimage = "us"  # made for comparison only in GUI class
+            self.chosenimage = "USmap.txt"  # made for comparison only in GUI class
             self.bonusArmyCity = ''
             self.attackingCity = ''
             self.defendingCity = ''
@@ -195,7 +195,7 @@ class GUI:
             textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
             textrect.center = (Quit.center)
             screen.blit(textsurf, textrect)
-            if self.chosenimage == "us":
+            if self.chosenimage == "USmap.txt":
                 map = game.map.USmap
             else:
                 map = game.map.worldMap
@@ -301,10 +301,10 @@ class GUI:
                             self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
-                        self.chosenimage = "us"
+                        self.chosenimage = "USmap.txt"
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
-                        self.chosenimage = "world"
+                        self.chosenimage = "WorldMap.txt"
             # game title
 
             # coordinateList = [(),(),(),() .... ]
@@ -354,7 +354,7 @@ class GUI:
             textsurf, textrect = text_objects("Quit", text, (0, 0, 0))  # get city.armyCount
             textrect.center = (Quit.center)
             screen.blit(textsurf, textrect)
-            if self.chosenimage == "us":
+            if self.chosenimage == "USmap.txt":
                 map = game.map.USmap
             else:
                 map = game.map.worldMap
@@ -376,7 +376,7 @@ class GUI:
                         if self.citiesRectx[city] + 40 > pygame.mouse.get_pos()[0] > self.citiesRectx[city]\
                                 and self.citiesRecty[city] + 40 > pygame.mouse.get_pos()[1] > self.citiesRecty[city]:
                             text = pygame.font.Font('freesansbold.ttf', 30)
-                            print("lelelelellelelelee")
+                            # print("lelelelellelelelee")
                             print(cityList[city])
                             if self.bonusAttack is False: #turn of placing bonus army
                                 if cityList[city].isRedArmy is True:
@@ -387,8 +387,8 @@ class GUI:
                                 if cityList[city].isRedArmy:
                                     self.attackingCity = cityList[city]
                                     print(self.attackingCity , "attack")
-                                    print(game.map.graph[self.attackingCity.id])
-                                    print(city , " currentCity")
+                                    # print(city , " currentCity")
+                                    # print(game.map.graph[self.attackingCity.id])
                                 elif cityList[city].isRedArmy is False and self.attackingCity != '' and game.map.graph[self.attackingCity.id].__contains__(city):
                                     self.defendingCity = cityList[city]
                                     print(self.defendingCity  , " defending")
@@ -470,10 +470,10 @@ class GUI:
                             self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("unitedstatesmap.png")
-                        self.chosenimage = "us"
+                        self.chosenimage = "USmap.txt"
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
                         self.gameimage = pygame.image.load("agents/kk.jpg")
-                        self.chosenimage = "world"
+                        self.chosenimage = "WorldMap.txt"
 
             # game title
 
