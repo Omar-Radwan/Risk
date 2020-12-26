@@ -395,9 +395,12 @@ class GUI:
                 if self.attackingCity != '' and self.defendingCity != '' and input_box.collidepoint(pygame.mouse.get_pos()):
                     # print(";lwenroinqweoifmnqwekp")
                     if event.type == pygame.KEYDOWN:
-                        self.withArmy+=event.unicode
-                        self.ready = True
-                        print(self.withArmy)
+                        if event.key != pygame.K_RETURN:
+                            self.withArmy+=event.unicode
+                            print(self.withArmy)
+                        else:
+                            print("ready")
+                            self.ready = True
 
 
                 if event.type == pygame.MOUSEBUTTONUP:
