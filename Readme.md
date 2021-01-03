@@ -44,3 +44,9 @@ then conquers only the one territory with fewest armies (if it can).
 ## Mini-MAX Agent vs Passive Agent Gameplay
 
 ![](./readme-assets/minimax_passive.gif)
+
+
+## Greedy Agent vs Passive Agent Gameplay
+
+
+![](./readme-assets/greedy_passive.gif)
