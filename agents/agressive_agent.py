@@ -1,11 +1,9 @@
 # send game state and return the new game state
 # togggle the redArmy boolean in each agent or state
 # check if the parameters are sent by reference not by value
-import math
 
-from agent import Agent
-from city import City
-from game import Game
+from agents.agent import Agent
+from game_componenets.game import Game
 
 
 class AggressiveAgent(Agent):

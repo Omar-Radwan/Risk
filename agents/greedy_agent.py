@@ -1,17 +1,12 @@
 #send game state and return the new game state
 #togggle the redArmy boolean in each agent or state
 #check if the parameters are sent by reference not by value
-import copy
-import math
 from queue import PriorityQueue
 
-import game
-from game import Game
-from agent import Agent
 import random
 
-from agent import Agent
-from game import Game
+from agents.agent import Agent
+from game_componenets.game import Game
 #1.place bonus army in the city and check all its adjacents and heuristic is the difference between both armies(myCity and enemyCity)
 class GreedyAgent(Agent):
     def __init__(self, isRedArmy):

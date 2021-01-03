@@ -1,51 +1,20 @@
-from time import sleep
+import pygame, sys
 
-import pygame, sys, ctypes
-from pygame.transform import rotate
+from game_componenets.game import Game
 
-from game import Game
-from map import Map
-from agents.greedy_agent import GreedyAgent
-from agents.minimax_agent import MiniMaxAgent
-from agents.nearly_pacifist_agent import NearlyPacifistAgent
-from agents.agressive_agent import AggressiveAgent
 # from agents.realtime_agent import
-from passive_agent import PassiveAgent
-from a_star_agent import AStarAgent
 
 pygame.init()
-backgroundimage = pygame.image.load('backgroundimage.jpg')
-unitedstatesmap = pygame.image.load('unitedstatesmap.png')
-worldMap = pygame.image.load('agents\kk.jpg')
+backgroundimage = pygame.image.load('assets/backgroundimage.jpg')
+unitedstatesmap = pygame.image.load('assets/unitedstatesmap.png')
+worldMap = pygame.image.load('assets/kk.jpg')
 clock = pygame.time.Clock()
-
-
-# pygame.mouse.set_visible(False)
 
 
 def text_objects(text, font, color):
     textSurface = font.render(text, True, color)
     return textSurface, textSurface.get_rect()
 
-
-# class Crosshair(pygame.sprite.Sprite):
-#     def __init__(self, picturepath):
-#         super().__init__()
-#         self.image = pygame.image.load(picturepath)
-#         self.rect = self.image.get_rect()
-#         self.attack = pygame.mixer.Sound('attack.wav')
-#
-#     def update(self):
-#         self.rect.center = pygame.mouse.get_pos()
-#
-#     def shoot(self):
-#         self.attack.play()
-
-#
-# crosshair = Crosshair('sword.png')
-
-# crosshairgroup = pygame.sprite.Group()
-# crosshairgroup.add(crosshair)
 
 
 class GUI:
@@ -60,7 +29,7 @@ class GUI:
             self.agent1bool = False
             self.agent2bool = False
             self.isSimulation = False
-            self.gameimage = pygame.image.load("unitedstatesmap.png")
+            self.gameimage = pygame.image.load("assets/unitedstatesmap.png")
             self.chosenimage = "USmap.txt"  # made for comparison only in GUI class
             self.bonusArmyCity = ''
             self.attackingCity = ''
@@ -71,7 +40,7 @@ class GUI:
             self.citiesRecty = []
 
         def intro(self):
-            image = pygame.image.load('backgroundimage.jpg')
+            image = pygame.image.load('assets/backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(backgroundimage, (0, 0))
             for event in pygame.event.get():
@@ -220,7 +189,7 @@ class GUI:
             pygame.display.update()
 
         def choosePlayerModeSimulation(self):
-            image = pygame.image.load('backgroundimage.jpg')
+            image = pygame.image.load('assets/backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(backgroundimage, (0, 0))
             for event in pygame.event.get():
@@ -300,10 +269,10 @@ class GUI:
                             self.agent2bool = True
                             self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
-                        self.gameimage = pygame.image.load("unitedstatesmap.png")
+                        self.gameimage = pygame.image.load("assets/unitedstatesmap.png")
                         self.chosenimage = "USmap.txt"
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
-                        self.gameimage = pygame.image.load("agents/kk.jpg")
+                        self.gameimage = pygame.image.load("assets/kk.jpg")
                         self.chosenimage = "WorldMap.txt"
             # game title
 
@@ -418,7 +387,7 @@ class GUI:
         def choosePlayerModePlaying(self):
             self.agent1 = "human"
             self.agent1bool = True
-            image = pygame.image.load('backgroundimage.jpg')
+            image = pygame.image.load('assets/backgroundimage.jpg')
             screen = pygame.display.set_mode((image.get_width(), image.get_height()))
             screen.blit(backgroundimage, (0, 0))
             for event in pygame.event.get():
@@ -478,10 +447,10 @@ class GUI:
                             self.agent2bool = True
                             self.agent2 = "nearly"
                     elif 758 > mouse[0] > 609 and 696 > mouse[1] > 666:
-                        self.gameimage = pygame.image.load("unitedstatesmap.png")
+                        self.gameimage = pygame.image.load("assets/unitedstatesmap.png")
                         self.chosenimage = "USmap.txt"
                     elif 1181 > mouse[0] > 926 and 696 > mouse[1] > 666:
-                        self.gameimage = pygame.image.load("agents/kk.jpg")
+                        self.gameimage = pygame.image.load("assets/kk.jpg")
                         self.chosenimage = "WorldMap.txt"
 
             # game title

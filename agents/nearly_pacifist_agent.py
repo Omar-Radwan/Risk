@@ -1,6 +1,6 @@
-from agent import Agent
-from city import City
-from game import Game
+from agents.agent import Agent
+from game_componenets.city import City
+from game_componenets.game import Game
 
 
 class NearlyPacifistAgent(Agent):

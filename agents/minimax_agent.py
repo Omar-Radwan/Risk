@@ -1,9 +1,9 @@
 from random import random
 
-from action_manager import ActionManager, BonusSoldiersAction, AttackAction
-from agent import Agent
-from game import Game
-from heuristics import HeuristicsManager
+from game_componenets.action_manager import ActionManager
+from agents.agent import Agent
+from game_componenets.game import Game
+from game_componenets.heuristics import HeuristicsManager
 
 
 class MiniMaxAgent(Agent):
@@ -130,8 +130,9 @@ class MiniMaxAgent(Agent):
             self.isRedPlayer] * 2
 
     def evaluate2(self, game: Game):
-        return 2 * game.cityCount[self.isRedPlayer] + game.soldiersCount[
-            self.isRedPlayer] + 3 * self.heuristicManager.mySecuredCities(self.isRedPlayer, game)
+        return 3 * (game.cityCount[self.isRedPlayer] - game.cityCount[not self.isRedPlayer]) + 2 * (
+                game.soldiersCount[self.isRedPlayer] - game.soldiersCount[
+            not self.isRedPlayer]) + 3 * self.heuristicManager.defensiveAndAttacking(self.isRedPlayer, game)
 
     def evaluate3(self, game: Game):
         return 1 if (game.cityCount[not self.isRedPlayer] == 0) else 0
